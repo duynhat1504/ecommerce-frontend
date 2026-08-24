@@ -4,6 +4,7 @@ import AdminRoute from "./auth/AdminRoute.jsx";
 import ProtectedRoute from "./auth/ProtectedRoute.jsx";
 import StorefrontLayout from "./layouts/StorefrontLayout.jsx";
 import CartPage from "./pages/CartPage.jsx";
+import CheckoutPage from "./pages/CheckoutPage.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
@@ -47,6 +48,16 @@ const router = createBrowserRouter([
           {
             index: true,
             element: <CartPage />,
+          },
+        ],
+      },
+      {
+        path: "checkout",
+        element: <ProtectedRoute />,
+        children: [
+          {
+            index: true,
+            element: <CheckoutPage />,
           },
         ],
       },

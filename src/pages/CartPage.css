@@ -200,6 +200,18 @@
   width: 100%;
 }
 
+.cart-summary__checkout {
+  width: 100%;
+}
+
+.cart-summary__checkout-blocked {
+  border-left: 3px solid var(--color-error);
+  padding: var(--space-sm) var(--space-md);
+  background: rgb(159 47 47 / 0.08);
+  color: var(--color-error);
+  font-weight: 700;
+}
+
 .cart-summary__clear {
   display: grid;
   gap: var(--space-sm);
