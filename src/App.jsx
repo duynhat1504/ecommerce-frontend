@@ -5,6 +5,7 @@ import ProtectedRoute from "./auth/ProtectedRoute.jsx";
 import StorefrontLayout from "./layouts/StorefrontLayout.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
+import ProductCatalogPage from "./pages/ProductCatalogPage.jsx";
 
 function FoundationPage({ title, description }) {
   return (
@@ -27,12 +28,7 @@ const router = createBrowserRouter([
       },
       {
         path: "products",
-        element: (
-          <FoundationPage
-            title="Shop"
-            description="The product catalog route is reserved for the next storefront feature scope."
-          />
-        ),
+        element: <ProductCatalogPage />,
       },
       {
         path: "account",

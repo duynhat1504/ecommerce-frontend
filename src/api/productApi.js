@@ -12,11 +12,12 @@ function buildQuery(params) {
   return searchParams.toString();
 }
 
-export async function getProducts(params = {}) {
+export async function getProducts(params = {}, options = {}) {
   const query = buildQuery(params);
   const response = await apiRequest(`/products${query ? `?${query}` : ""}`, {
     includeAuth: false,
     skipAuthRefresh: true,
+    ...options,
   });
 
   return unwrapApiResponse(response);
