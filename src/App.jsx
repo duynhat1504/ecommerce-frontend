@@ -3,6 +3,7 @@ import { Navigate, RouterProvider, createBrowserRouter } from "react-router-dom"
 import AdminRoute from "./auth/AdminRoute.jsx";
 import ProtectedRoute from "./auth/ProtectedRoute.jsx";
 import StorefrontLayout from "./layouts/StorefrontLayout.jsx";
+import HomePage from "./pages/HomePage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
 
 function FoundationPage({ title, description }) {
@@ -22,12 +23,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: (
-          <FoundationPage
-            title="Coffee tools for slower mornings."
-            description="The storefront foundation is ready for the next feature branch."
-          />
-        ),
+        element: <HomePage />,
       },
       {
         path: "products",
