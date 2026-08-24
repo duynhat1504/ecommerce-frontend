@@ -48,10 +48,10 @@ function buildUrl(path) {
   return `${API_BASE_URL}${path.startsWith("/") ? path : `/${path}`}`;
 }
 
-function buildHeaders(body, headers = {}) {
+function buildHeaders(body, headers = {}, includeAuth = true) {
   const requestHeaders = new Headers(headers);
 
-  if (accessToken && !requestHeaders.has("Authorization")) {
+  if (includeAuth && accessToken && !requestHeaders.has("Authorization")) {
     requestHeaders.set("Authorization", `Bearer ${accessToken}`);
   }
 
@@ -94,6 +94,7 @@ export async function apiRequest(path, options = {}) {
   const {
     body,
     headers,
+    includeAuth = true,
     skipAuthRefresh = false,
     retryOnUnauthorized = true,
     ...requestOptions
@@ -102,7 +103,7 @@ export async function apiRequest(path, options = {}) {
   const response = await fetch(buildUrl(path), {
     credentials: "include",
     ...requestOptions,
-    headers: buildHeaders(body, headers),
+    headers: buildHeaders(body, headers, includeAuth),
     body:
       body !== undefined && !(body instanceof FormData)
         ? JSON.stringify(body)
@@ -122,6 +123,7 @@ export async function apiRequest(path, options = {}) {
       return apiRequest(path, {
         body,
         headers,
+        includeAuth,
         skipAuthRefresh: true,
         retryOnUnauthorized: false,
         ...requestOptions,
