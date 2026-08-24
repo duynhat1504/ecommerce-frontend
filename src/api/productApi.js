@@ -22,3 +22,13 @@ export async function getProducts(params = {}, options = {}) {
 
   return unwrapApiResponse(response);
 }
+
+export async function getProductById(id, options = {}) {
+  const response = await apiRequest(`/products/${encodeURIComponent(id)}`, {
+    includeAuth: false,
+    skipAuthRefresh: true,
+    ...options,
+  });
+
+  return unwrapApiResponse(response);
+}
