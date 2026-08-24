@@ -3,6 +3,7 @@ import { Navigate, RouterProvider, createBrowserRouter } from "react-router-dom"
 import AdminRoute from "./auth/AdminRoute.jsx";
 import ProtectedRoute from "./auth/ProtectedRoute.jsx";
 import StorefrontLayout from "./layouts/StorefrontLayout.jsx";
+import CartPage from "./pages/CartPage.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
@@ -38,6 +39,16 @@ const router = createBrowserRouter([
       {
         path: "products/:id",
         element: <ProductDetailPage />,
+      },
+      {
+        path: "cart",
+        element: <ProtectedRoute />,
+        children: [
+          {
+            index: true,
+            element: <CartPage />,
+          },
+        ],
       },
       {
         path: "account",

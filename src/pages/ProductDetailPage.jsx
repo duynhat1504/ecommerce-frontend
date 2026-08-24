@@ -1,8 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { getProductById } from "../api/productApi";
+import useAuth from "../auth/useAuth";
+import useCart from "../cart/useCart";
 import ProductImage from "../components/ProductImage/ProductImage";
+import { getCartErrorMessage } from "../utils/cartErrorMessages";
 import { formatCurrency } from "../utils/formatCurrency";
 import "./ProductDetailPage.css";
 
@@ -17,6 +20,48 @@ function getStockCount(stock) {
   }
 
   return value;
+}
+
+function clampQuantity(value, stock) {
+  const parsed = Number(value);
+  const maximum = Math.max(1, stock);
+
+  if (!Number.isInteger(parsed)) {
+    return 1;
+  }
+
+  return Math.min(Math.max(parsed, 1), maximum);
+}
+
+function QuantitySelector({ quantity, stock, onChange, disabled }) {
+  return (
+    <div className="product-detail__quantity">
+      <p id="product-quantity-label">Quantity</p>
+      <div
+        className="product-detail__quantity-controls"
+        role="group"
+        aria-labelledby="product-quantity-label"
+      >
+        <button
+          type="button"
+          onClick={() => onChange(quantity - 1)}
+          disabled={disabled || quantity <= 1}
+          aria-label="Decrease quantity"
+        >
+          -
+        </button>
+        <span aria-live="polite">{quantity}</span>
+        <button
+          type="button"
+          onClick={() => onChange(quantity + 1)}
+          disabled={disabled || quantity >= stock}
+          aria-label="Increase quantity"
+        >
+          +
+        </button>
+      </div>
+    </div>
+  );
 }
 
 function ProductDetailSkeleton() {
@@ -57,9 +102,18 @@ function ProductDetailState({ title, message, onRetry }) {
 
 export default function ProductDetailPage() {
   const { id } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+  const { addItem } = useCart();
   const [productState, setProductState] = useState({
     status: "loading",
     product: null,
+    message: "",
+  });
+  const [quantity, setQuantity] = useState(1);
+  const [cartFeedback, setCartFeedback] = useState({
+    status: "idle",
     message: "",
   });
   const [retryKey, setRetryKey] = useState(0);
@@ -94,6 +148,11 @@ export default function ProductDetailPage() {
           product: response,
           message: "",
         });
+        setQuantity(1);
+        setCartFeedback({
+          status: "idle",
+          message: "",
+        });
       } catch (error) {
         if (error.name === "AbortError") {
           return;
@@ -122,6 +181,46 @@ export default function ProductDetailPage() {
       controller.abort();
     };
   }, [id, isValidProductId, retryKey]);
+
+  function handleQuantityChange(nextQuantity) {
+    setQuantity(clampQuantity(nextQuantity, stock));
+    setCartFeedback({
+      status: "idle",
+      message: "",
+    });
+  }
+
+  async function handleAddToCart() {
+    if (!product?.id || !isAvailable || cartFeedback.status === "submitting") {
+      return;
+    }
+
+    if (!isAuthenticated) {
+      navigate("/login", { state: { from: location } });
+      return;
+    }
+
+    setCartFeedback({
+      status: "submitting",
+      message: "",
+    });
+
+    try {
+      await addItem({
+        productId: product.id,
+        quantity,
+      });
+      setCartFeedback({
+        status: "success",
+        message: "Added to cart.",
+      });
+    } catch (error) {
+      setCartFeedback({
+        status: "error",
+        message: getCartErrorMessage(error, "This product could not be added to cart."),
+      });
+    }
+  }
 
   if (!isValidProductId) {
     return (
@@ -202,7 +301,42 @@ export default function ProductDetailPage() {
           <p className="product-detail__unavailable" role="status">
             This product is currently unavailable.
           </p>
-        ) : null}
+        ) : (
+          <div className="product-detail__purchase">
+            <QuantitySelector
+              quantity={quantity}
+              stock={stock}
+              onChange={handleQuantityChange}
+              disabled={cartFeedback.status === "submitting"}
+            />
+            <button
+              type="button"
+              className="button button--primary product-detail__cart-button"
+              onClick={handleAddToCart}
+              disabled={cartFeedback.status === "submitting"}
+            >
+              {cartFeedback.status === "submitting" ? "Adding..." : "Add to cart"}
+            </button>
+            {cartFeedback.message ? (
+              <p
+                className={
+                  cartFeedback.status === "error"
+                    ? "product-detail__cart-message product-detail__cart-message--error"
+                    : "product-detail__cart-message"
+                }
+                role={cartFeedback.status === "error" ? "alert" : "status"}
+              >
+                {cartFeedback.message}
+                {cartFeedback.status === "success" ? (
+                  <>
+                    {" "}
+                    <Link to="/cart">View cart</Link>
+                  </>
+                ) : null}
+              </p>
+            ) : null}
+          </div>
+        )}
 
       </section>
     </article>
