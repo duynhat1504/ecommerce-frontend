@@ -21,6 +21,10 @@ function getCartItems(cart) {
   return Array.isArray(cart?.items) ? cart.items : [];
 }
 
+function canCheckout(items) {
+  return items.length > 0 && items.every((item) => item.available !== false);
+}
+
 function CartLoadingState() {
   return (
     <section className="cart-state" aria-live="polite">
@@ -180,6 +184,7 @@ export default function CartPage() {
   const items = getCartItems(cart);
   const isLoading = status === "loading" && items.length === 0;
   const hasItems = items.length > 0;
+  const isCheckoutAvailable = canCheckout(items);
   const totalItems = cart.totalItems || items.reduce((sum, item) => sum + Number(item.quantity || 0), 0);
   const totalPrice = cart.totalPrice ?? items.reduce(
     (sum, item) => sum + Number(item.subtotal || 0),
@@ -322,6 +327,16 @@ export default function CartPage() {
           <Link className="button button--ghost cart-summary__continue" to="/products">
             Continue shopping
           </Link>
+
+          {isCheckoutAvailable ? (
+            <Link className="button button--primary cart-summary__checkout" to="/checkout">
+              Proceed to checkout
+            </Link>
+          ) : (
+            <div className="cart-summary__checkout-blocked" role="status">
+              Resolve unavailable items before checkout.
+            </div>
+          )}
 
           <div className="cart-summary__clear">
             {isConfirmingClear ? (
