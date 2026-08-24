@@ -1,4 +1,8 @@
-import { apiRequest, unwrapApiResponse } from "./apiClient";
+import { API_BASE_URL, apiRequest, unwrapApiResponse } from "./apiClient";
+
+function getBackendBaseUrl() {
+  return API_BASE_URL.replace(/\/api\/?$/, "");
+}
 
 export async function login(credentials) {
   const response = await apiRequest("/auth/login", {
@@ -18,6 +22,32 @@ export async function register(payload) {
   });
 
   return unwrapApiResponse(response);
+}
+
+export async function verifyEmail(token, options = {}) {
+  const searchParams = new URLSearchParams({ token });
+  const response = await apiRequest(`/auth/verify-email?${searchParams}`, {
+    method: "GET",
+    skipAuthRefresh: true,
+    ...options,
+  });
+
+  return unwrapApiResponse(response);
+}
+
+export async function resendVerification(payload, options = {}) {
+  const response = await apiRequest("/auth/resend-verification", {
+    method: "POST",
+    body: payload,
+    skipAuthRefresh: true,
+    ...options,
+  });
+
+  return unwrapApiResponse(response);
+}
+
+export function getGoogleOAuthUrl() {
+  return `${getBackendBaseUrl()}/oauth2/authorization/google`;
 }
 
 export async function refreshSession() {
