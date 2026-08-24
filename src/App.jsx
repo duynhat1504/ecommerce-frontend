@@ -4,9 +4,13 @@ import AdminRoute from "./auth/AdminRoute.jsx";
 import ProtectedRoute from "./auth/ProtectedRoute.jsx";
 import StorefrontLayout from "./layouts/StorefrontLayout.jsx";
 import HomePage from "./pages/HomePage.jsx";
+import LoginPage from "./pages/LoginPage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
+import OAuthCallbackPage from "./pages/OAuthCallbackPage.jsx";
 import ProductCatalogPage from "./pages/ProductCatalogPage.jsx";
 import ProductDetailPage from "./pages/ProductDetailPage.jsx";
+import RegisterPage from "./pages/RegisterPage.jsx";
+import VerifyEmailPage from "./pages/VerifyEmailPage.jsx";
 
 function FoundationPage({ title, description }) {
   return (
@@ -67,12 +71,19 @@ const router = createBrowserRouter([
       },
       {
         path: "login",
-        element: (
-          <FoundationPage
-            title="Sign in"
-            description="Authentication UI will be implemented in a later scope."
-          />
-        ),
+        element: <LoginPage />,
+      },
+      {
+        path: "register",
+        element: <RegisterPage />,
+      },
+      {
+        path: "verify-email",
+        element: <VerifyEmailPage />,
+      },
+      {
+        path: "oauth2/callback",
+        element: <OAuthCallbackPage />,
       },
       {
         path: "404",
