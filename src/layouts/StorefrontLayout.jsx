@@ -2,16 +2,20 @@ import { useEffect, useState } from "react";
 import { Link, NavLink, Outlet } from "react-router-dom";
 
 import useAuth from "../auth/useAuth";
+import useCart from "../cart/useCart";
 
 const navItems = [
   { to: "/", label: "Home", end: true },
   { to: "/products", label: "Shop" },
+  { to: "/cart", label: "Cart" },
   { to: "/account", label: "Account" },
 ];
 
 export default function StorefrontLayout() {
   const { isAdmin, isAuthenticated, logout, user } = useAuth();
+  const { itemCount } = useCart();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const cartLabel = isAuthenticated && itemCount > 0 ? `Cart ${itemCount}` : "Cart";
 
   function closeMenu() {
     setIsMenuOpen(false);
@@ -72,7 +76,7 @@ export default function StorefrontLayout() {
                   isActive ? "site-nav__link is-active" : "site-nav__link"
                 }
               >
-                {item.label}
+                {item.to === "/cart" ? cartLabel : item.label}
               </NavLink>
             ))}
             {isAdmin ? (
@@ -149,6 +153,7 @@ export default function StorefrontLayout() {
         </div>
         <nav className="site-footer__links" aria-label="Footer navigation">
           <Link to="/products">Shop</Link>
+          <Link to="/cart">Cart</Link>
           <Link to="/account">Account</Link>
         </nav>
       </footer>
