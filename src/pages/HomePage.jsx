@@ -4,24 +4,11 @@ import { Link } from "react-router-dom";
 import { getCategories } from "../api/categoryApi";
 import { getProducts } from "../api/productApi";
 import ProductImage from "../components/ProductImage/ProductImage";
+import { formatCurrency } from "../utils/formatCurrency";
 import "./HomePage.css";
 
 const heroImage = "/assets/home/cham-hero-tools.jpg";
 const storyImage = "/assets/home/cham-morning-grinder.jpg";
-
-function formatPrice(price) {
-  const value = Number(price);
-
-  if (!Number.isFinite(value)) {
-    return "";
-  }
-
-  return new Intl.NumberFormat("vi-VN", {
-    style: "currency",
-    currency: "VND",
-    maximumFractionDigits: 0,
-  }).format(value);
-}
 
 function getPageItems(pageResponse) {
   if (Array.isArray(pageResponse)) {
@@ -58,15 +45,18 @@ function SectionState({ state, emptyText, errorText }) {
 }
 
 function ProductPreview({ product }) {
-  const price = formatPrice(product.price);
+  const price = formatCurrency(product.price);
   const productName = product.name || "Coffee tool";
+  const productPath = product.id
+    ? `/products/${encodeURIComponent(product.id)}`
+    : "/products";
 
   return (
     <article className="product-preview">
       <Link
-        to="/products"
+        to={productPath}
         className="product-preview__image-link"
-        aria-label={`Browse products including ${productName}`}
+        aria-label={`View ${productName}`}
       >
         <ProductImage src={product.imageUrl} alt={productName} />
       </Link>
@@ -75,7 +65,7 @@ function ProductPreview({ product }) {
           <p className="product-preview__category">{product.categoryName}</p>
         ) : null}
         <h3>
-          <Link to="/products">{productName}</Link>
+          <Link to={productPath}>{productName}</Link>
         </h3>
         {price ? <p className="product-preview__price">{price}</p> : null}
       </div>

@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 import { getCategories } from "../api/categoryApi";
 import { getProducts } from "../api/productApi";
 import ProductImage from "../components/ProductImage/ProductImage";
+import { formatCurrency } from "../utils/formatCurrency";
 import "./ProductCatalogPage.css";
 
 const PAGE_SIZE = 12;
@@ -17,20 +18,6 @@ const SORT_OPTIONS = [
 ];
 
 const SORT_VALUES = SORT_OPTIONS.map((option) => option.value);
-
-function formatPrice(price) {
-  const value = Number(price);
-
-  if (!Number.isFinite(value)) {
-    return "";
-  }
-
-  return new Intl.NumberFormat("vi-VN", {
-    style: "currency",
-    currency: "VND",
-    maximumFractionDigits: 0,
-  }).format(value);
-}
 
 function getPositivePage(value) {
   const parsed = Number.parseInt(value, 10);
@@ -140,22 +127,31 @@ function getPaginationPages(currentPage, totalPages) {
 
 function ProductCard({ product }) {
   const productName = product.name || "Product";
-  const price = formatPrice(product.price);
+  const price = formatCurrency(product.price);
   const isOutOfStock = Number(product.stock) === 0;
+  const productPath = product.id
+    ? `/products/${encodeURIComponent(product.id)}`
+    : "/products";
 
   return (
     <article className="catalog-product">
-      <ProductImage src={product.imageUrl} alt={productName} />
-      <div className="catalog-product__meta">
-        {product.categoryName ? (
-          <p className="catalog-product__category">{product.categoryName}</p>
-        ) : null}
-        <h3>{productName}</h3>
-        {price ? <p className="catalog-product__price">{price}</p> : null}
-        {isOutOfStock ? (
-          <p className="catalog-product__stock">Currently out of stock</p>
-        ) : null}
-      </div>
+      <Link
+        className="catalog-product__link"
+        to={productPath}
+        aria-label={`View ${productName}`}
+      >
+        <ProductImage src={product.imageUrl} alt={productName} />
+        <div className="catalog-product__meta">
+          {product.categoryName ? (
+            <p className="catalog-product__category">{product.categoryName}</p>
+          ) : null}
+          <h3>{productName}</h3>
+          {price ? <p className="catalog-product__price">{price}</p> : null}
+          {isOutOfStock ? (
+            <p className="catalog-product__stock">Currently out of stock</p>
+          ) : null}
+        </div>
+      </Link>
     </article>
   );
 }
