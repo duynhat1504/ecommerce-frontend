@@ -6,6 +6,7 @@ import StorefrontLayout from "./layouts/StorefrontLayout.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
 import ProductCatalogPage from "./pages/ProductCatalogPage.jsx";
+import ProductDetailPage from "./pages/ProductDetailPage.jsx";
 
 function FoundationPage({ title, description }) {
   return (
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
       {
         path: "products",
         element: <ProductCatalogPage />,
+      },
+      {
+        path: "products/:id",
+        element: <ProductDetailPage />,
       },
       {
         path: "account",

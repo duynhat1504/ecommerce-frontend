@@ -182,13 +182,21 @@
 }
 
 .catalog-product {
+  min-width: 0;
+}
+
+.catalog-product__link {
   display: grid;
   align-content: start;
   gap: var(--space-md);
 }
 
-.catalog-product:hover .product-image__media {
+.catalog-product__link:hover .product-image__media {
   transform: scale(1.02);
+}
+
+.catalog-product__link:hover h3 {
+  color: var(--color-accent-strong);
 }
 
 .catalog-product__meta {
