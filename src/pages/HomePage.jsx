@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 import { getCategories } from "../api/categoryApi";
 import { getProducts } from "../api/productApi";
+import ProductImage from "../components/ProductImage/ProductImage";
 import "./HomePage.css";
 
 const heroImage = "/assets/home/cham-hero-tools.jpg";
@@ -79,31 +80,6 @@ function ProductPreview({ product }) {
         {price ? <p className="product-preview__price">{price}</p> : null}
       </div>
     </article>
-  );
-}
-
-function ProductImage({ src, alt }) {
-  const [hasFailed, setHasFailed] = useState(false);
-
-  if (!src || hasFailed) {
-    return (
-      <span
-        className="product-preview__image-fallback"
-        aria-label={`${alt} image unavailable`}
-      >
-        Image unavailable
-      </span>
-    );
-  }
-
-  return (
-    <img
-      src={src}
-      alt={alt}
-      className="product-preview__image"
-      loading="lazy"
-      onError={() => setHasFailed(true)}
-    />
   );
 }
 
