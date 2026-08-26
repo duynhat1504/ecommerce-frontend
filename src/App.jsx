@@ -3,7 +3,16 @@ import { Navigate, RouterProvider, createBrowserRouter } from "react-router-dom"
 import AdminRoute from "./auth/AdminRoute.jsx";
 import ProtectedRoute from "./auth/ProtectedRoute.jsx";
 import StorefrontLayout from "./layouts/StorefrontLayout.jsx";
+import CartPage from "./pages/CartPage.jsx";
+import CheckoutPage from "./pages/CheckoutPage.jsx";
+import HomePage from "./pages/HomePage.jsx";
+import LoginPage from "./pages/LoginPage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
+import OAuthCallbackPage from "./pages/OAuthCallbackPage.jsx";
+import ProductCatalogPage from "./pages/ProductCatalogPage.jsx";
+import ProductDetailPage from "./pages/ProductDetailPage.jsx";
+import RegisterPage from "./pages/RegisterPage.jsx";
+import VerifyEmailPage from "./pages/VerifyEmailPage.jsx";
 
 function FoundationPage({ title, description }) {
   return (
@@ -22,21 +31,35 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: (
-          <FoundationPage
-            title="Coffee tools for slower mornings."
-            description="The storefront foundation is ready for the next feature branch."
-          />
-        ),
+        element: <HomePage />,
       },
       {
         path: "products",
-        element: (
-          <FoundationPage
-            title="Shop"
-            description="The product catalog route is reserved for the next storefront feature scope."
-          />
-        ),
+        element: <ProductCatalogPage />,
+      },
+      {
+        path: "products/:id",
+        element: <ProductDetailPage />,
+      },
+      {
+        path: "cart",
+        element: <ProtectedRoute />,
+        children: [
+          {
+            index: true,
+            element: <CartPage />,
+          },
+        ],
+      },
+      {
+        path: "checkout",
+        element: <ProtectedRoute />,
+        children: [
+          {
+            index: true,
+            element: <CheckoutPage />,
+          },
+        ],
       },
       {
         path: "account",
@@ -70,12 +93,19 @@ const router = createBrowserRouter([
       },
       {
         path: "login",
-        element: (
-          <FoundationPage
-            title="Sign in"
-            description="Authentication UI will be implemented in a later scope."
-          />
-        ),
+        element: <LoginPage />,
+      },
+      {
+        path: "register",
+        element: <RegisterPage />,
+      },
+      {
+        path: "verify-email",
+        element: <VerifyEmailPage />,
+      },
+      {
+        path: "oauth2/callback",
+        element: <OAuthCallbackPage />,
       },
       {
         path: "404",

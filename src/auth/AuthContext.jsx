@@ -20,6 +20,7 @@ import {
 } from "../api/apiClient";
 
 const AUTH_STORAGE_KEY = "cham.accessToken";
+let refreshSessionRequest = null;
 
 function getStoredToken() {
   return window.sessionStorage.getItem(AUTH_STORAGE_KEY);
@@ -72,15 +73,26 @@ export function AuthProvider({ children }) {
   }, [clearSession]);
 
   const refreshAccessToken = useCallback(async () => {
-    const session = await refreshSession();
-    const token = applySession(session);
+    if (!refreshSessionRequest) {
+      refreshSessionRequest = refreshSession()
+        .then((session) => {
+          const token = applySession(session);
 
-    if (!token) {
-      throw new Error("Refresh response did not include an access token.");
+          if (!token) {
+            throw new Error("Refresh response did not include an access token.");
+          }
+
+          return token;
+        })
+        .finally(() => {
+          refreshSessionRequest = null;
+        });
     }
 
-    return token;
+    return refreshSessionRequest;
   }, [applySession]);
+
+  const fetchCurrentUser = useCallback(() => getCurrentUser(), []);
 
   useEffect(() => {
     setApiAccessToken(accessToken);
@@ -105,6 +117,14 @@ export function AuthProvider({ children }) {
       if (!storedToken) {
         try {
           await refreshAccessToken();
+          if (isMounted) {
+            const currentUser = await fetchCurrentUser();
+
+            if (isMounted) {
+              setUser(currentUser);
+              setStatus("authenticated");
+            }
+          }
         } catch {
           if (isMounted) {
             clearSession();
@@ -116,15 +136,25 @@ export function AuthProvider({ children }) {
       setApiAccessToken(storedToken);
 
       try {
-        const currentUser = await getCurrentUser();
-
         if (isMounted) {
-          setUser(currentUser);
-          setStatus("authenticated");
+          const currentUser = await fetchCurrentUser();
+
+          if (isMounted) {
+            setUser(currentUser);
+            setStatus("authenticated");
+          }
         }
       } catch {
         try {
           await refreshAccessToken();
+          if (isMounted) {
+            const currentUser = await fetchCurrentUser();
+
+            if (isMounted) {
+              setUser(currentUser);
+              setStatus("authenticated");
+            }
+          }
         } catch {
           if (isMounted) {
             clearSession();
@@ -138,7 +168,7 @@ export function AuthProvider({ children }) {
     return () => {
       isMounted = false;
     };
-  }, [clearSession, refreshAccessToken]);
+  }, [clearSession, fetchCurrentUser, refreshAccessToken]);
 
   const login = useCallback(async (credentials) => {
     setStatus("loading");

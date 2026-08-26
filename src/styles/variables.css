@@ -36,25 +36,3 @@
 
   --shadow-subtle: 0 16px 40px rgb(68 55 40 / 0.08);
 }
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
-
-    --color-page: #181a17;
-    --color-surface: #22251f;
-    --color-surface-muted: #303429;
-    --color-text: #f1eee7;
-    --color-text-muted: #c6beb2;
-    --color-border: #3a3f35;
-    --color-accent: #9aa48b;
-    --color-accent-strong: #d6ddc8;
-    --color-coffee: #c1a282;
-    --color-error: #ee8b8b;
-    --color-focus: #9fbfe2;
-    --color-header: rgb(24 26 23 / 0.94);
-    --color-selection-text: #181a17;
-
-    --shadow-subtle: 0 16px 40px rgb(0 0 0 / 0.22);
-  }
-}
