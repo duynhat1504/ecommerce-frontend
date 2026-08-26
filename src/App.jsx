@@ -5,6 +5,7 @@ import ProtectedRoute from "./auth/ProtectedRoute.jsx";
 import StorefrontLayout from "./layouts/StorefrontLayout.jsx";
 import AccountOrderDetailPage from "./pages/AccountOrderDetailPage.jsx";
 import AccountOrdersPage from "./pages/AccountOrdersPage.jsx";
+import AccountProfilePage from "./pages/AccountProfilePage.jsx";
 import CartPage from "./pages/CartPage.jsx";
 import CheckoutPage from "./pages/CheckoutPage.jsx";
 import HomePage from "./pages/HomePage.jsx";
@@ -80,7 +81,11 @@ const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: <Navigate to="orders" replace />,
+            element: <Navigate to="profile" replace />,
+          },
+          {
+            path: "profile",
+            element: <AccountProfilePage />,
           },
           {
             path: "orders",
