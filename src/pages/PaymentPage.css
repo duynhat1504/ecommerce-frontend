@@ -1,0 +1,219 @@
+.payment-page {
+  display: grid;
+  gap: var(--space-xl);
+  max-width: 72rem;
+  padding: clamp(2rem, 5vw, 4rem) 0 clamp(4rem, 7vw, 6rem);
+}
+
+.payment-page__header {
+  display: grid;
+  gap: var(--space-sm);
+  max-width: 42rem;
+}
+
+.payment-page__kicker,
+.payment-state__kicker {
+  color: var(--color-coffee);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.payment-page h1,
+.payment-state h1 {
+  max-width: 10ch;
+  font-size: clamp(3rem, 7vw, 5.25rem);
+}
+
+.payment-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(18rem, 24rem);
+  align-items: start;
+  gap: clamp(2rem, 5vw, 4rem);
+}
+
+.payment-panel {
+  display: grid;
+  gap: var(--space-xl);
+}
+
+.payment-section,
+.payment-summary {
+  display: grid;
+  gap: var(--space-lg);
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--space-lg);
+}
+
+.payment-section h2,
+.payment-summary h2,
+.payment-result h2 {
+  font-size: clamp(1.55rem, 2.5vw, 2.1rem);
+}
+
+.payment-facts,
+.payment-summary__total {
+  display: grid;
+  gap: var(--space-sm);
+  margin: 0;
+}
+
+.payment-facts div,
+.payment-summary__total div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: var(--space-sm);
+}
+
+.payment-facts dt,
+.payment-summary__total dt {
+  color: var(--color-text-muted);
+  font-weight: 700;
+}
+
+.payment-facts dd,
+.payment-summary__total dd {
+  margin: 0;
+  color: var(--color-text);
+  font-weight: 800;
+  text-align: right;
+}
+
+.payment-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.payment-actions .button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.payment-error,
+.payment-result--failed p {
+  color: var(--color-error);
+  font-weight: 700;
+}
+
+.payment-inline-state {
+  color: var(--color-text);
+  font-weight: 700;
+}
+
+.payment-uncertain,
+.payment-result {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-md);
+  border-left: 3px solid var(--color-accent);
+  padding: var(--space-sm) var(--space-md);
+  background: rgb(105 113 93 / 0.1);
+}
+
+.payment-uncertain div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.payment-result--success {
+  border-color: var(--color-accent-strong);
+}
+
+.payment-result--failed {
+  border-color: var(--color-error);
+  background: rgb(159 47 47 / 0.08);
+}
+
+.payment-summary {
+  position: sticky;
+  top: calc(var(--header-height) + var(--space-lg));
+}
+
+.payment-summary__items {
+  display: grid;
+  gap: var(--space-md);
+}
+
+.payment-summary-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-md);
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: var(--space-md);
+}
+
+.payment-summary-item h3 {
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 0.98rem;
+  line-height: 1.25;
+}
+
+.payment-summary-item p:last-child {
+  color: var(--color-text);
+  font-weight: 800;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.payment-state {
+  min-height: calc(100dvh - var(--header-height));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: var(--space-lg);
+  max-width: 52rem;
+  padding: var(--space-3xl) 0;
+}
+
+.payment-state__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+@media (max-width: 900px) {
+  .payment-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .payment-summary {
+    position: static;
+  }
+}
+
+@media (max-width: 520px) {
+  .payment-page {
+    padding-top: var(--space-xl);
+  }
+
+  .payment-page h1,
+  .payment-state h1 {
+    font-size: clamp(2.7rem, 14vw, 4.2rem);
+  }
+
+  .payment-actions,
+  .payment-actions .button,
+  .payment-uncertain div,
+  .payment-uncertain .button,
+  .payment-result .button,
+  .payment-state__actions,
+  .payment-state .button {
+    width: 100%;
+  }
+
+  .payment-summary-item {
+    grid-template-columns: 1fr;
+  }
+
+  .payment-summary-item p:last-child {
+    text-align: left;
+  }
+}

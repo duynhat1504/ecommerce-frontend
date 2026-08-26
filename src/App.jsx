@@ -9,6 +9,7 @@ import HomePage from "./pages/HomePage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
 import OAuthCallbackPage from "./pages/OAuthCallbackPage.jsx";
+import PaymentPage from "./pages/PaymentPage.jsx";
 import ProductCatalogPage from "./pages/ProductCatalogPage.jsx";
 import ProductDetailPage from "./pages/ProductDetailPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
@@ -58,6 +59,16 @@ const router = createBrowserRouter([
           {
             index: true,
             element: <CheckoutPage />,
+          },
+        ],
+      },
+      {
+        path: "payment/:orderId",
+        element: <ProtectedRoute />,
+        children: [
+          {
+            index: true,
+            element: <PaymentPage />,
           },
         ],
       },

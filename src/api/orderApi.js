@@ -9,3 +9,12 @@ export async function createOrder(payload, options = {}) {
 
   return unwrapApiResponse(response);
 }
+
+export async function getOrderById(orderId, options = {}) {
+  const response = await apiRequest(`/orders/${encodeURIComponent(orderId)}`, {
+    method: "GET",
+    ...options,
+  });
+
+  return unwrapApiResponse(response);
+}
