@@ -8,7 +8,7 @@ const navItems = [
   { to: "/", label: "Home", end: true },
   { to: "/products", label: "Shop" },
   { to: "/cart", label: "Cart" },
-  { to: "/account", label: "Account" },
+  { to: "/account/profile", label: "Account" },
 ];
 
 export default function StorefrontLayout() {
@@ -154,7 +154,7 @@ export default function StorefrontLayout() {
         <nav className="site-footer__links" aria-label="Footer navigation">
           <Link to="/products">Shop</Link>
           <Link to="/cart">Cart</Link>
-          <Link to="/account">Account</Link>
+          <Link to="/account/profile">Account</Link>
         </nav>
       </footer>
     </div>

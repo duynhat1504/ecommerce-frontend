@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import { getOrderById } from "../api/orderApi";
+import AccountNavigation from "../components/Account/AccountNavigation";
 import { formatCurrency } from "../utils/formatCurrency";
 import "./AccountOrdersPage.css";
 
@@ -342,6 +343,7 @@ export default function AccountOrderDetailPage() {
         <p className="account-order-detail__kicker">Order</p>
         <h1 id="account-order-detail-title">{getOrderReference(order)}</h1>
         <p>Historical order details from checkout.</p>
+        <AccountNavigation />
       </div>
 
       <div className="account-order-detail__layout">
