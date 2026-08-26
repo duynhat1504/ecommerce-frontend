@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 
 import { getMyOrders } from "../api/orderApi";
+import AccountNavigation from "../components/Account/AccountNavigation";
 import { formatCurrency } from "../utils/formatCurrency";
 import "./AccountOrdersPage.css";
 
@@ -338,6 +339,7 @@ export default function AccountOrdersPage() {
         <p className="account-orders-page__kicker">Account</p>
         <h1 id="account-orders-title">Orders</h1>
         <p>Review orders placed from this account.</p>
+        <AccountNavigation />
       </div>
 
       <div className="account-orders-panel">
