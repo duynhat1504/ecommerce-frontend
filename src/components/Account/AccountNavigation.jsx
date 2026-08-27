@@ -5,6 +5,7 @@ import "./AccountNavigation.css";
 const accountRoutes = [
   { to: "/account/profile", label: "Profile" },
   { to: "/account/orders", label: "Orders" },
+  { to: "/account/addresses", label: "Addresses" },
 ];
 
 export default function AccountNavigation() {

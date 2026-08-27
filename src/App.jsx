@@ -3,6 +3,7 @@ import { Navigate, RouterProvider, createBrowserRouter } from "react-router-dom"
 import AdminRoute from "./auth/AdminRoute.jsx";
 import ProtectedRoute from "./auth/ProtectedRoute.jsx";
 import StorefrontLayout from "./layouts/StorefrontLayout.jsx";
+import AccountAddressesPage from "./pages/AccountAddressesPage.jsx";
 import AccountOrderDetailPage from "./pages/AccountOrderDetailPage.jsx";
 import AccountOrdersPage from "./pages/AccountOrdersPage.jsx";
 import AccountProfilePage from "./pages/AccountProfilePage.jsx";
@@ -90,6 +91,10 @@ const router = createBrowserRouter([
           {
             path: "orders",
             element: <AccountOrdersPage />,
+          },
+          {
+            path: "addresses",
+            element: <AccountAddressesPage />,
           },
           {
             path: "orders/:orderId",
