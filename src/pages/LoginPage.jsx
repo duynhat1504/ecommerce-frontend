@@ -49,6 +49,8 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const redirectTo = getRedirectFromLocation(location, searchParams);
+  const loginNotice =
+    typeof location.state?.notice === "string" ? location.state.notice : "";
   const [values, setValues] = useState({
     email: "",
     password: "",
@@ -139,6 +141,12 @@ export default function LoginPage() {
       </section>
 
       <section className="auth-panel" aria-label="Sign in form">
+        {loginNotice ? (
+          <p className="auth-form__notice" role="status">
+            {loginNotice}
+          </p>
+        ) : null}
+
         {hasOAuthError ? (
           <p className="auth-form__error" role="alert">
             Google sign in could not be completed. Please try again.

@@ -94,6 +94,15 @@ export function AuthProvider({ children }) {
 
   const fetchCurrentUser = useCallback(() => getCurrentUser(), []);
 
+  const refreshUser = useCallback(async (options = {}) => {
+    const currentUser = await getCurrentUser(options);
+
+    setUser(currentUser);
+    setStatus("authenticated");
+
+    return currentUser;
+  }, []);
+
   useEffect(() => {
     setApiAccessToken(accessToken);
   }, [accessToken]);
@@ -201,8 +210,9 @@ export function AuthProvider({ children }) {
       login,
       logout,
       clearSession,
+      refreshUser,
     }),
-    [accessToken, user, status, login, logout, clearSession],
+    [accessToken, user, status, login, logout, clearSession, refreshUser],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

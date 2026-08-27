@@ -3,12 +3,17 @@ import { Navigate, RouterProvider, createBrowserRouter } from "react-router-dom"
 import AdminRoute from "./auth/AdminRoute.jsx";
 import ProtectedRoute from "./auth/ProtectedRoute.jsx";
 import StorefrontLayout from "./layouts/StorefrontLayout.jsx";
+import AccountAddressesPage from "./pages/AccountAddressesPage.jsx";
+import AccountOrderDetailPage from "./pages/AccountOrderDetailPage.jsx";
+import AccountOrdersPage from "./pages/AccountOrdersPage.jsx";
+import AccountProfilePage from "./pages/AccountProfilePage.jsx";
 import CartPage from "./pages/CartPage.jsx";
 import CheckoutPage from "./pages/CheckoutPage.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
 import OAuthCallbackPage from "./pages/OAuthCallbackPage.jsx";
+import PaymentPage from "./pages/PaymentPage.jsx";
 import ProductCatalogPage from "./pages/ProductCatalogPage.jsx";
 import ProductDetailPage from "./pages/ProductDetailPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
@@ -62,17 +67,38 @@ const router = createBrowserRouter([
         ],
       },
       {
+        path: "payment/:orderId",
+        element: <ProtectedRoute />,
+        children: [
+          {
+            index: true,
+            element: <PaymentPage />,
+          },
+        ],
+      },
+      {
         path: "account",
         element: <ProtectedRoute />,
         children: [
           {
             index: true,
-            element: (
-              <FoundationPage
-                title="Account"
-                description="Protected account routing is in place."
-              />
-            ),
+            element: <Navigate to="profile" replace />,
+          },
+          {
+            path: "profile",
+            element: <AccountProfilePage />,
+          },
+          {
+            path: "orders",
+            element: <AccountOrdersPage />,
+          },
+          {
+            path: "addresses",
+            element: <AccountAddressesPage />,
+          },
+          {
+            path: "orders/:orderId",
+            element: <AccountOrderDetailPage />,
           },
         ],
       },

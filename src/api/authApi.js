@@ -73,15 +73,18 @@ export async function logoutAll() {
   });
 }
 
-export async function changePassword(payload) {
-  await apiRequest("/auth/change-password", {
+export async function changePassword(payload, options = {}) {
+  const response = await apiRequest("/auth/change-password", {
     method: "PUT",
     body: payload,
+    ...options,
   });
+
+  return unwrapApiResponse(response);
 }
 
-export async function getCurrentUser() {
-  const response = await apiRequest("/users/me");
+export async function getCurrentUser(options = {}) {
+  const response = await apiRequest("/users/me", options);
 
   return unwrapApiResponse(response);
 }

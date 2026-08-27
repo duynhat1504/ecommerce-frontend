@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { createShippingAddress, getShippingAddresses } from "../api/addressApi";
 import { createOrder } from "../api/orderApi";
@@ -293,52 +293,8 @@ function OrderSummary({ cart, items }) {
   );
 }
 
-function OrderCreatedState({ order }) {
-  const items = Array.isArray(order?.items) ? order.items : [];
-  const itemCount = items.reduce(
-    (sum, item) => sum + Number(item.quantity || 0),
-    0,
-  );
-
-  return (
-    <section className="checkout-success" aria-labelledby="checkout-success-title">
-      <p className="checkout-success__kicker">Order created</p>
-      <h1 id="checkout-success-title">Order created.</h1>
-      <p>
-        Your order is pending. Payment will be handled separately.
-      </p>
-      <dl className="checkout-success__details">
-        <div>
-          <dt>Order reference</dt>
-          <dd>{order?.orderCode || order?.id || "Order"}</dd>
-        </div>
-        <div>
-          <dt>Status</dt>
-          <dd>{order?.status || "PENDING"}</dd>
-        </div>
-        <div>
-          <dt>Items</dt>
-          <dd>{itemCount}</dd>
-        </div>
-        <div>
-          <dt>Total</dt>
-          <dd>{formatCurrency(order?.totalAmount)}</dd>
-        </div>
-      </dl>
-      <div className="checkout-success__shipping">
-        <h2>Shipping snapshot</h2>
-        <p>{order?.recipientName}</p>
-        <p>{order?.phoneNumber}</p>
-        <p>{order?.shippingAddress}</p>
-      </div>
-      <Link className="button button--primary" to="/products">
-        Continue shopping
-      </Link>
-    </section>
-  );
-}
-
 export default function CheckoutPage() {
+  const navigate = useNavigate();
   const {
     cart,
     clearCartState,
@@ -360,7 +316,6 @@ export default function CheckoutPage() {
   const [orderState, setOrderState] = useState({
     status: "idle",
     message: "",
-    order: null,
   });
 
   const cartItems = getCartItems(cart);
@@ -529,17 +484,25 @@ export default function CheckoutPage() {
     setOrderState({
       status: "submitting",
       message: "",
-      order: null,
     });
 
     try {
       const order = await createOrder({ addressId: selectedAddressId });
 
       clearCartState();
+
+      if (!order?.id) {
+        setOrderState({
+          status: "error",
+          message: "Order was created, but the payment link could not be opened.",
+        });
+        return;
+      }
+
+      navigate(`/payment/${encodeURIComponent(order.id)}`);
       setOrderState({
-        status: "success",
+        status: "idle",
         message: "",
-        order,
       });
     } catch (error) {
       const message = getCheckoutErrorMessage(
@@ -550,7 +513,6 @@ export default function CheckoutPage() {
       setOrderState({
         status: "error",
         message,
-        order: null,
       });
 
       try {
@@ -599,10 +561,6 @@ export default function CheckoutPage() {
     refreshCart().catch(() => {
       // CartContext keeps the visible load error state.
     });
-  }
-
-  if (orderState.status === "success") {
-    return <OrderCreatedState order={orderState.order} />;
   }
 
   if (cartStatus === "loading" && !cartHasItems) {

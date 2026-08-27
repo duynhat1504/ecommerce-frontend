@@ -11,8 +11,7 @@
 }
 
 .checkout-page__kicker,
-.checkout-state__kicker,
-.checkout-success__kicker {
+.checkout-state__kicker {
   color: var(--color-coffee);
   font-size: 0.82rem;
   font-weight: 800;
@@ -21,8 +20,7 @@
 }
 
 .checkout-page h1,
-.checkout-state h1,
-.checkout-success h1 {
+.checkout-state h1 {
   max-width: 10ch;
   font-size: clamp(3rem, 7vw, 5.25rem);
 }
@@ -54,8 +52,7 @@
 }
 
 .checkout-section h2,
-.checkout-side h2,
-.checkout-success h2 {
+.checkout-side h2 {
   font-size: clamp(1.55rem, 2.5vw, 2.1rem);
 }
 
@@ -261,15 +258,13 @@
   white-space: nowrap;
 }
 
-.checkout-summary__totals,
-.checkout-success__details {
+.checkout-summary__totals {
   display: grid;
   gap: var(--space-sm);
   margin: 0;
 }
 
-.checkout-summary__totals div,
-.checkout-success__details div {
+.checkout-summary__totals div {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
@@ -278,14 +273,12 @@
   padding-bottom: var(--space-sm);
 }
 
-.checkout-summary__totals dt,
-.checkout-success__details dt {
+.checkout-summary__totals dt {
   color: var(--color-text-muted);
   font-weight: 700;
 }
 
-.checkout-summary__totals dd,
-.checkout-success__details dd {
+.checkout-summary__totals dd {
   margin: 0;
   color: var(--color-text);
   font-weight: 800;
@@ -301,8 +294,7 @@
   opacity: 0.55;
 }
 
-.checkout-state,
-.checkout-success {
+.checkout-state {
   min-height: calc(100dvh - var(--header-height));
   display: flex;
   flex-direction: column;
@@ -311,26 +303,6 @@
   gap: var(--space-lg);
   max-width: 52rem;
   padding: var(--space-3xl) 0;
-}
-
-.checkout-success {
-  justify-content: flex-start;
-}
-
-.checkout-success__details,
-.checkout-success__shipping {
-  width: min(100%, 42rem);
-}
-
-.checkout-success__shipping {
-  display: grid;
-  gap: var(--space-xs);
-  border-top: 1px solid var(--color-border);
-  padding-top: var(--space-lg);
-}
-
-.checkout-success__shipping p {
-  color: var(--color-text-muted);
 }
 
 @media (max-width: 980px) {
@@ -369,15 +341,13 @@
   }
 
   .checkout-page h1,
-  .checkout-state h1,
-  .checkout-success h1 {
+  .checkout-state h1 {
     font-size: clamp(2.7rem, 14vw, 4.2rem);
   }
 
   .checkout-address-form__actions,
   .checkout-address-form__actions .button,
-  .checkout-state .button,
-  .checkout-success .button {
+  .checkout-state .button {
     width: 100%;
   }
 }
