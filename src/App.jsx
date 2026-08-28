@@ -9,6 +9,7 @@ import AccountOrderDetailPage from "./pages/AccountOrderDetailPage.jsx";
 import AccountOrdersPage from "./pages/AccountOrdersPage.jsx";
 import AccountProfilePage from "./pages/AccountProfilePage.jsx";
 import AdminHomePage from "./pages/AdminHomePage.jsx";
+import AdminProductsPage from "./pages/AdminProductsPage.jsx";
 import CartPage from "./pages/CartPage.jsx";
 import CheckoutPage from "./pages/CheckoutPage.jsx";
 import HomePage from "./pages/HomePage.jsx";
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
           {
             index: true,
             element: <AdminHomePage />,
+          },
+          {
+            path: "products",
+            element: <AdminProductsPage />,
           },
         ],
       },
