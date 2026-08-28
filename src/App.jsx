@@ -2,11 +2,13 @@ import { Navigate, RouterProvider, createBrowserRouter } from "react-router-dom"
 
 import AdminRoute from "./auth/AdminRoute.jsx";
 import ProtectedRoute from "./auth/ProtectedRoute.jsx";
+import AdminLayout from "./layouts/AdminLayout.jsx";
 import StorefrontLayout from "./layouts/StorefrontLayout.jsx";
 import AccountAddressesPage from "./pages/AccountAddressesPage.jsx";
 import AccountOrderDetailPage from "./pages/AccountOrderDetailPage.jsx";
 import AccountOrdersPage from "./pages/AccountOrdersPage.jsx";
 import AccountProfilePage from "./pages/AccountProfilePage.jsx";
+import AdminHomePage from "./pages/AdminHomePage.jsx";
 import CartPage from "./pages/CartPage.jsx";
 import CheckoutPage from "./pages/CheckoutPage.jsx";
 import HomePage from "./pages/HomePage.jsx";
@@ -19,17 +21,22 @@ import ProductDetailPage from "./pages/ProductDetailPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
 import VerifyEmailPage from "./pages/VerifyEmailPage.jsx";
 
-function FoundationPage({ title, description }) {
-  return (
-    <section className="foundation-page" aria-labelledby="page-title">
-      <p className="foundation-page__kicker">CHẬM</p>
-      <h1 id="page-title">{title}</h1>
-      <p>{description}</p>
-    </section>
-  );
-}
-
 const router = createBrowserRouter([
+  {
+    path: "/admin",
+    element: <AdminRoute />,
+    children: [
+      {
+        element: <AdminLayout />,
+        children: [
+          {
+            index: true,
+            element: <AdminHomePage />,
+          },
+        ],
+      },
+    ],
+  },
   {
     path: "/",
     element: <StorefrontLayout />,
@@ -99,21 +106,6 @@ const router = createBrowserRouter([
           {
             path: "orders/:orderId",
             element: <AccountOrderDetailPage />,
-          },
-        ],
-      },
-      {
-        path: "admin",
-        element: <AdminRoute />,
-        children: [
-          {
-            index: true,
-            element: (
-              <FoundationPage
-                title="Admin"
-                description="Admin route protection is in place."
-              />
-            ),
           },
         ],
       },
