@@ -10,6 +10,7 @@ import AccountOrdersPage from "./pages/AccountOrdersPage.jsx";
 import AccountProfilePage from "./pages/AccountProfilePage.jsx";
 import AdminCategoriesPage from "./pages/AdminCategoriesPage.jsx";
 import AdminHomePage from "./pages/AdminHomePage.jsx";
+import AdminInventoryPage from "./pages/AdminInventoryPage.jsx";
 import AdminProductsPage from "./pages/AdminProductsPage.jsx";
 import CartPage from "./pages/CartPage.jsx";
 import CheckoutPage from "./pages/CheckoutPage.jsx";
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
           {
             path: "categories",
             element: <AdminCategoriesPage />,
+          },
+          {
+            path: "inventory",
+            element: <AdminInventoryPage />,
           },
         ],
       },

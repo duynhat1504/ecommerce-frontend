@@ -17,6 +17,10 @@ const adminNavItems = [
     to: "/admin/categories",
     label: "Categories",
   },
+  {
+    to: "/admin/inventory",
+    label: "Inventory",
+  },
 ];
 
 export default function AdminLayout() {
