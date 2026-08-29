@@ -1,0 +1,487 @@
+.admin-categories {
+  display: grid;
+  gap: var(--space-md);
+}
+
+.admin-categories__header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: var(--space-md);
+}
+
+.admin-categories__kicker {
+  margin-bottom: var(--space-2xs);
+  color: var(--color-coffee);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.admin-categories h1 {
+  max-width: none;
+  font-size: clamp(2rem, 3vw, 3rem);
+}
+
+.admin-categories h2 {
+  font-size: clamp(1.15rem, 1.5vw, 1.45rem);
+}
+
+.admin-categories__header-actions,
+.admin-categories-toolbar,
+.admin-categories-list__header,
+.admin-category-form__header,
+.admin-category-form__actions,
+.admin-categories-confirm,
+.admin-categories-confirm div {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.admin-categories__header-actions,
+.admin-categories-list__header,
+.admin-category-form__header,
+.admin-categories-confirm {
+  align-items: center;
+  justify-content: space-between;
+}
+
+.admin-categories-toolbar {
+  align-items: end;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: var(--space-md);
+}
+
+.admin-category-control,
+.admin-category-field,
+.admin-category-form,
+.admin-category-form__header > div,
+.admin-categories-list,
+.admin-categories-list__header > div,
+.admin-categories-state {
+  display: grid;
+}
+
+.admin-category-control,
+.admin-category-field,
+.admin-category-form__header > div,
+.admin-categories-list__header > div,
+.admin-categories-state {
+  gap: var(--space-2xs);
+}
+
+.admin-category-control {
+  min-width: min(15rem, 100%);
+}
+
+.admin-category-control label,
+.admin-category-field label {
+  color: var(--color-text);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.admin-category-control select,
+.admin-category-field input,
+.admin-category-field select,
+.admin-category-field textarea {
+  width: 100%;
+  min-height: 2.35rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0 var(--space-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.admin-category-field textarea {
+  min-height: 6.5rem;
+  padding-top: var(--space-sm);
+  resize: vertical;
+}
+
+.admin-category-field input[aria-invalid="true"],
+.admin-category-field select[aria-invalid="true"],
+.admin-category-field textarea[aria-invalid="true"] {
+  border-color: var(--color-error);
+}
+
+.admin-categories-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(4.5rem, auto));
+  gap: var(--space-sm);
+  margin: 0;
+}
+
+.admin-categories-summary div {
+  display: grid;
+  gap: 0.1rem;
+  border-left: 1px solid var(--color-border);
+  padding-left: var(--space-sm);
+}
+
+.admin-categories-summary dt {
+  color: var(--color-text-muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.admin-categories-summary dd {
+  margin: 0;
+  color: var(--color-text);
+  font-family: ui-monospace, "Cascadia Code", "SFMono-Regular", Consolas,
+    monospace;
+  font-size: 0.96rem;
+  font-weight: 800;
+}
+
+.admin-categories-layout {
+  display: grid;
+  gap: var(--space-lg);
+}
+
+.admin-categories-layout.has-form {
+  grid-template-columns: minmax(0, 1fr) minmax(19rem, 25rem);
+  align-items: start;
+}
+
+.admin-categories-list {
+  gap: var(--space-md);
+  min-width: 0;
+}
+
+.admin-categories-table-wrap {
+  overflow-x: auto;
+  border-top: 1px solid var(--color-border);
+}
+
+.admin-categories-table {
+  width: 100%;
+  min-width: 54rem;
+  border-collapse: collapse;
+}
+
+.admin-categories-table th,
+.admin-categories-table td {
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--space-xs) var(--space-sm);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.admin-categories-table thead th {
+  color: var(--color-text);
+  font-size: 0.74rem;
+  font-weight: 900;
+}
+
+.admin-categories-table tbody th {
+  font-weight: 700;
+}
+
+.admin-categories-table th:first-child,
+.admin-categories-table td:first-child {
+  padding-left: 0;
+}
+
+.admin-categories-table th:last-child,
+.admin-categories-table td:last-child {
+  width: 14rem;
+  padding-right: 0;
+}
+
+.admin-categories-row.is-deleted {
+  color: var(--color-text-muted);
+}
+
+.admin-categories-row__name,
+.admin-categories-row__meta,
+.admin-categories-row__muted {
+  display: block;
+}
+
+.admin-categories-row__name {
+  color: var(--color-text);
+  line-height: 1.25;
+}
+
+.admin-categories-row__meta {
+  margin-top: 0.1rem;
+  color: var(--color-text-muted);
+  font-family: ui-monospace, "Cascadia Code", "SFMono-Regular", Consolas,
+    monospace;
+  font-size: 0.72rem;
+  overflow-wrap: anywhere;
+}
+
+.admin-categories-row__muted {
+  color: var(--color-text-muted);
+}
+
+.admin-categories-number {
+  font-family: ui-monospace, "Cascadia Code", "SFMono-Regular", Consolas,
+    monospace;
+  font-size: 0.82rem;
+}
+
+.admin-categories-status {
+  display: inline-flex;
+  min-height: 1.65rem;
+  align-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0 var(--space-xs);
+  font-size: 0.76rem;
+  font-weight: 900;
+}
+
+.admin-categories-status--active {
+  background: rgb(105 113 93 / 0.12);
+  color: var(--color-accent-strong);
+}
+
+.admin-categories-status--inactive {
+  background: var(--color-surface-muted);
+  color: var(--color-text-muted);
+}
+
+.admin-categories-status--deleted {
+  background: rgb(159 47 47 / 0.1);
+  color: var(--color-error);
+}
+
+.admin-categories-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.admin-categories-text-button {
+  min-height: 2rem;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  padding: 0;
+  background: transparent;
+  color: var(--color-text);
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.admin-categories-text-button:hover:not(:disabled) {
+  border-color: currentColor;
+}
+
+.admin-categories-text-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.admin-categories-text-button--warning {
+  color: var(--color-coffee);
+}
+
+.admin-categories-text-button--danger,
+.admin-categories-alert,
+.admin-category-field__error {
+  color: var(--color-error);
+}
+
+.admin-categories-confirm-cell {
+  padding-top: 0;
+}
+
+.admin-categories-confirm {
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--space-xs);
+}
+
+.admin-categories-confirm p {
+  color: var(--color-text);
+  font-weight: 800;
+}
+
+.admin-categories-panel {
+  position: sticky;
+  top: var(--space-md);
+  display: grid;
+  gap: var(--space-sm);
+  border-left: 1px solid var(--color-border);
+  padding-left: var(--space-md);
+}
+
+.admin-category-form {
+  gap: var(--space-md);
+}
+
+.admin-category-form__actions {
+  flex-wrap: wrap;
+}
+
+.admin-categories-alert,
+.admin-category-field__error {
+  font-size: 0.86rem;
+}
+
+.admin-categories-alert {
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--space-sm);
+}
+
+.admin-categories-state {
+  justify-items: start;
+  gap: var(--space-sm);
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--space-lg);
+}
+
+.admin-categories-skeleton {
+  display: block;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-muted);
+}
+
+.admin-categories-skeleton--title {
+  width: min(14rem, 62vw);
+  height: 0.95rem;
+}
+
+.admin-categories-skeleton--wide {
+  width: min(21rem, 62vw);
+  height: 0.9rem;
+}
+
+.admin-categories-skeleton--short {
+  width: 5.5rem;
+  height: 0.9rem;
+}
+
+.admin-categories-skeleton--actions {
+  width: 10rem;
+  height: 1.25rem;
+}
+
+.admin-categories .button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+@media (max-width: 1180px) {
+  .admin-categories-layout.has-form {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-categories-panel {
+    position: static;
+    border-left: 0;
+    border-top: 1px solid var(--color-border);
+    padding-top: var(--space-md);
+    padding-left: 0;
+  }
+}
+
+@media (max-width: 760px) {
+  .admin-categories__header,
+  .admin-categories-list__header,
+  .admin-category-form__header,
+  .admin-categories-confirm {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .admin-categories__header-actions,
+  .admin-categories-toolbar {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-categories-summary {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .admin-categories {
+    gap: var(--space-sm);
+  }
+
+  .admin-categories__header-actions,
+  .admin-categories-toolbar,
+  .admin-category-form__actions,
+  .admin-categories-confirm div {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-categories__header-actions,
+  .admin-category-form__actions,
+  .admin-categories-confirm div {
+    display: grid;
+  }
+
+  .admin-categories-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-categories__header-actions .button,
+  .admin-category-form__actions .button,
+  .admin-categories-state .button,
+  .admin-categories-confirm .button {
+    width: 100%;
+  }
+
+  .admin-categories-table {
+    min-width: 0;
+  }
+
+  .admin-categories-table,
+  .admin-categories-table thead,
+  .admin-categories-table tbody,
+  .admin-categories-table tr,
+  .admin-categories-table th,
+  .admin-categories-table td {
+    display: block;
+  }
+
+  .admin-categories-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    clip-path: inset(50%);
+  }
+
+  .admin-categories-row {
+    border-bottom: 1px solid var(--color-border);
+    padding: var(--space-sm) 0;
+  }
+
+  .admin-categories-table th,
+  .admin-categories-table td,
+  .admin-categories-table th:first-child,
+  .admin-categories-table td:first-child,
+  .admin-categories-table th:last-child,
+  .admin-categories-table td:last-child {
+    width: auto;
+    border-bottom: 0;
+    padding: var(--space-2xs) 0;
+  }
+
+  .admin-categories-table td::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 0.1rem;
+    color: var(--color-text-muted);
+    font-size: 0.7rem;
+    font-weight: 900;
+  }
+
+  .admin-categories-confirm-cell {
+    padding-top: var(--space-sm);
+  }
+}
