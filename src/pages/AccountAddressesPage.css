@@ -93,6 +93,8 @@
 .account-address-row h3 {
   color: var(--color-text);
   font-size: 1.05rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .account-address-row p {

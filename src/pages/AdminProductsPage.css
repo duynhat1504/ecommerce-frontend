@@ -57,11 +57,6 @@
   padding-bottom: var(--space-md);
 }
 
-.admin-products-toolbar__note {
-  margin-left: auto;
-  font-size: 0.84rem;
-}
-
 .admin-product-control,
 .admin-product-field,
 .admin-product-form,
@@ -142,6 +137,7 @@
 .admin-products-table td {
   border-bottom: 1px solid var(--color-border);
   padding: var(--space-xs) var(--space-sm);
+  overflow-wrap: anywhere;
   text-align: left;
   vertical-align: middle;
 }
@@ -439,11 +435,6 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .admin-products-toolbar__note {
-    grid-column: 1 / -1;
-    margin-left: 0;
-  }
-
   .admin-product-form__grid {
     grid-template-columns: 1fr;
   }
@@ -518,6 +509,7 @@
     padding: var(--space-2xs) 0;
   }
 
+  .admin-products-table th[data-label]::before,
   .admin-products-table td::before {
     content: attr(data-label);
     display: block;

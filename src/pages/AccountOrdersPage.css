@@ -104,6 +104,7 @@
 .account-order-item strong {
   color: var(--color-text);
   font-weight: 800;
+  overflow-wrap: anywhere;
 }
 
 .account-order-row__reference,

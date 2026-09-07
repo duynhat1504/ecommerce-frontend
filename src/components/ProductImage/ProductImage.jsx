@@ -9,10 +9,13 @@ export default function ProductImage({ src, alt, className = "", loading = "lazy
 
   if (!src || hasFailed) {
     return (
-      <span className={`${classes} product-image--fallback`}>
-        <span className="product-image__fallback-text">
-          <span aria-hidden="true">Image unavailable</span>
-          <span className="sr-only">{`${imageAlt} unavailable`}</span>
+      <span
+        className={`${classes} product-image--fallback`}
+        role="img"
+        aria-label={`${imageAlt} unavailable`}
+      >
+        <span className="product-image__fallback-text" aria-hidden="true">
+          Image unavailable
         </span>
       </span>
     );
@@ -25,6 +28,7 @@ export default function ProductImage({ src, alt, className = "", loading = "lazy
         alt={imageAlt}
         className="product-image__media"
         loading={loading}
+        decoding="async"
         onError={() => setHasFailed(true)}
       />
     </span>

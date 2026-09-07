@@ -34,7 +34,7 @@ export default function AuthField({
         </p>
       ) : null}
       {error ? (
-        <p className="auth-field__error" id={errorId}>
+        <p className="auth-field__error" id={errorId} role="alert">
           {error}
         </p>
       ) : null}
