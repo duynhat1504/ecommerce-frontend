@@ -81,6 +81,7 @@
   color: var(--color-text);
   font-weight: 800;
   text-align: right;
+  overflow-wrap: anywhere;
 }
 
 .payment-actions {
@@ -148,11 +149,16 @@
   padding-bottom: var(--space-md);
 }
 
+.payment-summary-item > div {
+  min-width: 0;
+}
+
 .payment-summary-item h3 {
   color: var(--color-text);
   font-family: var(--font-body);
   font-size: 0.98rem;
   line-height: 1.25;
+  overflow-wrap: anywhere;
 }
 
 .payment-summary-item p:last-child {

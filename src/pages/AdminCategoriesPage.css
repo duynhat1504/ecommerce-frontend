@@ -169,6 +169,7 @@
 .admin-categories-table td {
   border-bottom: 1px solid var(--color-border);
   padding: var(--space-xs) var(--space-sm);
+  overflow-wrap: anywhere;
   text-align: left;
   vertical-align: middle;
 }
@@ -472,6 +473,7 @@
     padding: var(--space-2xs) 0;
   }
 
+  .admin-categories-table th[data-label]::before,
   .admin-categories-table td::before {
     content: attr(data-label);
     display: block;

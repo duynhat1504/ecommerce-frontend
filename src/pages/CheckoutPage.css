@@ -96,6 +96,7 @@
 }
 
 .checkout-address-option > span {
+  min-width: 0;
   display: grid;
   gap: var(--space-2xs);
 }
@@ -106,6 +107,7 @@
 
 .checkout-address-option span span {
   color: var(--color-text-muted);
+  overflow-wrap: anywhere;
 }
 
 .checkout-no-address,
@@ -230,6 +232,10 @@
   padding-bottom: var(--space-md);
 }
 
+.checkout-summary-item > div {
+  min-width: 0;
+}
+
 .checkout-summary-item__image {
   aspect-ratio: 4 / 5;
   border-radius: var(--radius-sm);
@@ -240,6 +246,7 @@
   font-family: var(--font-body);
   font-size: 0.98rem;
   line-height: 1.25;
+  overflow-wrap: anywhere;
 }
 
 .checkout-summary-item p {

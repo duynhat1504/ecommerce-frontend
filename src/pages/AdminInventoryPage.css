@@ -161,6 +161,7 @@
 .admin-inventory-table td {
   border-bottom: 1px solid var(--color-border);
   padding: var(--space-xs) var(--space-sm);
+  overflow-wrap: anywhere;
   text-align: left;
   vertical-align: middle;
 }
@@ -460,6 +461,7 @@
     padding: var(--space-2xs) 0;
   }
 
+  .admin-inventory-table th[data-label]::before,
   .admin-inventory-table td::before {
     content: attr(data-label);
     display: block;
