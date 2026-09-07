@@ -129,7 +129,7 @@ function PasswordField({
         </p>
       ) : null}
       {error ? (
-        <p className="account-profile-field__error" id={errorId}>
+        <p className="account-profile-field__error" id={errorId} role="alert">
           {error}
         </p>
       ) : null}

@@ -11,7 +11,11 @@ import AccountProfilePage from "./pages/AccountProfilePage.jsx";
 import AdminCategoriesPage from "./pages/AdminCategoriesPage.jsx";
 import AdminHomePage from "./pages/AdminHomePage.jsx";
 import AdminInventoryPage from "./pages/AdminInventoryPage.jsx";
+import AdminOrderDetailPage from "./pages/AdminOrderDetailPage.jsx";
+import AdminOrdersPage from "./pages/AdminOrdersPage.jsx";
 import AdminProductsPage from "./pages/AdminProductsPage.jsx";
+import AdminUserDetailPage from "./pages/AdminUserDetailPage.jsx";
+import AdminUsersPage from "./pages/AdminUsersPage.jsx";
 import CartPage from "./pages/CartPage.jsx";
 import CheckoutPage from "./pages/CheckoutPage.jsx";
 import HomePage from "./pages/HomePage.jsx";
@@ -47,6 +51,22 @@ const router = createBrowserRouter([
           {
             path: "inventory",
             element: <AdminInventoryPage />,
+          },
+          {
+            path: "orders",
+            element: <AdminOrdersPage />,
+          },
+          {
+            path: "orders/:orderId",
+            element: <AdminOrderDetailPage />,
+          },
+          {
+            path: "users",
+            element: <AdminUsersPage />,
+          },
+          {
+            path: "users/:userId",
+            element: <AdminUserDetailPage />,
           },
         ],
       },

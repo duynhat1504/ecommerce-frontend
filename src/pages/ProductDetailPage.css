@@ -54,6 +54,7 @@
 .product-detail h1 {
   max-width: 11ch;
   font-size: clamp(3rem, 6vw, 5.75rem);
+  overflow-wrap: anywhere;
 }
 
 .product-detail__price {
@@ -96,6 +97,7 @@
   margin: 0;
   color: var(--color-text);
   font-weight: 800;
+  overflow-wrap: anywhere;
 }
 
 .product-detail__unavailable {

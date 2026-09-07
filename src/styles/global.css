@@ -198,9 +198,11 @@ p {
   justify-content: center;
   border: 1px solid transparent;
   border-radius: var(--radius-md);
-  padding: 0 var(--space-md);
+  padding: var(--space-xs) var(--space-md);
   font-weight: 700;
-  line-height: 1;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+  text-align: center;
   transition:
     background-color 180ms ease,
     border-color 180ms ease,

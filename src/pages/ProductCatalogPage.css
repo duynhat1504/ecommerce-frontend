@@ -212,6 +212,7 @@
 .catalog-product h3 {
   font-size: clamp(1.02rem, 1.35vw, 1.2rem);
   line-height: 1.18;
+  overflow-wrap: anywhere;
 }
 
 .catalog-product__price {
