@@ -1,0 +1,21 @@
+:80 {
+  root * /usr/share/caddy
+
+  encode zstd gzip
+
+  header {
+    -Server
+    X-Content-Type-Options "nosniff"
+    X-Frame-Options "SAMEORIGIN"
+    Referrer-Policy "strict-origin-when-cross-origin"
+    Permissions-Policy "camera=(), geolocation=(), microphone=()"
+  }
+
+  @viteAssets path /assets/*
+  header @viteAssets Cache-Control "public, max-age=31536000, immutable"
+
+  # React Router uses browser history. Serve the app shell for client routes
+  # while allowing real static files to be served normally.
+  try_files {path} /index.html
+  file_server
+}
