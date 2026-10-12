@@ -4,10 +4,12 @@ import { useSearchParams } from "react-router-dom";
 import {
   createAdminProduct,
   deleteAdminProduct,
+  deleteAdminProductImage,
   getAdminProductById,
   getAdminProductCategories,
   getAdminProducts,
   updateAdminProduct,
+  uploadAdminProductImage,
 } from "../api/adminProductApi";
 import ProductImage from "../components/ProductImage/ProductImage";
 import { getBackendFieldErrors } from "../utils/authFormUtils";
@@ -19,10 +21,17 @@ const EMPTY_FORM = {
   description: "",
   price: "",
   stock: "",
-  imageUrl: "",
   categoryName: "",
   active: true,
 };
+
+const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+
+const ALLOWED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+];
 
 const PAGE_SIZE_OPTIONS = [10, 25, 50, 100];
 
@@ -214,12 +223,14 @@ function getProductFormPayload(values, mode) {
     name: values.name,
     description: values.description,
     price: values.price === "" ? null : Number(values.price),
-    imageUrl: values.imageUrl,
     categoryName: values.categoryName,
   };
 
   if (mode === "create") {
-    payload.stock = values.stock === "" ? null : Number.parseInt(values.stock, 10);
+    payload.stock =
+      values.stock === ""
+        ? null
+        : Number.parseInt(values.stock, 10);
   }
 
   if (mode === "edit") {
@@ -235,7 +246,6 @@ function getProductFormValues(product) {
     description: product?.description || "",
     price: product?.price ?? "",
     stock: product?.stock ?? "",
-    imageUrl: product?.imageUrl || "",
     categoryName: product?.categoryName || "",
     active: Boolean(product?.active),
   };
@@ -315,13 +325,19 @@ function ProductFormField({
 function ProductForm({
   categories,
   categoriesStatus,
+  currentImageUrl,
   fieldErrors,
   formMode,
   formValues,
+  isDeletingImage,
   isSubmitting,
   onCancel,
   onChange,
+  onDeleteImage,
+  onImageChange,
   onSubmit,
+  previewImageUrl,
+  selectedImageFile,
 }) {
   const isEdit = formMode === "edit";
   const title = isEdit ? "Edit product" : "Create product";
@@ -427,16 +443,47 @@ function ProductForm({
           ) : null}
         </ProductFormField>
 
-        <ProductFormField
-          id="admin-product-image-url"
-          name="imageUrl"
-          label="Image URL"
-          type="url"
-          value={formValues.imageUrl}
-          onChange={onChange}
-          maxLength={500}
-          error={fieldErrors.imageUrl}
-        />
+        <div className="admin-product-field">
+          <label htmlFor="admin-product-image">Product image</label>
+
+          <input
+            id="admin-product-image"
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            onChange={onImageChange}
+            disabled={isSubmitting || isDeletingImage}
+          />
+
+          <p className="admin-product-field__hint">
+            JPEG, PNG or WebP. Maximum 5 MB.
+          </p>
+
+          {selectedImageFile ? (
+            <p className="admin-product-field__hint">
+              Selected: {selectedImageFile.name}
+            </p>
+          ) : null}
+
+          {previewImageUrl || currentImageUrl ? (
+            <ProductImage
+              src={previewImageUrl || currentImageUrl}
+              alt="Product preview"
+              className="admin-product-form__image-preview"
+              loading="eager"
+            />
+          ) : null}
+
+          {formMode === "edit" && currentImageUrl && !selectedImageFile ? (
+            <button
+              type="button"
+              className="button button--ghost"
+              onClick={onDeleteImage}
+              disabled={isSubmitting || isDeletingImage}
+            >
+              {isDeletingImage ? "Deleting image..." : "Delete image"}
+            </button>
+          ) : null}
+        </div>
       </div>
 
       <ProductFormField
@@ -701,6 +748,9 @@ export default function AdminProductsPage() {
   const [formMode, setFormMode] = useState("closed");
   const [editingProductId, setEditingProductId] = useState("");
   const [formValues, setFormValues] = useState(EMPTY_FORM);
+  const [selectedImageFile, setSelectedImageFile] = useState(null);
+  const [currentImageUrl, setCurrentImageUrl] = useState("");
+  const [isDeletingImage, setIsDeletingImage] = useState(false);
   const [fieldErrors, setFieldErrors] = useState({});
   const [formError, setFormError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -850,6 +900,22 @@ export default function AdminProductsPage() {
     }
   }, [productQuery.page, productsState.data, searchParams, setSearchParams]);
 
+  const previewImageUrl = useMemo(() => {
+    if (!selectedImageFile) {
+      return "";
+    }
+
+    return URL.createObjectURL(selectedImageFile);
+  }, [selectedImageFile]);
+
+  useEffect(() => {
+    return () => {
+      if (previewImageUrl) {
+        URL.revokeObjectURL(previewImageUrl);
+      }
+    };
+  }, [previewImageUrl]);
+
   async function reloadProducts() {
     const response = await getAdminProducts(backendQuery);
     const data = normalizeProductPage(
@@ -906,10 +972,67 @@ export default function AdminProductsPage() {
     setSearchParams(nextParams);
   }
 
+  function handleImageChange(event) {
+    const file = event.target.files?.[0] || null;
+
+    if (!file) {
+      setSelectedImageFile(null);
+      setFormError("");
+      return;
+    }
+
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+      setSelectedImageFile(null);
+      setFormError("Only JPEG, PNG, and WebP images are allowed.");
+      event.target.value = "";
+      return;
+    }
+
+    if (file.size > MAX_IMAGE_SIZE) {
+      setSelectedImageFile(null);
+      setFormError("Image size must not exceed 5 MB.");
+      event.target.value = "";
+      return;
+    }
+
+    setSelectedImageFile(file);
+    setFormError("");
+  }
+
+  async function handleDeleteImage() {
+    if (!editingProductId || isDeletingImage) {
+      return;
+    }
+
+    setIsDeletingImage(true);
+    setFormError("");
+
+    try {
+      const updatedProduct =
+        await deleteAdminProductImage(editingProductId);
+
+      setCurrentImageUrl(updatedProduct.imageUrl || "");
+      setSelectedImageFile(null);
+
+      await reloadProducts();
+    } catch (error) {
+      setFormError(
+        getProductMutationErrorMessage(
+          error,
+          "Product image could not be deleted.",
+        ),
+      );
+    } finally {
+      setIsDeletingImage(false);
+    }
+  }
+
   function resetForm() {
     setFormMode("closed");
     setEditingProductId("");
     setFormValues(EMPTY_FORM);
+    setSelectedImageFile(null);
+    setCurrentImageUrl("");
     setFieldErrors({});
     setFormError("");
   }
@@ -918,6 +1041,8 @@ export default function AdminProductsPage() {
     setFormMode("create");
     setEditingProductId("");
     setFormValues(EMPTY_FORM);
+    setSelectedImageFile(null);
+    setCurrentImageUrl("");
     setFieldErrors({});
     setFormError("");
     setActionError("");
@@ -947,7 +1072,9 @@ export default function AdminProductsPage() {
       setFormMode("edit");
       setEditingProductId(productDetail.id);
       setFormValues(getProductFormValues(productDetail));
-    } catch (error) {
+      setSelectedImageFile(null);
+      setCurrentImageUrl(productDetail.imageUrl || "");
+      } catch (error) {
       setActionError(
         getProductMutationErrorMessage(error, "Product could not be opened."),
       );
@@ -986,10 +1113,22 @@ export default function AdminProductsPage() {
     try {
       const payload = getProductFormPayload(formValues, formMode);
 
+      let savedProduct;
+
       if (formMode === "edit") {
-        await updateAdminProduct(editingProductId, payload);
+        savedProduct = await updateAdminProduct(
+          editingProductId,
+          payload,
+        );
       } else {
-        await createAdminProduct(payload);
+        savedProduct = await createAdminProduct(payload);
+      }
+
+      if (selectedImageFile) {
+        await uploadAdminProductImage(
+          savedProduct.id,
+          selectedImageFile,
+        );
       }
 
       await reloadProducts();
@@ -997,8 +1136,12 @@ export default function AdminProductsPage() {
     } catch (error) {
       setFieldErrors(getProductFieldErrors(error));
       setFormError(
-        getProductMutationErrorMessage(error, "Product could not be saved."),
+        getProductMutationErrorMessage(
+          error,
+          "Product could not be saved.",
+        ),
       );
+
       await reloadProducts().catch(() => {});
     } finally {
       setIsSubmitting(false);
@@ -1068,7 +1211,6 @@ export default function AdminProductsPage() {
         name: product.name,
         description: product.description,
         price: product.price,
-        imageUrl: product.imageUrl,
         categoryName: product.categoryName,
         active: nextActive,
       });
@@ -1286,13 +1428,19 @@ export default function AdminProductsPage() {
             <ProductForm
               categories={categoriesState.items}
               categoriesStatus={categoriesState.status}
+              currentImageUrl={currentImageUrl}
               fieldErrors={fieldErrors}
               formMode={formMode}
               formValues={formValues}
+              isDeletingImage={isDeletingImage}
               isSubmitting={isSubmitting}
               onCancel={resetForm}
               onChange={handleFormChange}
+              onDeleteImage={handleDeleteImage}
+              onImageChange={handleImageChange}
               onSubmit={handleFormSubmit}
+              previewImageUrl={previewImageUrl}
+              selectedImageFile={selectedImageFile}
             />
           </aside>
         ) : null}
