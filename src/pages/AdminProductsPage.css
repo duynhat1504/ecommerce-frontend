@@ -523,3 +523,28 @@
     padding-top: var(--space-sm);
   }
 }
+
+.admin-product-form__image-preview {
+  display: block;
+  width: 100%;
+  max-width: 220px;
+  aspect-ratio: 1;
+  margin-top: 0.75rem;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.admin-product-field__hint {
+  margin: 0.4rem 0 0;
+  font-size: 0.85rem;
+  color: var(--color-text-muted, #6b7280);
+}
+
+.admin-product-field input[type="file"] {
+  width: 100%;
+  margin-top: 0.35rem;
+}
+
+.admin-product-field .button {
+  margin-top: 0.75rem;
+}

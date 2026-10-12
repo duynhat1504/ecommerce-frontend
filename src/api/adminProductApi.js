@@ -84,3 +84,35 @@ export async function getAdminProductCategories(params = {}, options = {}) {
 
   return unwrapApiResponse(response);
 }
+
+export async function uploadAdminProductImage(
+  productId,
+  file,
+  options = {},
+) {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const response = await apiRequest(
+    `/admin/products/${encodeURIComponent(productId)}/image`,
+    {
+      method: "POST",
+      body: formData,
+      ...options,
+    },
+  );
+
+  return unwrapApiResponse(response);
+}
+
+export async function deleteAdminProductImage(productId, options = {}) {
+  const response = await apiRequest(
+    `/admin/products/${encodeURIComponent(productId)}/image`,
+    {
+      method: "DELETE",
+      ...options,
+    },
+  );
+
+  return unwrapApiResponse(response);
+}
