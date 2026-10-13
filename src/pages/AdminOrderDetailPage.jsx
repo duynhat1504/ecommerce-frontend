@@ -13,14 +13,14 @@ const UUID_PATTERN =
 
 const STATUS_TRANSITIONS = {
   PENDING: [
-    { status: "CONFIRMED", label: "Confirm" },
-    { status: "CANCELLED", label: "Cancel" },
+    { status: "CONFIRMED", label: "Xác nhận" },
+    { status: "CANCELLED", label: "Hủy đơn" },
   ],
   CONFIRMED: [
-    { status: "SHIPPING", label: "Mark shipping" },
-    { status: "CANCELLED", label: "Cancel" },
+    { status: "SHIPPING", label: "Chuyển sang đang giao" },
+    { status: "CANCELLED", label: "Hủy đơn" },
   ],
-  SHIPPING: [{ status: "COMPLETED", label: "Complete" }],
+  SHIPPING: [{ status: "COMPLETED", label: "Hoàn thành" }],
   COMPLETED: [],
   CANCELLED: [],
   EXPIRED: [],
@@ -38,11 +38,20 @@ function getOrderItemCount(order) {
 }
 
 function getOrderReference(order) {
-  return order?.orderCode || order?.id || "Order";
+  return order?.orderCode || order?.id || "Đơn hàng";
 }
 
 function getStatusLabel(status) {
-  return status ? status.replaceAll("_", " ") : "Unavailable";
+  const labels = {
+    PENDING: "Chờ xác nhận",
+    CONFIRMED: "Đã xác nhận",
+    SHIPPING: "Đang giao",
+    COMPLETED: "Hoàn thành",
+    CANCELLED: "Đã hủy",
+    EXPIRED: "Hết hạn",
+  };
+
+  return labels[status] || "Không khả dụng";
 }
 
 function getDateTimeLabel(value) {
@@ -66,72 +75,72 @@ function getDetailErrorState(error) {
   if (error?.status === 404) {
     return {
       status: "missing",
-      message: "Order not found.",
+      message: "Không tìm thấy đơn hàng.",
     };
   }
 
   if (error?.status === 400) {
     return {
       status: "missing",
-      message: error.message || "The order identifier was rejected.",
+      message: "Mã định danh đơn hàng không hợp lệ.",
     };
   }
 
   if (error?.status === 401 || error?.status === 403) {
     return {
       status: "error",
-      message: "Admin access is required. Sign in again with an admin account.",
+      message: "Cần quyền quản trị. Hãy đăng nhập lại bằng tài khoản quản trị.",
     };
   }
 
   if (error?.status >= 500) {
     return {
       status: "error",
-      message: "The order service is unavailable right now.",
+      message: "Dịch vụ đơn hàng hiện không khả dụng.",
     };
   }
 
   if (!error?.status) {
     return {
       status: "network",
-      message: "Network connection failed. Check the API server and try again.",
+      message: "Kết nối mạng thất bại. Hãy kiểm tra máy chủ API rồi thử lại.",
     };
   }
 
   return {
     status: "error",
-    message: "Order details could not be loaded.",
+    message: "Không thể tải chi tiết đơn hàng.",
   };
 }
 
 function getMutationMessage(error, status) {
   if (error?.status === 404) {
-    return "Order not found. The order may have been removed or the id is invalid.";
+    return "Không tìm thấy đơn hàng. Đơn hàng có thể đã bị xóa hoặc mã không hợp lệ.";
   }
 
   if (error?.status === 400) {
-    const backendMessage = error.message || "The backend rejected this transition.";
+    const backendMessage = error.message || "";
 
     if (backendMessage.startsWith("Cannot change order status")) {
-      return `Invalid transition: ${backendMessage}`;
+      return "Không thể chuyển trạng thái đơn hàng theo thao tác này.";
     }
 
-    return backendMessage;
+    return "Backend từ chối thay đổi trạng thái đơn hàng.";
   }
 
   if (error?.status === 401 || error?.status === 403) {
-    return "Admin access is required. Sign in again with an admin account.";
+    return "Cần quyền quản trị. Hãy đăng nhập lại bằng tài khoản quản trị.";
   }
 
   if (error?.status >= 500) {
-    return "The order service rejected the status change right now.";
+    return "Dịch vụ đơn hàng hiện không thể đổi trạng thái.";
   }
 
   if (!error?.status) {
-    return "Network connection failed. The order was not changed locally.";
+    return "Kết nối mạng thất bại. Đơn hàng chưa được thay đổi.";
   }
 
-  return `Could not change order status to ${getStatusLabel(status)}.`;
+  return `Không thể đổi trạng thái đơn hàng thành ${getStatusLabel(status)}.`;
 }
 
 function AdminOrderDetailState({ alert = false, action, message, title }) {
@@ -141,7 +150,7 @@ function AdminOrderDetailState({ alert = false, action, message, title }) {
       aria-labelledby="admin-order-detail-state-title"
       role={alert ? "alert" : undefined}
     >
-      <p className="admin-orders__kicker">Admin orders</p>
+      <p className="admin-orders__kicker">Quản lý đơn hàng</p>
       <h1 id="admin-order-detail-state-title">{title}</h1>
       <p>{message}</p>
       {action}
@@ -172,11 +181,11 @@ function OrderFacts({ order }) {
   return (
     <dl className="admin-order-facts">
       <div>
-        <dt>Reference</dt>
+        <dt>Mã đơn hàng</dt>
         <dd>{getOrderReference(order)}</dd>
       </div>
       <div>
-        <dt>Status</dt>
+        <dt>Trạng thái</dt>
         <dd>
           <span
             className={`admin-orders-status admin-orders-status--${String(
@@ -188,16 +197,16 @@ function OrderFacts({ order }) {
         </dd>
       </div>
       <div>
-        <dt>Placed</dt>
+        <dt>Ngày đặt</dt>
         <dd>{getDateTimeLabel(order?.createdAt)}</dd>
       </div>
       <div>
-        <dt>Updated</dt>
+        <dt>Cập nhật</dt>
         <dd>{getDateTimeLabel(order?.updatedAt)}</dd>
       </div>
       <div>
-        <dt>Order id</dt>
-        <dd>{order?.id || "Unavailable"}</dd>
+        <dt>Mã định danh đơn hàng</dt>
+        <dd>{order?.id || "Không khả dụng"}</dd>
       </div>
     </dl>
   );
@@ -208,37 +217,37 @@ function OrderItems({ order }) {
 
   return (
     <section className="admin-order-section" aria-labelledby="admin-order-items-title">
-      <h2 id="admin-order-items-title">Item snapshot</h2>
+      <h2 id="admin-order-items-title">Chi tiết sản phẩm</h2>
       <div className="admin-orders-table-wrap">
         <table className="admin-orders-table admin-orders-table--items">
-          <caption className="sr-only">Historical order item records</caption>
+          <caption className="sr-only">Chi tiết sản phẩm trong đơn hàng</caption>
           <thead>
             <tr>
-              <th scope="col">Product</th>
-              <th scope="col">Unit price</th>
-              <th scope="col">Quantity</th>
-              <th scope="col">Subtotal</th>
+              <th scope="col">Sản phẩm</th>
+              <th scope="col">Đơn giá</th>
+              <th scope="col">Số lượng</th>
+              <th scope="col">Thành tiền</th>
             </tr>
           </thead>
           <tbody>
             {items.map((item, index) => (
               <tr className="admin-orders-row" key={`${item.productId || item.productName}-${index}`}>
-                <th scope="row" data-label="Product">
+                <th scope="row" data-label="Sản phẩm">
                   <span className="admin-orders-row__name">
-                    {item.productName || "Product"}
+                    {item.productName || "Sản phẩm"}
                   </span>
                   <span className="admin-orders-row__meta">
-                    {item.productId || "Historical item"}
+                    {item.productId || "Sản phẩm đã lưu"}
                   </span>
                 </th>
-                <td data-label="Unit price" className="admin-orders-number">
-                  {formatCurrency(item.unitPrice) || "Unavailable"}
+                <td data-label="Đơn giá" className="admin-orders-number">
+                  {formatCurrency(item.unitPrice) || "Không khả dụng"}
                 </td>
-                <td data-label="Quantity" className="admin-orders-number">
+                <td data-label="Số lượng" className="admin-orders-number">
                   {Number.isFinite(Number(item.quantity)) ? item.quantity : "0"}
                 </td>
-                <td data-label="Subtotal" className="admin-orders-number">
-                  {formatCurrency(item.subtotal) || "Unavailable"}
+                <td data-label="Thành tiền" className="admin-orders-number">
+                  {formatCurrency(item.subtotal) || "Không khả dụng"}
                 </td>
               </tr>
             ))}
@@ -252,19 +261,19 @@ function OrderItems({ order }) {
 function ShippingSnapshot({ order }) {
   return (
     <section className="admin-order-section" aria-labelledby="admin-order-shipping-title">
-      <h2 id="admin-order-shipping-title">Shipping snapshot</h2>
+      <h2 id="admin-order-shipping-title">Thông tin giao hàng</h2>
       <dl className="admin-order-facts">
         <div>
-          <dt>Recipient</dt>
-          <dd>{order?.recipientName || "Unavailable"}</dd>
+          <dt>Người nhận</dt>
+          <dd>{order?.recipientName || "Không khả dụng"}</dd>
         </div>
         <div>
-          <dt>Phone</dt>
-          <dd>{order?.phoneNumber || "Unavailable"}</dd>
+          <dt>Số điện thoại</dt>
+          <dd>{order?.phoneNumber || "Không khả dụng"}</dd>
         </div>
         <div>
-          <dt>Address</dt>
-          <dd>{order?.shippingAddress || "Unavailable"}</dd>
+          <dt>Địa chỉ</dt>
+          <dd>{order?.shippingAddress || "Không khả dụng"}</dd>
         </div>
       </dl>
     </section>
@@ -283,23 +292,23 @@ function StatusActions({
   return (
     <aside className="admin-order-panel" aria-labelledby="admin-order-status-title">
       <div className="admin-order-panel__header">
-        <h2 id="admin-order-status-title">Status</h2>
+        <h2 id="admin-order-status-title">Trạng thái</h2>
         <span className="admin-orders-number">{getStatusLabel(order?.status)}</span>
       </div>
 
       <dl className="admin-order-facts admin-order-facts--compact">
         <div>
-          <dt>Items</dt>
+          <dt>Sản phẩm</dt>
           <dd>{getOrderItemCount(order)}</dd>
         </div>
         <div>
-          <dt>Total</dt>
-          <dd>{formatCurrency(order?.totalAmount) || "Unavailable"}</dd>
+          <dt>Tổng tiền</dt>
+          <dd>{formatCurrency(order?.totalAmount) || "Không khả dụng"}</dd>
         </div>
       </dl>
 
       {transitions.length ? (
-        <div className="admin-order-actions" aria-label="Supported status actions">
+        <div className="admin-order-actions" aria-label="Các thao tác trạng thái được hỗ trợ">
           {transitions.map((transition) => (
             <button
               key={transition.status}
@@ -312,13 +321,13 @@ function StatusActions({
               onClick={() => onChangeStatus(transition.status)}
               disabled={isMutating}
             >
-              {mutatingStatus === transition.status ? "Saving..." : transition.label}
+              {mutatingStatus === transition.status ? "Đang lưu..." : transition.label}
             </button>
           ))}
         </div>
       ) : (
         <p className="admin-order-note">
-          No status actions are supported from this state.
+          Không có thao tác trạng thái nào cho trạng thái này.
         </p>
       )}
 
@@ -413,7 +422,7 @@ export default function AdminOrderDetailPage() {
         await loadOrder();
       } catch {
         setActionMessage(
-          "Status request finished, but the refreshed order could not be loaded.",
+          "Đã gửi yêu cầu trạng thái, nhưng không thể tải lại đơn hàng.",
         );
       }
     } catch (error) {
@@ -432,11 +441,11 @@ export default function AdminOrderDetailPage() {
   if (!isValidOrderId) {
     return (
       <AdminOrderDetailState
-        title="Order not found."
-        message="The order identifier is not a valid UUID."
+        title="Không tìm thấy đơn hàng."
+        message="Mã định danh đơn hàng không phải UUID hợp lệ."
         action={
           <Link className="button button--primary" to="/admin/orders">
-            Back to orders
+            Quay lại đơn hàng
           </Link>
         }
       />
@@ -450,11 +459,11 @@ export default function AdminOrderDetailPage() {
   if (orderState.status === "missing") {
     return (
       <AdminOrderDetailState
-        title="Order not found."
+        title="Không tìm thấy đơn hàng."
         message={orderState.message}
         action={
           <Link className="button button--primary" to="/admin/orders">
-            Back to orders
+            Quay lại đơn hàng
           </Link>
         }
       />
@@ -464,16 +473,16 @@ export default function AdminOrderDetailPage() {
   if (orderState.status === "error" || orderState.status === "network") {
     return (
       <AdminOrderDetailState
-        title="Order unavailable."
+        title="Đơn hàng không khả dụng."
         message={orderState.message}
         alert
         action={
           <div className="admin-orders-state__actions">
             <button type="button" className="button button--ghost" onClick={handleRetry}>
-              Retry
+              Thử lại
             </button>
             <Link className="button button--primary" to="/admin/orders">
-              Back to orders
+              Quay lại đơn hàng
             </Link>
           </div>
         }
@@ -487,11 +496,11 @@ export default function AdminOrderDetailPage() {
     <article className="admin-order-detail" aria-labelledby="admin-order-detail-title">
       <header className="admin-order-detail__header">
         <Link className="admin-orders-text-link" to="/admin/orders">
-          Back to orders
+          Quay lại đơn hàng
         </Link>
         <div className="admin-order-detail__heading">
           <div>
-            <p className="admin-orders__kicker">Admin order</p>
+            <p className="admin-orders__kicker">Đơn hàng quản trị</p>
             <h1 id="admin-order-detail-title">{getOrderReference(order)}</h1>
           </div>
           <button
@@ -500,7 +509,7 @@ export default function AdminOrderDetailPage() {
             onClick={handleRetry}
             disabled={orderState.status === "loading" || Boolean(mutatingStatus)}
           >
-            Refresh
+            Làm mới
           </button>
         </div>
       </header>
@@ -508,7 +517,7 @@ export default function AdminOrderDetailPage() {
       <div className="admin-order-detail__layout">
         <div className="admin-order-detail__main">
           <section className="admin-order-section" aria-labelledby="admin-order-facts-title">
-            <h2 id="admin-order-facts-title">Order details</h2>
+            <h2 id="admin-order-facts-title">Chi tiết đơn hàng</h2>
             <OrderFacts order={order} />
           </section>
 

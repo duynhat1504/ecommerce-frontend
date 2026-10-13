@@ -28,9 +28,9 @@ function canCheckout(items) {
 function CartLoadingState() {
   return (
     <section className="cart-state" aria-live="polite">
-      <p className="cart-state__kicker">Cart</p>
-      <h1>Loading your cart.</h1>
-      <p>Your current cart is being retrieved.</p>
+      <p className="cart-state__kicker">Giỏ hàng</p>
+      <h1>Đang tải giỏ hàng.</h1>
+      <p>Giỏ hàng của bạn đang được tải.</p>
     </section>
   );
 }
@@ -38,15 +38,15 @@ function CartLoadingState() {
 function CartErrorState({ message, onRetry }) {
   return (
     <section className="cart-state" aria-labelledby="cart-error-title" role="alert">
-      <p className="cart-state__kicker">Cart</p>
-      <h1 id="cart-error-title">Cart unavailable.</h1>
-      <p>{message || "Your cart could not be loaded right now."}</p>
+      <p className="cart-state__kicker">Giỏ hàng</p>
+      <h1 id="cart-error-title">Giỏ hàng không khả dụng.</h1>
+      <p>{message || "Không thể tải giỏ hàng của bạn vào lúc này."}</p>
       <div className="cart-state__actions">
         <button type="button" className="button button--ghost" onClick={onRetry}>
-          Retry
+          Thử lại
         </button>
         <Link className="button button--primary" to="/products">
-          Browse products
+          Xem sản phẩm
         </Link>
       </div>
     </section>
@@ -56,11 +56,11 @@ function CartErrorState({ message, onRetry }) {
 function EmptyCartState() {
   return (
     <section className="cart-state" aria-labelledby="empty-cart-title">
-      <p className="cart-state__kicker">Cart</p>
-      <h1 id="empty-cart-title">Your cart is empty.</h1>
-      <p>Browse the shop and add objects when you are ready.</p>
+      <p className="cart-state__kicker">Giỏ hàng</p>
+      <h1 id="empty-cart-title">Giỏ hàng của bạn đang trống.</h1>
+      <p>Khám phá cửa hàng và thêm sản phẩm khi bạn sẵn sàng.</p>
       <Link className="button button--primary" to="/products">
-        Browse products
+        Xem sản phẩm
       </Link>
     </section>
   );
@@ -83,14 +83,14 @@ function CartQuantityControl({
     <div
       className="cart-quantity"
       role="group"
-      aria-label={`Quantity for ${item.productName}`}
+      aria-label={`Số lượng của ${item.productName}`}
     >
       <button
         type="button"
         className="cart-quantity__button"
         onClick={() => onQuantityChange(item.productId, quantity - 1)}
         disabled={!canDecrease}
-        aria-label={`Decrease quantity for ${item.productName}`}
+        aria-label={`Giảm số lượng của ${item.productName}`}
       >
         -
       </button>
@@ -102,7 +102,7 @@ function CartQuantityControl({
         className="cart-quantity__button"
         onClick={() => onQuantityChange(item.productId, quantity + 1)}
         disabled={!canIncrease}
-        aria-label={`Increase quantity for ${item.productName}`}
+        aria-label={`Tăng số lượng của ${item.productName}`}
       >
         +
       </button>
@@ -116,7 +116,7 @@ function CartRow({
   onQuantityChange,
   onRemove,
 }) {
-  const productName = item.productName || "Product";
+  const productName = item.productName || "Sản phẩm";
   const productPath = item.productId
     ? `/products/${encodeURIComponent(item.productId)}`
     : "/products";
@@ -124,7 +124,7 @@ function CartRow({
 
   return (
     <article className="cart-row" aria-label={productName}>
-      <Link className="cart-row__image-link" to={productPath} aria-label={`View ${productName}`}>
+      <Link className="cart-row__image-link" to={productPath} aria-label={`Xem ${productName}`}>
         <ProductImage
           src={item.imageUrl}
           alt={productName}
@@ -138,7 +138,7 @@ function CartRow({
         </Link>
         {item.available === false ? (
           <p className="cart-row__availability">
-            {item.unavailableReason || "This item is currently unavailable."}
+            {item.unavailableReason || "Sản phẩm này hiện không khả dụng."}
           </p>
         ) : null}
         <p className="cart-row__unit-price">{formatCurrency(item.unitPrice)}</p>
@@ -156,12 +156,12 @@ function CartRow({
           onClick={() => onRemove(item.productId)}
           disabled={isPending}
         >
-          Remove
+          Xóa
         </button>
       </div>
 
       <p className="cart-row__subtotal">
-        <span>Subtotal</span>
+        <span>Thành tiền</span>
         <strong>{formatCurrency(lineSubtotal)}</strong>
       </p>
     </article>
@@ -203,7 +203,7 @@ export default function CartPage() {
       await updateItem(productId, quantity);
     } catch (requestError) {
       setMutationError(
-        getCartErrorMessage(requestError, "Quantity could not be updated."),
+        getCartErrorMessage(requestError, "Không thể cập nhật số lượng."),
       );
       try {
         await refreshCart();
@@ -227,7 +227,7 @@ export default function CartPage() {
       await removeItem(productId);
     } catch (requestError) {
       setMutationError(
-        getCartErrorMessage(requestError, "Item could not be removed."),
+        getCartErrorMessage(requestError, "Không thể xóa sản phẩm."),
       );
       try {
         await refreshCart();
@@ -252,7 +252,7 @@ export default function CartPage() {
       setIsConfirmingClear(false);
     } catch (requestError) {
       setMutationError(
-        getCartErrorMessage(requestError, "Cart could not be cleared."),
+        getCartErrorMessage(requestError, "Không thể xóa giỏ hàng."),
       );
     } finally {
       setPendingAction("");
@@ -280,9 +280,9 @@ export default function CartPage() {
   return (
     <section className="cart-page" aria-labelledby="cart-title">
       <div className="cart-page__header">
-        <p className="cart-page__kicker">Cart</p>
-        <h1 id="cart-title">Your cart</h1>
-        <p>{totalItems} {totalItems === 1 ? "item" : "items"}</p>
+        <p className="cart-page__kicker">Giỏ hàng</p>
+        <h1 id="cart-title">Giỏ hàng của bạn</h1>
+        <p>{totalItems} sản phẩm</p>
       </div>
 
       {mutationError ? (
@@ -292,7 +292,7 @@ export default function CartPage() {
       ) : null}
 
       <div className="cart-layout">
-        <div className="cart-items" aria-label="Cart items">
+        <div className="cart-items" aria-label="Sản phẩm trong giỏ hàng">
           {items.map((item) => {
             const pendingKey =
               item.productId && pendingAction.includes(item.productId)
@@ -312,36 +312,36 @@ export default function CartPage() {
         </div>
 
         <aside className="cart-summary" aria-labelledby="cart-summary-title">
-          <h2 id="cart-summary-title">Summary</h2>
+          <h2 id="cart-summary-title">Tóm tắt</h2>
           <dl>
             <div>
-              <dt>Items</dt>
+              <dt>Sản phẩm</dt>
               <dd>{totalItems}</dd>
             </div>
             <div>
-              <dt>Order subtotal</dt>
+              <dt>Tạm tính</dt>
               <dd>{formatCurrency(totalPrice)}</dd>
             </div>
           </dl>
 
           <Link className="button button--ghost cart-summary__continue" to="/products">
-            Continue shopping
+            Tiếp tục mua sắm
           </Link>
 
           {isCheckoutAvailable ? (
             <Link className="button button--primary cart-summary__checkout" to="/checkout">
-              Proceed to checkout
+              Thanh toán
             </Link>
           ) : (
             <div className="cart-summary__checkout-blocked" role="status">
-              Resolve unavailable items before checkout.
+              Hãy xử lý các sản phẩm không khả dụng trước khi thanh toán.
             </div>
           )}
 
           <div className="cart-summary__clear">
             {isConfirmingClear ? (
-              <div className="cart-summary__confirm" role="group" aria-label="Clear cart confirmation">
-                <p>Clear all items from your cart?</p>
+              <div className="cart-summary__confirm" role="group" aria-label="Xác nhận xóa giỏ hàng">
+                <p>Xóa tất cả sản phẩm khỏi giỏ hàng?</p>
                 <div>
                   <button
                     type="button"
@@ -349,7 +349,7 @@ export default function CartPage() {
                     onClick={() => setIsConfirmingClear(false)}
                     disabled={pendingAction === "clear"}
                   >
-                    Keep cart
+                    Giữ giỏ hàng
                   </button>
                   <button
                     type="button"
@@ -357,7 +357,7 @@ export default function CartPage() {
                     onClick={handleClearCart}
                     disabled={pendingAction === "clear"}
                   >
-                    {pendingAction === "clear" ? "Clearing..." : "Clear cart"}
+                    {pendingAction === "clear" ? "Đang xóa..." : "Xóa giỏ hàng"}
                   </button>
                 </div>
               </div>
@@ -367,7 +367,7 @@ export default function CartPage() {
                 className="cart-summary__clear-button"
                 onClick={() => setIsConfirmingClear(true)}
               >
-                Clear cart
+                Xóa giỏ hàng
               </button>
             )}
           </div>

@@ -1,31 +1,31 @@
 const CHECKOUT_ERROR_MESSAGES = [
   {
     test: (message) => message === "Cart is empty",
-    message: "Your cart is empty. Add products before placing an order.",
+    message: "Giỏ hàng của bạn đang trống. Hãy thêm sản phẩm trước khi đặt hàng.",
   },
   {
     test: (message) => message === "Shipping address not found",
-    message: "Choose another shipping address or add a new one.",
+    message: "Hãy chọn địa chỉ giao hàng khác hoặc thêm địa chỉ mới.",
   },
   {
     test: (message) => message.includes("Insufficient stock"),
-    message: "Some items no longer have enough stock. Review your cart and try again.",
+    message: "Một số sản phẩm không còn đủ tồn kho. Hãy kiểm tra giỏ hàng và thử lại.",
   },
   {
     test: (message) => message.includes("Product is not available"),
-    message: "Some items are no longer available. Review your cart before ordering.",
+    message: "Một số sản phẩm không còn khả dụng. Hãy kiểm tra giỏ hàng trước khi đặt hàng.",
   },
   {
     test: (message) => message.includes("Product category is not available"),
-    message: "Some items are no longer available. Review your cart before ordering.",
+    message: "Một số sản phẩm không còn khả dụng. Hãy kiểm tra giỏ hàng trước khi đặt hàng.",
   },
   {
     test: (message) => message.includes("One or more products"),
-    message: "Some cart items changed. Review your cart before ordering.",
+    message: "Một số sản phẩm trong giỏ hàng đã thay đổi. Hãy kiểm tra lại trước khi đặt hàng.",
   },
   {
     test: (message) => message === "Validation failed",
-    message: "Check the required fields and try again.",
+    message: "Kiểm tra các trường bắt buộc rồi thử lại.",
   },
 ];
 
@@ -35,7 +35,7 @@ export function getCheckoutErrorMessage(error, fallback) {
   }
 
   if (error?.status === 401 || error?.status === 403) {
-    return "Sign in again to continue checkout.";
+    return "Hãy đăng nhập lại để tiếp tục thanh toán.";
   }
 
   const backendMessage = error?.message || "";
@@ -48,7 +48,7 @@ export function getCheckoutErrorMessage(error, fallback) {
   }
 
   if (error?.status >= 500) {
-    return "Checkout is unavailable right now. Please try again later.";
+    return "Chức năng thanh toán hiện không khả dụng. Vui lòng thử lại sau.";
   }
 
   return fallback;

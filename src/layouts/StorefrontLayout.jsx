@@ -5,17 +5,17 @@ import useAuth from "../auth/useAuth";
 import useCart from "../cart/useCart";
 
 const navItems = [
-  { to: "/", label: "Home", end: true },
-  { to: "/products", label: "Shop" },
-  { to: "/cart", label: "Cart" },
-  { to: "/account/profile", label: "Account" },
+  { to: "/", label: "Trang chủ", end: true },
+  { to: "/products", label: "Sản phẩm" },
+  { to: "/cart", label: "Giỏ hàng" },
+  { to: "/account/profile", label: "Tài khoản" },
 ];
 
 export default function StorefrontLayout() {
   const { isAdmin, isAuthenticated, logout, user } = useAuth();
   const { itemCount } = useCart();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const cartLabel = isAuthenticated && itemCount > 0 ? `Cart ${itemCount}` : "Cart";
+  const cartLabel = isAuthenticated && itemCount > 0 ? `Giỏ hàng ${itemCount}` : "Giỏ hàng";
 
   function closeMenu() {
     setIsMenuOpen(false);
@@ -42,11 +42,11 @@ export default function StorefrontLayout() {
   return (
     <div className="app-shell">
       <header className="site-header">
-        <nav className="site-nav" aria-label="Primary navigation">
-          <Link className="site-brand" to="/" aria-label="CHẬM home">
+        <nav className="site-nav" aria-label="Điều hướng chính">
+          <Link className="site-brand" to="/" aria-label="Trang chủ CHẬM">
             <span className="site-brand__mark">CHẬM</span>
             <span className="site-brand__line">
-              Coffee tools for slower mornings.
+              Dụng cụ cà phê cho những buổi sáng chậm rãi.
             </span>
           </Link>
 
@@ -57,7 +57,7 @@ export default function StorefrontLayout() {
             aria-controls="primary-navigation"
             onClick={() => setIsMenuOpen((current) => !current)}
           >
-            Menu
+            Trình đơn
           </button>
 
           <div
@@ -87,14 +87,14 @@ export default function StorefrontLayout() {
                   isActive ? "site-nav__link is-active" : "site-nav__link"
                 }
               >
-                Admin
+                Quản trị
               </NavLink>
             ) : null}
             <div className="site-nav__mobile-actions">
               {isAuthenticated ? (
                 <>
                   <span className="site-nav__mobile-user">
-                    {user?.fullName || "Account"}
+                    {user?.fullName || "Tài khoản"}
                   </span>
                   <button
                     className="site-nav__mobile-action"
@@ -104,7 +104,7 @@ export default function StorefrontLayout() {
                       logout();
                     }}
                   >
-                    Sign out
+                    Đăng xuất
                   </button>
                 </>
               ) : (
@@ -113,7 +113,7 @@ export default function StorefrontLayout() {
                   to="/login"
                   onClick={closeMenu}
                 >
-                  Sign in
+                  Đăng nhập
                 </Link>
               )}
             </div>
@@ -130,12 +130,12 @@ export default function StorefrontLayout() {
                     logout();
                   }}
                 >
-                  Sign out
+                  Đăng xuất
                 </button>
               </>
             ) : (
               <Link className="button button--primary" to="/login" onClick={closeMenu}>
-                Sign in
+                Đăng nhập
               </Link>
             )}
           </div>
@@ -149,12 +149,12 @@ export default function StorefrontLayout() {
       <footer className="site-footer">
         <div className="site-footer__brand">
           <p>CHẬM</p>
-          <p>Coffee tools for slower mornings.</p>
+          <p>Dụng cụ cà phê cho những buổi sáng chậm rãi.</p>
         </div>
-        <nav className="site-footer__links" aria-label="Footer navigation">
-          <Link to="/products">Shop</Link>
-          <Link to="/cart">Cart</Link>
-          <Link to="/account/profile">Account</Link>
+        <nav className="site-footer__links" aria-label="Điều hướng chân trang">
+          <Link to="/products">Sản phẩm</Link>
+          <Link to="/cart">Giỏ hàng</Link>
+          <Link to="/account/profile">Tài khoản</Link>
         </nav>
       </footer>
     </div>

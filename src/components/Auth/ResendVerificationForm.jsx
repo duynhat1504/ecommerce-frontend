@@ -5,11 +5,11 @@ import AuthField from "./AuthField";
 import { isValidEmail } from "../../utils/authFormUtils";
 
 const RESEND_SUCCESS_MESSAGE =
-  "If this email is eligible, a new verification link has been sent.";
+  "Nếu email này đủ điều kiện, một liên kết xác thực mới đã được gửi.";
 
 export default function ResendVerificationForm({
   initialEmail = "",
-  title = "Need a new verification link?",
+  title = "Cần gửi lại liên kết xác thực?",
 }) {
   const [email, setEmail] = useState(initialEmail);
   const [emailError, setEmailError] = useState("");
@@ -22,12 +22,12 @@ export default function ResendVerificationForm({
     const nextEmail = email.trim();
 
     if (!nextEmail) {
-      setEmailError("Email is required.");
+      setEmailError("Vui lòng nhập email.");
       return;
     }
 
     if (!isValidEmail(nextEmail)) {
-      setEmailError("Enter a valid email address.");
+      setEmailError("Vui lòng nhập địa chỉ email hợp lệ.");
       return;
     }
 
@@ -41,7 +41,7 @@ export default function ResendVerificationForm({
       setMessage(RESEND_SUCCESS_MESSAGE);
     } catch {
       setStatus("error");
-      setMessage("Unable to request a verification email right now.");
+      setMessage("Không thể yêu cầu email xác thực vào lúc này.");
     }
   }
 
@@ -50,7 +50,7 @@ export default function ResendVerificationForm({
       <div>
         <h2 id="resend-title">{title}</h2>
         <p className="auth-page__fine-print">
-          Use the email address from your CHẬM account.
+          Dùng địa chỉ email của tài khoản CHẬM của bạn.
         </p>
       </div>
       <form className="auth-resend__form" onSubmit={handleSubmit}>
@@ -69,7 +69,7 @@ export default function ResendVerificationForm({
           className="button button--ghost"
           disabled={status === "submitting"}
         >
-          {status === "submitting" ? "Sending..." : "Resend verification"}
+          {status === "submitting" ? "Đang gửi..." : "Gửi lại email xác thực"}
         </button>
       </form>
       {message ? (

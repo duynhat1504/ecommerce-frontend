@@ -22,7 +22,7 @@ function SectionState({ state, emptyText, errorText }) {
   if (state === "loading") {
     return (
       <div className="home-state" aria-live="polite">
-        <p className="sr-only">Loading homepage data...</p>
+        <p className="sr-only">Đang tải dữ liệu trang chủ...</p>
         <span className="home-state__line" />
         <span className="home-state__line home-state__line--short" />
       </div>
@@ -46,7 +46,7 @@ function SectionState({ state, emptyText, errorText }) {
 
 function ProductPreview({ product }) {
   const price = formatCurrency(product.price);
-  const productName = product.name || "Coffee tool";
+  const productName = product.name || "Dụng cụ cà phê";
   const productPath = product.id
     ? `/products/${encodeURIComponent(product.id)}`
     : "/products";
@@ -56,7 +56,7 @@ function ProductPreview({ product }) {
       <Link
         to={productPath}
         className="product-preview__image-link"
-        aria-label={`View ${productName}`}
+        aria-label={`Xem ${productName}`}
       >
         <ProductImage src={product.imageUrl} alt={productName} />
       </Link>
@@ -154,44 +154,44 @@ export default function HomePage() {
       <section className="home-hero" aria-labelledby="home-hero-title">
         <div className="home-hero__copy">
           <p className="home-hero__brand">CHẬM</p>
-          <h1 id="home-hero-title">Tools for a slower cup.</h1>
+          <h1 id="home-hero-title">Dụng cụ cho một tách cà phê chậm rãi.</h1>
           <p className="home-hero__text">
-            Brewing objects chosen for quiet mornings, small counters and daily use.
+            Những dụng cụ pha cà phê được chọn cho buổi sáng yên tĩnh và sử dụng mỗi ngày.
           </p>
           <Link className="button button--primary home-hero__cta" to="/products">
-            Shop the collection
+            Khám phá bộ sưu tập
           </Link>
         </div>
         <div className="home-hero__media">
           <img
             src={heroImage}
-            alt="Ceramic dripper, glass server and kettle on a sunlit wooden table"
+            alt="Phễu lọc gốm, bình thủy tinh và ấm nước trên bàn gỗ đầy nắng"
           />
         </div>
       </section>
 
       <section className="ritual-section" aria-labelledby="ritual-title">
         <div className="ritual-section__text">
-          <h2 id="ritual-title">For the first quiet pour.</h2>
+          <h2 id="ritual-title">Cho lần rót đầu tiên trong ngày.</h2>
           <p>
-            Start with a dripper, a steady kettle and a cup that makes the table feel considered.
+            Bắt đầu với phễu lọc, ấm rót ổn định và chiếc cốc khiến góc bàn thêm chỉn chu.
           </p>
         </div>
         <Link className="ritual-section__link" to="/products">
-          Browse brewing tools
+          Xem dụng cụ pha cà phê
         </Link>
       </section>
 
       <section className="home-products" aria-labelledby="new-products-title">
         <div className="home-section-heading">
-          <h2 id="new-products-title">New objects in the shop</h2>
-          <Link to="/products">View all</Link>
+          <h2 id="new-products-title">Sản phẩm mới tại cửa hàng</h2>
+          <Link to="/products">Xem tất cả</Link>
         </div>
 
         <SectionState
           state={productsState}
-          emptyText="No products are available yet."
-          errorText="Products could not be loaded right now."
+          emptyText="Chưa có sản phẩm nào."
+          errorText="Không thể tải sản phẩm vào lúc này."
         />
 
         {productsState === "success" ? (
@@ -207,31 +207,31 @@ export default function HomePage() {
         <div className="product-story__media">
           <img
             src={storyImage}
-            alt="Hand grinder, ceramic cups and coffee beans arranged by a morning window"
+            alt="Cối xay tay, cốc gốm và hạt cà phê cạnh ô cửa sổ buổi sáng"
             loading="lazy"
           />
         </div>
         <div className="product-story__copy">
-          <h2 id="story-title">Objects that stay on the counter.</h2>
+          <h2 id="story-title">Những vật dụng luôn ở lại trên bàn pha.</h2>
           <p>
-            CHẬM focuses on coffee tools that earn their place through material, weight and daily usefulness.
+            CHẬM chọn dụng cụ cà phê xứng đáng có mặt qua chất liệu, cảm giác cầm và sự hữu ích mỗi ngày.
           </p>
-          <Link to="/products">See everyday tools</Link>
+          <Link to="/products">Xem dụng cụ dùng mỗi ngày</Link>
         </div>
       </section>
 
       <section className="home-categories" aria-labelledby="categories-title">
         <div className="home-categories__intro">
-          <h2 id="categories-title">Shop by ritual</h2>
+          <h2 id="categories-title">Chọn theo thói quen pha</h2>
           <p>
-            Move from beans to cup with a smaller set of objects, each one chosen for repeated mornings.
+            Từ hạt đến tách cà phê, mỗi dụng cụ đều được chọn cho những buổi sáng lặp lại.
           </p>
         </div>
 
         <SectionState
           state={categoriesState}
-          emptyText="Categories will appear here once they are added."
-          errorText="Categories could not be loaded right now."
+          emptyText="Danh mục sẽ xuất hiện tại đây khi được thêm vào."
+          errorText="Không thể tải danh mục vào lúc này."
         />
 
         {categoriesState === "success" ? (
@@ -245,9 +245,9 @@ export default function HomePage() {
       </section>
 
       <section className="quiet-section" aria-labelledby="quiet-title">
-        <p>Built for one store, one point of view.</p>
+        <p>Dành cho một cửa hàng, một góc nhìn.</p>
         <h2 id="quiet-title">
-          Coffee equipment without the noise of a marketplace.
+          Dụng cụ cà phê không ồn ào như một sàn thương mại.
         </h2>
       </section>
     </div>

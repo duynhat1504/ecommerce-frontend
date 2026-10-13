@@ -13,22 +13,22 @@ const PAGE_SIZE_OPTIONS = [10, 25, 50, 100];
 const TRANSACTION_SIZE_OPTIONS = [10, 20, 50, 100];
 
 const PRODUCT_SORT_OPTIONS = [
-  { label: "Stock low", value: "stock,asc" },
-  { label: "Stock high", value: "stock,desc" },
-  { label: "Updated recently", value: "updatedAt,desc" },
-  { label: "Name A to Z", value: "name,asc" },
-  { label: "Name Z to A", value: "name,desc" },
-  { label: "Newest", value: "createdAt,desc" },
+  { label: "Tồn kho thấp nhất", value: "stock,asc" },
+  { label: "Tồn kho cao nhất", value: "stock,desc" },
+  { label: "Mới cập nhật", value: "updatedAt,desc" },
+  { label: "Tên A đến Z", value: "name,asc" },
+  { label: "Tên Z đến A", value: "name,desc" },
+  { label: "Mới nhất", value: "createdAt,desc" },
 ];
 
 const PRODUCT_SORT_VALUES = PRODUCT_SORT_OPTIONS.map((option) => option.value);
 
 const TRANSACTION_TYPES = [
-  { label: "All types", value: "all" },
-  { label: "Admin adjustment", value: "ADMIN_ADJUSTMENT" },
-  { label: "Order created", value: "ORDER_CREATED" },
-  { label: "Order cancelled", value: "ORDER_CANCELLED" },
-  { label: "Order expired", value: "ORDER_EXPIRED" },
+  { label: "Tất cả loại", value: "all" },
+  { label: "Điều chỉnh bởi quản trị viên", value: "ADMIN_ADJUSTMENT" },
+  { label: "Tạo đơn hàng", value: "ORDER_CREATED" },
+  { label: "Hủy đơn hàng", value: "ORDER_CANCELLED" },
+  { label: "Đơn hàng hết hạn", value: "ORDER_EXPIRED" },
 ];
 
 const TRANSACTION_TYPE_VALUES = TRANSACTION_TYPES.map((option) => option.value);
@@ -163,11 +163,11 @@ function getDateTimeLabel(value) {
 
 function getInventoryErrorMessage(error, fallback) {
   if (error?.status === 401 || error?.status === 403) {
-    return "Admin access is required. Sign in again with an admin account.";
+    return "Cần quyền quản trị. Hãy đăng nhập lại bằng tài khoản quản trị.";
   }
 
   if (error?.status === 400 && error?.data?.errors) {
-    return "Check the highlighted fields and try again.";
+    return "Kiểm tra các trường được đánh dấu rồi thử lại.";
   }
 
   if (error?.status === 400) {
@@ -175,15 +175,15 @@ function getInventoryErrorMessage(error, fallback) {
   }
 
   if (error?.status === 404) {
-    return error.message || "The product was not found.";
+    return "Không tìm thấy sản phẩm.";
   }
 
   if (error?.status >= 500) {
-    return "The inventory service is unavailable right now.";
+    return "Dịch vụ kho hàng hiện không khả dụng.";
   }
 
   if (!error?.status) {
-    return "Network connection failed. Check the API server and try again.";
+    return "Kết nối mạng thất bại. Hãy kiểm tra máy chủ API rồi thử lại.";
   }
 
   return fallback;
@@ -203,27 +203,27 @@ function getInventoryFieldErrors(error) {
 function getLifecycle(product) {
   if (product?.deletedAt) {
     return {
-      label: "Deleted",
+      label: "Đã xóa",
       className: "admin-inventory-status admin-inventory-status--deleted",
     };
   }
 
   if (product?.active) {
     return {
-      label: "Active",
+      label: "Đang hoạt động",
       className: "admin-inventory-status admin-inventory-status--active",
     };
   }
 
   return {
-    label: "Inactive",
+    label: "Ngừng hoạt động",
     className: "admin-inventory-status admin-inventory-status--inactive",
   };
 }
 
 function getTransactionLabel(type) {
   return (
-    TRANSACTION_TYPES.find((option) => option.value === type)?.label || type || "Unknown"
+    TRANSACTION_TYPES.find((option) => option.value === type)?.label || "Không xác định"
   );
 }
 
@@ -291,7 +291,7 @@ function Pagination({ currentPage, label, onPageChange, totalPages }) {
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage <= 1}
       >
-        Previous
+        Trước
       </button>
       <div className="admin-inventory-pagination__pages">
         {pages.map((pageNumber, index) => {
@@ -326,7 +326,7 @@ function Pagination({ currentPage, label, onPageChange, totalPages }) {
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage >= totalPages}
       >
-        Next
+        Sau
       </button>
     </nav>
   );
@@ -334,7 +334,7 @@ function Pagination({ currentPage, label, onPageChange, totalPages }) {
 
 function ProductRow({ isSelected, onSelect, product }) {
   const lifecycle = getLifecycle(product);
-  const stock = Number.isFinite(Number(product.stock)) ? product.stock : "Unknown";
+  const stock = Number.isFinite(Number(product.stock)) ? product.stock : "Không xác định";
 
   return (
     <tr
@@ -342,21 +342,21 @@ function ProductRow({ isSelected, onSelect, product }) {
         product.deletedAt ? "admin-inventory-row is-deleted" : "admin-inventory-row"
       }
     >
-      <th scope="row" data-label="Product">
+      <th scope="row" data-label="Sản phẩm">
         <span className="admin-inventory-row__name">
-          {product.name || "Untitled product"}
+          {product.name || "Sản phẩm chưa có tên"}
         </span>
         <span className="admin-inventory-row__meta">
-          {product.id || "No product id"}
+          {product.id || "Không có mã sản phẩm"}
         </span>
       </th>
-      <td data-label="Stock" className="admin-inventory-number">
+      <td data-label="Tồn kho" className="admin-inventory-number">
         {stock}
       </td>
-      <td data-label="Status">
+      <td data-label="Trạng thái">
         <span className={lifecycle.className}>{lifecycle.label}</span>
       </td>
-      <td data-label="Actions">
+      <td data-label="Thao tác">
         <button
           type="button"
           className={
@@ -366,7 +366,7 @@ function ProductRow({ isSelected, onSelect, product }) {
           }
           onClick={() => onSelect(product)}
         >
-          {isSelected ? "Selected" : "View history"}
+          {isSelected ? "Đã chọn" : "Xem lịch sử"}
         </button>
       </td>
     </tr>
@@ -380,18 +380,18 @@ function TransactionRow({ transaction }) {
 
   return (
     <tr className="admin-inventory-row">
-      <td data-label="Type">{getTransactionLabel(transaction.type)}</td>
-      <td data-label="Change" className="admin-inventory-number">
-        {hasChange ? changeLabel : "Unknown"}
+      <td data-label="Loại">{getTransactionLabel(transaction.type)}</td>
+      <td data-label="Thay đổi" className="admin-inventory-number">
+        {hasChange ? changeLabel : "Không xác định"}
       </td>
-      <td data-label="Stock" className="admin-inventory-number">
-        {transaction.stockBefore ?? "?"} to {transaction.stockAfter ?? "?"}
+      <td data-label="Tồn kho" className="admin-inventory-number">
+        {transaction.stockBefore ?? "?"} đến {transaction.stockAfter ?? "?"}
       </td>
-      <td data-label="Reference">
+      <td data-label="Tham chiếu">
         {transaction.orderCode ? (
           <span>{transaction.orderCode}</span>
         ) : (
-          <span className="admin-inventory-row__muted">No order</span>
+          <span className="admin-inventory-row__muted">Không có đơn hàng</span>
         )}
         {transaction.performedByEmail ? (
           <span className="admin-inventory-row__meta">
@@ -399,9 +399,9 @@ function TransactionRow({ transaction }) {
           </span>
         ) : null}
       </td>
-      <td data-label="Reason">{transaction.reason || "No reason recorded"}</td>
-      <td data-label="Created" className="admin-inventory-number">
-        {getDateTimeLabel(transaction.createdAt) || "Unknown"}
+      <td data-label="Lý do">{transaction.reason || "Không ghi nhận lý do"}</td>
+      <td data-label="Thời gian tạo" className="admin-inventory-number">
+        {getDateTimeLabel(transaction.createdAt) || "Không xác định"}
       </td>
     </tr>
   );
@@ -423,8 +423,8 @@ function AdjustmentForm({
     <form className="admin-inventory-adjustment" onSubmit={onSubmit}>
       <div className="admin-inventory-adjustment__header">
         <div>
-          <h2>Adjust stock</h2>
-          <p>Saved values come from the backend response.</p>
+          <h2>Điều chỉnh tồn kho</h2>
+          <p>Các giá trị đã lưu được lấy từ phản hồi backend.</p>
         </div>
       </div>
 
@@ -436,12 +436,12 @@ function AdjustmentForm({
 
       {cannotAdjust ? (
         <p className="admin-inventory-alert" role="alert">
-          Deleted products cannot be adjusted by the backend.
+          Backend không thể điều chỉnh sản phẩm đã xóa.
         </p>
       ) : null}
 
       <div className="admin-inventory-field">
-        <label htmlFor="admin-inventory-direction">Direction</label>
+        <label htmlFor="admin-inventory-direction">Hướng điều chỉnh</label>
         <select
           id="admin-inventory-direction"
           name="direction"
@@ -449,13 +449,13 @@ function AdjustmentForm({
           onChange={onChange}
           disabled={isDisabled}
         >
-          <option value="increase">Increase</option>
-          <option value="decrease">Decrease</option>
+          <option value="increase">Tăng</option>
+          <option value="decrease">Giảm</option>
         </select>
       </div>
 
       <div className="admin-inventory-field">
-        <label htmlFor="admin-inventory-quantity">Quantity</label>
+        <label htmlFor="admin-inventory-quantity">Số lượng</label>
         <input
           id="admin-inventory-quantity"
           name="quantity"
@@ -483,7 +483,7 @@ function AdjustmentForm({
       </div>
 
       <div className="admin-inventory-field">
-        <label htmlFor="admin-inventory-reason">Reason</label>
+        <label htmlFor="admin-inventory-reason">Lý do</label>
         <textarea
           id="admin-inventory-reason"
           name="reason"
@@ -513,7 +513,7 @@ function AdjustmentForm({
         className="button button--primary"
         disabled={isDisabled}
       >
-        {isSubmitting ? "Saving..." : "Save adjustment"}
+        {isSubmitting ? "Đang lưu..." : "Lưu điều chỉnh"}
       </button>
     </form>
   );
@@ -983,8 +983,8 @@ export default function AdminInventoryPage() {
     <section className="admin-inventory" aria-labelledby="admin-inventory-title">
       <header className="admin-inventory__header">
         <div>
-          <p className="admin-inventory__kicker">Admin inventory</p>
-          <h1 id="admin-inventory-title">Inventory</h1>
+          <p className="admin-inventory__kicker">Quản lý kho hàng</p>
+          <h1 id="admin-inventory-title">Kho hàng</h1>
         </div>
         <button
           type="button"
@@ -992,26 +992,26 @@ export default function AdminInventoryPage() {
           onClick={handleRetry}
           disabled={productsState.status === "loading"}
         >
-          Refresh
+          Tải lại
         </button>
       </header>
 
       <section className="admin-inventory-toolbar" aria-label="Inventory list controls">
         <div className="admin-inventory-control">
-          <label htmlFor="admin-inventory-active-filter">Product status</label>
+          <label htmlFor="admin-inventory-active-filter">Trạng thái sản phẩm</label>
           <select
             id="admin-inventory-active-filter"
             value={inventoryQuery.active}
             onChange={(event) => updateQuery({ active: event.target.value })}
           >
-            <option value="all">All products</option>
-            <option value="true">Active flag only</option>
-            <option value="false">Inactive flag only</option>
+            <option value="all">Tất cả sản phẩm</option>
+            <option value="true">Chỉ đang hoạt động</option>
+            <option value="false">Chỉ ngừng hoạt động</option>
           </select>
         </div>
 
         <div className="admin-inventory-control">
-          <label htmlFor="admin-inventory-sort">Product sort</label>
+          <label htmlFor="admin-inventory-sort">Sắp xếp sản phẩm</label>
           <select
             id="admin-inventory-sort"
             value={inventoryQuery.sort}
@@ -1026,7 +1026,7 @@ export default function AdminInventoryPage() {
         </div>
 
         <div className="admin-inventory-control">
-          <label htmlFor="admin-inventory-page-size">Product rows</label>
+          <label htmlFor="admin-inventory-page-size">Số dòng sản phẩm</label>
           <select
             id="admin-inventory-page-size"
             value={inventoryQuery.size}
@@ -1048,15 +1048,15 @@ export default function AdminInventoryPage() {
         >
           <div className="admin-inventory-list__header">
             <div>
-              <h2 id="admin-inventory-products-title">Stock list</h2>
+              <h2 id="admin-inventory-products-title">Danh sách tồn kho</h2>
               {productsState.status === "success" ? (
                 <p>
-                  Showing {productResultStart}-{productResultEnd} of{" "}
-                  {productData.totalElements} products
+                  Hiển thị {productResultStart}-{productResultEnd} trong tổng số{" "}
+                  {productData.totalElements} sản phẩm
                 </p>
               ) : null}
               {productsState.status === "loading" ? (
-                <p aria-live="polite">Loading products...</p>
+                <p aria-live="polite">Đang tải sản phẩm...</p>
               ) : null}
             </div>
           </div>
@@ -1082,13 +1082,13 @@ export default function AdminInventoryPage() {
           productsState.status === "success" ? (
             <div className="admin-inventory-table-wrap">
               <table className="admin-inventory-table">
-                <caption className="sr-only">Admin product stock records</caption>
+                <caption className="sr-only">Danh sách tồn kho sản phẩm quản trị</caption>
                 <thead>
                   <tr>
-                    <th scope="col">Product</th>
-                    <th scope="col">Stock</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Actions</th>
+                    <th scope="col">Sản phẩm</th>
+                    <th scope="col">Tồn kho</th>
+                    <th scope="col">Trạng thái</th>
+                    <th scope="col">Thao tác</th>
                   </tr>
                 </thead>
                 {productsState.status === "loading" ? (
@@ -1123,7 +1123,7 @@ export default function AdminInventoryPage() {
           <section className="admin-inventory-detail">
             <div className="admin-inventory-detail__header">
               <div>
-                <h2>Product history</h2>
+                <h2>Lịch sử sản phẩm</h2>
                 {selectedProductStatus === "loading" ? (
                   <p aria-live="polite">Loading selected product...</p>
                 ) : null}
@@ -1140,8 +1140,8 @@ export default function AdminInventoryPage() {
 
             {!inventoryQuery.productId ? (
               <div className="admin-inventory-state">
-                <h2>Select a product.</h2>
-                <p>Choose a stock row to inspect backend inventory history.</p>
+                <h2>Chọn một sản phẩm.</h2>
+                <p>Chọn một hàng tồn kho để kiểm tra lịch sử tồn kho phụ trợ.</p>
               </div>
             ) : null}
 
@@ -1158,7 +1158,7 @@ export default function AdminInventoryPage() {
                 aria-label="Inventory history controls"
               >
                 <div className="admin-inventory-control">
-                  <label htmlFor="admin-inventory-type">Type</label>
+                  <label htmlFor="admin-inventory-type">Loại</label>
                   <select
                     id="admin-inventory-type"
                     value={inventoryQuery.type}
@@ -1178,7 +1178,7 @@ export default function AdminInventoryPage() {
                 </div>
 
                 <div className="admin-inventory-control">
-                  <label htmlFor="admin-inventory-from-date">From date</label>
+                  <label htmlFor="admin-inventory-from-date">Từ ngày</label>
                   <input
                     id="admin-inventory-from-date"
                     type="date"
@@ -1193,7 +1193,7 @@ export default function AdminInventoryPage() {
                 </div>
 
                 <div className="admin-inventory-control">
-                  <label htmlFor="admin-inventory-to-date">To date</label>
+                  <label htmlFor="admin-inventory-to-date">Đến ngày</label>
                   <input
                     id="admin-inventory-to-date"
                     type="date"
@@ -1208,7 +1208,7 @@ export default function AdminInventoryPage() {
                 </div>
 
                 <div className="admin-inventory-control">
-                  <label htmlFor="admin-inventory-tx-size">History rows</label>
+                  <label htmlFor="admin-inventory-tx-size">Số dòng lịch sử</label>
                   <select
                     id="admin-inventory-tx-size"
                     value={inventoryQuery.transactionSize}
@@ -1254,15 +1254,15 @@ export default function AdminInventoryPage() {
             transactionStatus === "success" ? (
               <div className="admin-inventory-table-wrap">
                 <table className="admin-inventory-table admin-inventory-table--history">
-                  <caption className="sr-only">Product inventory transactions</caption>
+                  <caption className="sr-only">Giao dịch tồn kho sản phẩm</caption>
                   <thead>
                     <tr>
-                      <th scope="col">Type</th>
-                      <th scope="col">Change</th>
-                      <th scope="col">Stock</th>
-                      <th scope="col">Reference</th>
-                      <th scope="col">Reason</th>
-                      <th scope="col">Created</th>
+                      <th scope="col">Loại</th>
+                      <th scope="col">Thay đổi</th>
+                      <th scope="col">Tồn kho</th>
+                      <th scope="col">Tham chiếu</th>
+                      <th scope="col">Lý do</th>
+                      <th scope="col">Thời gian tạo</th>
                     </tr>
                   </thead>
                   {transactionStatus === "loading" ? (

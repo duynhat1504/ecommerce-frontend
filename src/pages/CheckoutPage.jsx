@@ -46,29 +46,29 @@ function validateAddressForm(values) {
   const errors = {};
 
   if (!values.recipientName.trim()) {
-    errors.recipientName = "Recipient name is required.";
+    errors.recipientName = "Vui lòng nhập tên người nhận.";
   }
 
   if (!values.phoneNumber.trim()) {
-    errors.phoneNumber = "Phone number is required.";
+    errors.phoneNumber = "Vui lòng nhập số điện thoại.";
   } else if (values.phoneNumber.trim().length > 10) {
-    errors.phoneNumber = "Phone number must be 10 characters or fewer.";
+    errors.phoneNumber = "Số điện thoại không được quá 10 ký tự.";
   }
 
   if (!values.province.trim()) {
-    errors.province = "Province is required.";
+    errors.province = "Vui lòng nhập tỉnh hoặc thành phố.";
   }
 
   if (!values.district.trim()) {
-    errors.district = "District is required.";
+    errors.district = "Vui lòng nhập quận hoặc huyện.";
   }
 
   if (!values.ward.trim()) {
-    errors.ward = "Ward is required.";
+    errors.ward = "Vui lòng nhập phường hoặc xã.";
   }
 
   if (!values.addressLine.trim()) {
-    errors.addressLine = "Address line is required.";
+    errors.addressLine = "Vui lòng nhập địa chỉ cụ thể.";
   }
 
   return errors;
@@ -109,7 +109,7 @@ function AddressField({
 function CheckoutState({ title, message, action }) {
   return (
     <section className="checkout-state" aria-labelledby="checkout-state-title">
-      <p className="checkout-state__kicker">Checkout</p>
+      <p className="checkout-state__kicker">Thanh toán</p>
       <h1 id="checkout-state-title">{title}</h1>
       <p>{message}</p>
       {action}
@@ -137,8 +137,8 @@ function AddressOption({ address, checked, onChange }) {
       />
       <span>
         <strong>
-          {address.recipientName || "Recipient"}
-          {address.defaultAddress ? " (default)" : ""}
+          {address.recipientName || "Người nhận"}
+          {address.defaultAddress ? " (mặc định)" : ""}
         </strong>
         <span>{address.phoneNumber}</span>
         <span>{address.fullAddress || addressLabel}</span>
@@ -161,7 +161,7 @@ function AddressForm({
         <AddressField
           id="checkout-recipient-name"
           name="recipientName"
-          label="Recipient name"
+          label="Tên người nhận"
           value={formValues.recipientName}
           onChange={onChange}
           autoComplete="name"
@@ -170,7 +170,7 @@ function AddressForm({
         <AddressField
           id="checkout-phone-number"
           name="phoneNumber"
-          label="Phone number"
+          label="Số điện thoại"
           value={formValues.phoneNumber}
           onChange={onChange}
           autoComplete="tel"
@@ -179,7 +179,7 @@ function AddressForm({
         <AddressField
           id="checkout-province"
           name="province"
-          label="Province"
+          label="Tỉnh / Thành phố"
           value={formValues.province}
           onChange={onChange}
           autoComplete="address-level1"
@@ -188,7 +188,7 @@ function AddressForm({
         <AddressField
           id="checkout-district"
           name="district"
-          label="District"
+          label="Quận / Huyện"
           value={formValues.district}
           onChange={onChange}
           autoComplete="address-level2"
@@ -197,7 +197,7 @@ function AddressForm({
         <AddressField
           id="checkout-ward"
           name="ward"
-          label="Ward"
+          label="Phường / Xã"
           value={formValues.ward}
           onChange={onChange}
           autoComplete="address-level3"
@@ -206,7 +206,7 @@ function AddressForm({
         <AddressField
           id="checkout-address-line"
           name="addressLine"
-          label="Address line"
+          label="Địa chỉ cụ thể"
           value={formValues.addressLine}
           onChange={onChange}
           autoComplete="street-address"
@@ -221,7 +221,7 @@ function AddressForm({
           checked={formValues.defaultAddress}
           onChange={onChange}
         />
-        <span>Use as default address</span>
+        <span>Đặt làm địa chỉ mặc định</span>
       </label>
 
       <div className="checkout-address-form__actions">
@@ -230,7 +230,7 @@ function AddressForm({
           className="button button--primary"
           disabled={isSubmitting}
         >
-          {isSubmitting ? "Saving address..." : "Save address"}
+          {isSubmitting ? "Đang lưu địa chỉ..." : "Lưu địa chỉ"}
         </button>
         <button
           type="button"
@@ -238,7 +238,7 @@ function AddressForm({
           onClick={onCancel}
           disabled={isSubmitting}
         >
-          Cancel
+          Hủy
         </button>
       </div>
     </form>
@@ -251,10 +251,10 @@ function OrderSummary({ cart, items }) {
 
   return (
     <aside className="checkout-summary" aria-labelledby="checkout-summary-title">
-      <h2 id="checkout-summary-title">Order summary</h2>
+      <h2 id="checkout-summary-title">Tóm tắt đơn hàng</h2>
       <div className="checkout-summary__items">
         {items.map((item) => {
-          const productName = item.productName || "Product";
+          const productName = item.productName || "Sản phẩm";
 
           return (
             <article className="checkout-summary-item" key={item.productId}>
@@ -265,10 +265,10 @@ function OrderSummary({ cart, items }) {
               />
               <div>
                 <h3>{productName}</h3>
-                <p>Quantity {item.quantity}</p>
+                <p>Số lượng: {item.quantity}</p>
                 {item.available === false ? (
                   <p className="checkout-summary-item__unavailable">
-                    {item.unavailableReason || "Unavailable"}
+                    {item.unavailableReason || "Không khả dụng"}
                   </p>
                 ) : null}
               </div>
@@ -281,11 +281,11 @@ function OrderSummary({ cart, items }) {
       </div>
       <dl className="checkout-summary__totals">
         <div>
-          <dt>Items</dt>
+          <dt>Sản phẩm</dt>
           <dd>{totalItems}</dd>
         </div>
         <div>
-          <dt>Total</dt>
+          <dt>Tổng tiền</dt>
           <dd>{formatCurrency(totalPrice)}</dd>
         </div>
       </dl>
@@ -375,7 +375,7 @@ export default function CheckoutPage() {
           items: [],
           message: getCheckoutErrorMessage(
             error,
-            "Shipping addresses could not be loaded.",
+            "Không thể tải địa chỉ giao hàng.",
           ),
         });
       }
@@ -463,7 +463,7 @@ export default function CheckoutPage() {
 
       setAddressFieldErrors(backendErrors);
       setAddressSubmitError(
-        getCheckoutErrorMessage(error, "Address could not be saved."),
+        getCheckoutErrorMessage(error, "Không thể lưu địa chỉ."),
       );
     } finally {
       setIsAddressSubmitting(false);
@@ -475,8 +475,8 @@ export default function CheckoutPage() {
       setOrderState((current) => ({
         ...current,
         message: selectedAddressId
-          ? "Review your cart before placing this order."
-          : "Choose a shipping address before placing this order.",
+          ? "Hãy kiểm tra giỏ hàng trước khi đặt đơn."
+          : "Hãy chọn địa chỉ giao hàng trước khi đặt đơn.",
       }));
       return;
     }
@@ -494,7 +494,7 @@ export default function CheckoutPage() {
       if (!order?.id) {
         setOrderState({
           status: "error",
-          message: "Order was created, but the payment link could not be opened.",
+          message: "Đơn hàng đã được tạo, nhưng không thể mở liên kết thanh toán.",
         });
         return;
       }
@@ -507,7 +507,7 @@ export default function CheckoutPage() {
     } catch (error) {
       const message = getCheckoutErrorMessage(
         error,
-        "Order could not be created. Please try again.",
+        "Không thể tạo đơn hàng. Vui lòng thử lại.",
       );
 
       setOrderState({
@@ -551,7 +551,7 @@ export default function CheckoutPage() {
           items: [],
           message: getCheckoutErrorMessage(
             error,
-            "Shipping addresses could not be loaded.",
+            "Không thể tải địa chỉ giao hàng.",
           ),
         });
       });
@@ -566,8 +566,8 @@ export default function CheckoutPage() {
   if (cartStatus === "loading" && !cartHasItems) {
     return (
       <CheckoutState
-        title="Loading checkout."
-        message="Your cart and shipping addresses are being prepared."
+        title="Đang tải thanh toán."
+        message="Giỏ hàng và địa chỉ giao hàng của bạn đang được chuẩn bị."
       />
     );
   }
@@ -575,11 +575,11 @@ export default function CheckoutPage() {
   if (cartStatus === "error" && !cartHasItems) {
     return (
       <CheckoutState
-        title="Checkout unavailable."
-        message={cartError || "Your cart could not be loaded right now."}
+        title="Thanh toán không khả dụng."
+        message={cartError || "Không thể tải giỏ hàng của bạn vào lúc này."}
         action={
           <button type="button" className="button button--ghost" onClick={handleRetryCartLoad}>
-            Retry
+            Thử lại
           </button>
         }
       />
@@ -589,11 +589,11 @@ export default function CheckoutPage() {
   if (!cartHasItems) {
     return (
       <CheckoutState
-        title="Your cart is empty."
-        message="Add products to your cart before checkout."
+        title="Giỏ hàng của bạn đang trống."
+        message="Hãy thêm sản phẩm vào giỏ hàng trước khi thanh toán."
         action={
           <Link className="button button--primary" to="/products">
-            Browse products
+            Xem sản phẩm
           </Link>
         }
       />
@@ -603,16 +603,16 @@ export default function CheckoutPage() {
   return (
     <section className="checkout-page" aria-labelledby="checkout-title">
       <div className="checkout-page__header">
-        <p className="checkout-page__kicker">Checkout</p>
-        <h1 id="checkout-title">Checkout</h1>
-        <p>Choose a shipping address and review your cart before placing the order.</p>
+        <p className="checkout-page__kicker">Thanh toán</p>
+        <h1 id="checkout-title">Thanh toán</h1>
+        <p>Chọn địa chỉ giao hàng và kiểm tra giỏ hàng trước khi đặt đơn.</p>
       </div>
 
       <div className="checkout-layout">
         <div className="checkout-main">
           <section className="checkout-section" aria-labelledby="shipping-title">
             <div className="checkout-section__header">
-              <h2 id="shipping-title">Shipping address</h2>
+              <h2 id="shipping-title">Địa chỉ giao hàng</h2>
               {addressesState.status === "success" && addressesState.items.length > 0 ? (
                 <button
                   type="button"
@@ -622,14 +622,14 @@ export default function CheckoutPage() {
                     setIsAddingAddress((current) => !current);
                   }}
                 >
-                  {isAddingAddress ? "Use saved address" : "Add address"}
+                  {isAddingAddress ? "Dùng địa chỉ đã lưu" : "Thêm địa chỉ"}
                 </button>
               ) : null}
             </div>
 
             {addressesState.status === "loading" ? (
               <p className="checkout-inline-state" aria-live="polite">
-                Loading shipping addresses...
+                Đang tải địa chỉ giao hàng...
               </p>
             ) : null}
 
@@ -641,14 +641,14 @@ export default function CheckoutPage() {
                   className="button button--ghost"
                   onClick={handleRetryAddressLoad}
                 >
-                  Retry
+                  Thử lại
                 </button>
               </div>
             ) : null}
 
             {addressesState.status === "success" && addressesState.items.length > 0 ? (
               <fieldset className="checkout-address-list">
-                <legend>Choose one saved address</legend>
+                <legend>Chọn một địa chỉ đã lưu</legend>
                 {addressesState.items.map((address) => (
                   <AddressOption
                     key={address.id}
@@ -662,14 +662,14 @@ export default function CheckoutPage() {
 
             {addressesState.status === "success" && addressesState.items.length === 0 ? (
               <div className="checkout-no-address">
-                <p>No shipping addresses yet.</p>
-                <p>Add one here to continue checkout.</p>
+                <p>Chưa có địa chỉ giao hàng.</p>
+                <p>Thêm địa chỉ tại đây để tiếp tục thanh toán.</p>
               </div>
             ) : null}
 
             {isAddingAddress ? (
               <div className="checkout-address-create">
-                <h3>Add a shipping address</h3>
+                <h3>Thêm địa chỉ giao hàng</h3>
                 {addressSubmitError ? (
                   <p className="checkout-inline-error__message" role="alert">
                     {addressSubmitError}
@@ -691,24 +691,24 @@ export default function CheckoutPage() {
           </section>
 
           <section className="checkout-section" aria-labelledby="review-title">
-            <h2 id="review-title">Review</h2>
+            <h2 id="review-title">Kiểm tra đơn hàng</h2>
             {cartStatus === "loading" ? (
               <p className="checkout-inline-state" aria-live="polite">
-                Refreshing your cart...
+                Đang làm mới giỏ hàng...
               </p>
             ) : null}
 
             {cartStatus === "error" ? (
               <div className="checkout-inline-error" role="alert">
                 <p>
-                  Cart could not be refreshed. Try again before placing an order.
+                  Không thể làm mới giỏ hàng. Hãy thử lại trước khi đặt đơn.
                 </p>
                 <button
                   type="button"
                   className="button button--ghost"
                   onClick={handleRetryCartLoad}
                 >
-                  Retry
+                  Thử lại
                 </button>
               </div>
             ) : null}
@@ -716,17 +716,17 @@ export default function CheckoutPage() {
             {cartStatus === "success" && cartHasUnavailableItems ? (
               <div className="checkout-inline-error" role="alert">
                 <p>
-                  Some cart items are unavailable. Return to cart to update them before ordering.
+                  Một số sản phẩm trong giỏ không khả dụng. Hãy quay lại giỏ hàng để cập nhật trước khi đặt đơn.
                 </p>
                 <Link className="button button--ghost" to="/cart">
-                  Back to cart
+                  Quay lại giỏ hàng
                 </Link>
               </div>
             ) : null}
 
             {cartStatus === "success" && !cartHasUnavailableItems ? (
               <p className="checkout-inline-state">
-                Cart is ready for order creation.
+                Giỏ hàng đã sẵn sàng để tạo đơn.
               </p>
             ) : null}
           </section>
@@ -741,13 +741,13 @@ export default function CheckoutPage() {
         <div className="checkout-side">
           <OrderSummary cart={cart} items={cartItems} />
           <section className="checkout-place-order" aria-labelledby="place-order-title">
-            <h2 id="place-order-title">Place order</h2>
+            <h2 id="place-order-title">Đặt hàng</h2>
             {selectedAddress ? (
               <p>
-                Shipping to {selectedAddress.recipientName}.
+                Giao đến {selectedAddress.recipientName}.
               </p>
             ) : (
-              <p>Choose a shipping address to continue.</p>
+              <p>Chọn địa chỉ giao hàng để tiếp tục.</p>
             )}
             <button
               type="button"
@@ -755,7 +755,7 @@ export default function CheckoutPage() {
               onClick={handlePlaceOrder}
               disabled={!canPlaceOrder}
             >
-              {orderState.status === "submitting" ? "Placing order..." : "Place order"}
+              {orderState.status === "submitting" ? "Đang đặt hàng..." : "Đặt hàng"}
             </button>
           </section>
         </div>
