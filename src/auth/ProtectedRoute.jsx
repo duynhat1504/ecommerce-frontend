@@ -9,7 +9,7 @@ export default function ProtectedRoute() {
   if (status === "loading") {
     return (
       <section className="route-state" aria-live="polite">
-        <p>Checking your session...</p>
+        <p>Đang kiểm tra phiên đăng nhập...</p>
       </section>
     );
   }

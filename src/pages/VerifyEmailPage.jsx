@@ -9,8 +9,8 @@ function VerificationStatus({ status, message }) {
   if (status === "verifying") {
     return (
       <div className="auth-status" aria-live="polite">
-        <h2>Verifying...</h2>
-        <p>Please wait while we confirm your email.</p>
+        <h2>Đang xác thực...</h2>
+        <p>Vui lòng chờ trong khi chúng tôi xác nhận email của bạn.</p>
       </div>
     );
   }
@@ -18,10 +18,10 @@ function VerificationStatus({ status, message }) {
   if (status === "success") {
     return (
       <div className="auth-status">
-        <h2>Email verified</h2>
-        <p>Your account is ready. You can now sign in.</p>
+        <h2>Email đã được xác thực</h2>
+        <p>Tài khoản của bạn đã sẵn sàng. Bạn có thể đăng nhập ngay bây giờ.</p>
         <p className="auth-status__links">
-          <Link to="/login">Sign in</Link>
+          <Link to="/login">Đăng nhập</Link>
         </p>
       </div>
     );
@@ -29,11 +29,11 @@ function VerificationStatus({ status, message }) {
 
   return (
     <div className="auth-status" role={status === "error" ? "alert" : undefined}>
-      <h2>Verification link unavailable</h2>
+      <h2>Liên kết xác thực không khả dụng</h2>
       <p>{message}</p>
       <p className="auth-status__links">
-        <Link to="/login">Sign in</Link>
-        <Link to="/register">Create account</Link>
+        <Link to="/login">Đăng nhập</Link>
+        <Link to="/register">Tạo tài khoản</Link>
       </p>
     </div>
   );
@@ -46,7 +46,7 @@ export default function VerifyEmailPage() {
     status: token ? "verifying" : "missing",
     message: token
       ? ""
-      : "This verification link is missing a token.",
+      : "Liên kết xác thực này thiếu mã xác thực.",
   });
 
   useEffect(() => {
@@ -76,14 +76,14 @@ export default function VerifyEmailPage() {
         if (error.status === 400) {
           setVerifyState({
             status: "invalid",
-            message: "This verification link is invalid or expired.",
+            message: "Liên kết xác thực này không hợp lệ hoặc đã hết hạn.",
           });
           return;
         }
 
         setVerifyState({
           status: "error",
-          message: "Unable to verify your email right now.",
+          message: "Không thể xác thực email của bạn vào lúc này.",
         });
       }
     }
@@ -99,13 +99,13 @@ export default function VerifyEmailPage() {
     <div className="auth-page">
       <section className="auth-page__intro" aria-labelledby="verify-title">
         <p className="auth-page__brand">CHẬM Account</p>
-        <h1 id="verify-title">Verify email</h1>
+        <h1 id="verify-title">Xác thực email</h1>
         <p>
-          Email verification protects your account before the first sign in.
+          Xác thực email giúp bảo vệ tài khoản của bạn trước lần đăng nhập đầu tiên.
         </p>
       </section>
 
-      <section className="auth-panel" aria-label="Email verification status">
+      <section className="auth-panel" aria-label="Trạng thái xác thực email">
         <VerificationStatus
           status={verifyState.status}
           message={verifyState.message}

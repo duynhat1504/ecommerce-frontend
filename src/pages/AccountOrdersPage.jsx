@@ -55,16 +55,16 @@ function getPaginationPages(currentPage, totalPages) {
 
 function formatOrderDate(value) {
   if (!value) {
-    return "Date unavailable";
+    return "Không có ngày";
   }
 
   const date = new Date(value);
 
   if (Number.isNaN(date.getTime())) {
-    return "Date unavailable";
+    return "Không có ngày";
   }
 
-  return new Intl.DateTimeFormat("en-US", {
+  return new Intl.DateTimeFormat("vi-VN", {
     year: "numeric",
     month: "short",
     day: "numeric",
@@ -75,26 +75,39 @@ function formatItemCount(count) {
   const itemCount = Number(count);
 
   if (!Number.isFinite(itemCount)) {
-    return "0 items";
+    return "0 sản phẩm";
   }
 
-  return `${itemCount} ${itemCount === 1 ? "item" : "items"}`;
+  return `${itemCount} sản phẩm`;
 }
 
 function getOrderReference(order) {
-  return order?.orderCode || order?.id || "Order";
+  return order?.orderCode || order?.id || "Đơn hàng";
+}
+
+function getStatusLabel(status) {
+  const labels = {
+    PENDING: "Chờ xác nhận",
+    CONFIRMED: "Đã xác nhận",
+    SHIPPING: "Đang giao",
+    COMPLETED: "Hoàn thành",
+    CANCELLED: "Đã hủy",
+    EXPIRED: "Hết hạn",
+  };
+
+  return labels[status] || "Không khả dụng";
 }
 
 function getOrdersErrorMessage(error) {
   if (error?.status === 401 || error?.status === 403) {
-    return "Sign in again to view your orders.";
+    return "Hãy đăng nhập lại để xem đơn hàng.";
   }
 
   if (error?.status >= 500) {
-    return "Order history is unavailable right now. Please try again later.";
+    return "Lịch sử đơn hàng hiện không khả dụng. Vui lòng thử lại sau.";
   }
 
-  return "Order history could not be loaded right now.";
+  return "Không thể tải lịch sử đơn hàng vào lúc này.";
 }
 
 function AccountOrdersState({ title, message, action, alert = false }) {
@@ -104,7 +117,7 @@ function AccountOrdersState({ title, message, action, alert = false }) {
       aria-labelledby="account-orders-state-title"
       role={alert ? "alert" : undefined}
     >
-      <p className="account-orders-state__kicker">Account</p>
+      <p className="account-orders-state__kicker">Tài khoản</p>
       <h1 id="account-orders-state-title">{title}</h1>
       <p>{message}</p>
       {action}
@@ -136,14 +149,14 @@ function AccountOrdersPagination({ currentPage, totalPages, onPageChange }) {
   }
 
   return (
-    <nav className="account-orders-pagination" aria-label="Order history pagination">
+    <nav className="account-orders-pagination" aria-label="Phân trang lịch sử đơn hàng">
       <button
         type="button"
         className="account-orders-pagination__control"
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage <= 1}
       >
-        Previous
+        Trước
       </button>
 
       <div className="account-orders-pagination__pages">
@@ -181,7 +194,7 @@ function AccountOrdersPagination({ currentPage, totalPages, onPageChange }) {
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage >= totalPages}
       >
-        Next
+        Sau
       </button>
     </nav>
   );
@@ -195,24 +208,24 @@ function AccountOrderRow({ order }) {
   return (
     <article className="account-order-row" aria-label={getOrderReference(order)}>
       <div className="account-order-row__reference">
-        <span>Order</span>
+        <span>Đơn hàng</span>
         <Link to={orderPath}>{getOrderReference(order)}</Link>
       </div>
       <div>
-        <span>Date</span>
+        <span>Ngày đặt</span>
         <strong>{formatOrderDate(order?.createdAt)}</strong>
       </div>
       <div>
-        <span>Status</span>
-        <strong className="account-order-status">{order?.status || "Unavailable"}</strong>
+        <span>Trạng thái</span>
+        <strong className="account-order-status">{getStatusLabel(order?.status)}</strong>
       </div>
       <div>
-        <span>Items</span>
+        <span>Sản phẩm</span>
         <strong>{formatItemCount(order?.totalItems)}</strong>
       </div>
       <div className="account-order-row__total">
-        <span>Total</span>
-        <strong>{formatCurrency(order?.totalAmount) || "Unavailable"}</strong>
+        <span>Tổng tiền</span>
+        <strong>{formatCurrency(order?.totalAmount) || "Không khả dụng"}</strong>
       </div>
     </article>
   );
@@ -317,7 +330,7 @@ export default function AccountOrdersPage() {
   if (ordersState.status === "error") {
     return (
       <AccountOrdersState
-        title="Orders unavailable."
+        title="Đơn hàng không khả dụng."
         message={ordersState.message}
         alert
         action={
@@ -326,7 +339,7 @@ export default function AccountOrdersPage() {
             className="button button--ghost"
             onClick={() => setRetryKey((key) => key + 1)}
           >
-            Retry
+            Thử lại
           </button>
         }
       />
@@ -336,18 +349,18 @@ export default function AccountOrdersPage() {
   return (
     <section className="account-orders-page" aria-labelledby="account-orders-title">
       <div className="account-orders-page__header">
-        <p className="account-orders-page__kicker">Account</p>
-        <h1 id="account-orders-title">Orders</h1>
-        <p>Review orders placed from this account.</p>
+        <p className="account-orders-page__kicker">Tài khoản</p>
+        <h1 id="account-orders-title">Đơn hàng</h1>
+        <p>Xem các đơn hàng được đặt từ tài khoản này.</p>
         <AccountNavigation />
       </div>
 
       <div className="account-orders-panel">
         <div className="account-orders-panel__header">
-          <h2>Order history</h2>
+          <h2>Lịch sử đơn hàng</h2>
           {ordersState.status === "success" && data?.totalElements ? (
             <p>
-              Showing {resultStart}-{resultEnd} of {data.totalElements}
+              Hiển thị {resultStart}-{resultEnd} trong tổng số {data.totalElements}
             </p>
           ) : null}
         </div>
@@ -358,10 +371,10 @@ export default function AccountOrdersPage() {
 
         {ordersState.status === "success" && orders.length === 0 ? (
           <div className="account-orders-empty">
-            <h2>No orders yet.</h2>
-            <p>Your completed checkouts will appear here.</p>
+            <h2>Chưa có đơn hàng.</h2>
+            <p>Các đơn hàng đã thanh toán sẽ xuất hiện tại đây.</p>
             <Link className="button button--primary" to="/products">
-              Browse products
+              Xem sản phẩm
             </Link>
           </div>
         ) : null}
@@ -370,11 +383,11 @@ export default function AccountOrdersPage() {
           <>
             <div className="account-orders-list">
               <div className="account-order-row account-order-row--head" aria-hidden="true">
-                <span>Reference</span>
-                <span>Date</span>
-                <span>Status</span>
-                <span>Items</span>
-                <span>Total</span>
+                <span>Mã đơn hàng</span>
+                <span>Ngày đặt</span>
+                <span>Trạng thái</span>
+                <span>Sản phẩm</span>
+                <span>Tổng tiền</span>
               </div>
               {orders.map((order) => (
                 <AccountOrderRow key={order.id || order.orderCode} order={order} />

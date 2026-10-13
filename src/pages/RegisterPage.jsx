@@ -13,14 +13,14 @@ import "./AuthPages.css";
 
 function getRegisterErrorMessage(error) {
   if (error?.status === 409) {
-    return "This email could not be registered. If you already have an account, sign in or request a new verification link.";
+    return "Không thể đăng ký email này. Nếu bạn đã có tài khoản, hãy đăng nhập hoặc yêu cầu liên kết xác thực mới.";
   }
 
   if (error?.status === 400) {
-    return "Check the highlighted fields and try again.";
+    return "Kiểm tra các trường được đánh dấu rồi thử lại.";
   }
 
-  return "Unable to create an account right now. Please try again.";
+  return "Không thể tạo tài khoản vào lúc này. Vui lòng thử lại.";
 }
 
 export default function RegisterPage() {
@@ -39,7 +39,7 @@ export default function RegisterPage() {
   if (status === "loading") {
     return (
       <section className="route-state" aria-live="polite">
-        <p>Checking your session...</p>
+        <p>Đang kiểm tra phiên đăng nhập...</p>
       </section>
     );
   }
@@ -66,31 +66,31 @@ export default function RegisterPage() {
     const email = values.email.trim();
 
     if (!fullName) {
-      nextErrors.fullName = "Full name is required.";
+      nextErrors.fullName = "Vui lòng nhập họ và tên.";
     } else if (fullName.length > 100) {
-      nextErrors.fullName = "Full name must not exceed 100 characters.";
+      nextErrors.fullName = "Họ và tên không được vượt quá 100 ký tự.";
     }
 
     if (!email) {
-      nextErrors.email = "Email is required.";
+      nextErrors.email = "Vui lòng nhập email.";
     } else if (!isValidEmail(email)) {
-      nextErrors.email = "Enter a valid email address.";
+      nextErrors.email = "Vui lòng nhập địa chỉ email hợp lệ.";
     } else if (email.length > 100) {
-      nextErrors.email = "Email must not exceed 100 characters.";
+      nextErrors.email = "Email không được vượt quá 100 ký tự.";
     }
 
     if (!values.password) {
-      nextErrors.password = "Password is required.";
+      nextErrors.password = "Vui lòng nhập mật khẩu.";
     } else if (values.password.length < 6) {
-      nextErrors.password = "Password must be at least 6 characters.";
+      nextErrors.password = "Mật khẩu phải có ít nhất 6 ký tự.";
     } else if (values.password.length > 100) {
-      nextErrors.password = "Password must not exceed 100 characters.";
+      nextErrors.password = "Mật khẩu không được vượt quá 100 ký tự.";
     }
 
     if (!values.confirmPassword) {
-      nextErrors.confirmPassword = "Confirm your password.";
+      nextErrors.confirmPassword = "Vui lòng xác nhận mật khẩu.";
     } else if (values.confirmPassword !== values.password) {
-      nextErrors.confirmPassword = "Passwords do not match.";
+      nextErrors.confirmPassword = "Mật khẩu xác nhận không khớp.";
     }
 
     setFieldErrors(nextErrors);
@@ -127,22 +127,21 @@ export default function RegisterPage() {
       <div className="auth-page">
         <section className="auth-page__intro" aria-labelledby="register-success-title">
           <p className="auth-page__brand">CHẬM Account</p>
-          <h1 id="register-success-title">Check your email</h1>
+          <h1 id="register-success-title">Kiểm tra email</h1>
           <p>
-            We sent a verification link to {registeredEmail}. Open that link to
-            activate your account before signing in.
+            Chúng tôi đã gửi liên kết xác thực đến {registeredEmail}. Hãy mở liên kết đó để
+            kích hoạt tài khoản trước khi đăng nhập.
           </p>
         </section>
 
-        <section className="auth-panel" aria-label="Registration next steps">
+        <section className="auth-panel" aria-label="Các bước tiếp theo sau khi đăng ký">
           <div className="auth-status">
-            <h2>Almost ready</h2>
+            <h2>Sắp hoàn tất</h2>
             <p>
-              Registration does not sign you in automatically. Verification is
-              required by the backend before login.
+              Đăng ký không tự động đăng nhập. Bạn cần xác thực email trước khi đăng nhập.
             </p>
             <p className="auth-status__links">
-              <Link to="/login">Already verified? Sign in</Link>
+              <Link to="/login">Đã xác thực? Đăng nhập</Link>
             </p>
           </div>
           <ResendVerificationForm initialEmail={registeredEmail} />
@@ -155,18 +154,18 @@ export default function RegisterPage() {
     <div className="auth-page">
       <section className="auth-page__intro" aria-labelledby="register-title">
         <p className="auth-page__brand">CHẬM Account</p>
-        <h1 id="register-title">Create account</h1>
+        <h1 id="register-title">Tạo tài khoản</h1>
         <p>
-          Set up your account, then verify your email before signing in.
+          Tạo tài khoản, sau đó xác thực email trước khi đăng nhập.
         </p>
       </section>
 
-      <section className="auth-panel" aria-label="Create account form">
+      <section className="auth-panel" aria-label="Biểu mẫu tạo tài khoản">
         <form className="auth-form" onSubmit={handleSubmit}>
           <AuthField
             id="register-full-name"
             name="fullName"
-            label="Full name"
+            label="Họ và tên"
             autoComplete="name"
             value={values.fullName}
             onChange={(event) => updateField("fullName", event.target.value)}
@@ -187,19 +186,19 @@ export default function RegisterPage() {
           <AuthField
             id="register-password"
             name="password"
-            label="Password"
+            label="Mật khẩu"
             type="password"
             autoComplete="new-password"
             value={values.password}
             onChange={(event) => updateField("password", event.target.value)}
             error={fieldErrors.password}
-            hint="At least 6 characters."
+            hint="Ít nhất 6 ký tự."
           />
 
           <AuthField
             id="register-confirm-password"
             name="confirmPassword"
-            label="Confirm password"
+            label="Xác nhận mật khẩu"
             type="password"
             autoComplete="new-password"
             value={values.confirmPassword}
@@ -221,11 +220,11 @@ export default function RegisterPage() {
               className="button button--primary"
               disabled={isSubmitting}
             >
-              {isSubmitting ? "Creating account..." : "Create account"}
+              {isSubmitting ? "Đang tạo tài khoản..." : "Tạo tài khoản"}
             </button>
             <p className="auth-form__links">
-              <span>Already have an account?</span>
-              <Link to="/login">Sign in</Link>
+              <span>Đã có tài khoản?</span>
+              <Link to="/login">Đăng nhập</Link>
             </p>
           </div>
         </form>

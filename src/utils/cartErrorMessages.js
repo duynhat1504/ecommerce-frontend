@@ -1,12 +1,12 @@
 const DOMAIN_ERROR_MESSAGES = new Map([
-  ["Requested quantity exceeds available stock", "Requested quantity exceeds available stock."],
-  ["Product is out of stock", "This product is out of stock."],
-  ["Product is not active", "This product is not available."],
-  ["Product category is not available", "This product is not available."],
-  ["Product not found", "This product is no longer available."],
-  ["Cart not found", "Your cart could not be found. Refresh and try again."],
-  ["Cart item not found", "This item is no longer in your cart."],
-  ["Validation failed", "Check the quantity and try again."],
+  ["Requested quantity exceeds available stock", "Số lượng yêu cầu vượt quá tồn kho hiện có."],
+  ["Product is out of stock", "Sản phẩm này đã hết hàng."],
+  ["Product is not active", "Sản phẩm này hiện không khả dụng."],
+  ["Product category is not available", "Sản phẩm này hiện không khả dụng."],
+  ["Product not found", "Sản phẩm này không còn khả dụng."],
+  ["Cart not found", "Không tìm thấy giỏ hàng. Hãy tải lại và thử lại."],
+  ["Cart item not found", "Sản phẩm này không còn trong giỏ hàng của bạn."],
+  ["Validation failed", "Kiểm tra số lượng rồi thử lại."],
 ]);
 
 export function getCartErrorMessage(error, fallback) {
@@ -15,7 +15,7 @@ export function getCartErrorMessage(error, fallback) {
   }
 
   if (error?.status === 401 || error?.status === 403) {
-    return "Sign in again to continue with your cart.";
+    return "Hãy đăng nhập lại để tiếp tục sử dụng giỏ hàng.";
   }
 
   if (DOMAIN_ERROR_MESSAGES.has(error?.message)) {
@@ -23,7 +23,7 @@ export function getCartErrorMessage(error, fallback) {
   }
 
   if (error?.status >= 500) {
-    return "Cart service is unavailable right now. Please try again.";
+    return "Dịch vụ giỏ hàng hiện không khả dụng. Vui lòng thử lại.";
   }
 
   return fallback;

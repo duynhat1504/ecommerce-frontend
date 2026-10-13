@@ -15,42 +15,42 @@ const initialPasswordValues = {
 
 function getProfileErrorMessage(error) {
   if (error?.status === 401 || error?.status === 403) {
-    return "Sign in again to view your profile.";
+    return "Hãy đăng nhập lại để xem hồ sơ.";
   }
 
   if (error?.status === 404) {
-    return "Profile could not be found.";
+    return "Không tìm thấy hồ sơ.";
   }
 
   if (error?.status >= 500) {
-    return "Profile is unavailable right now. Please try again later.";
+    return "Hồ sơ hiện không khả dụng. Vui lòng thử lại sau.";
   }
 
   if (!error?.status) {
-    return "Network connection failed. Please check your connection and try again.";
+    return "Kết nối mạng thất bại. Vui lòng kiểm tra kết nối rồi thử lại.";
   }
 
-  return "Profile could not be loaded right now.";
+  return "Không thể tải hồ sơ vào lúc này.";
 }
 
 function getPasswordErrorMessage(error) {
   if (error?.status === 401 || error?.status === 403) {
-    return "Sign in again before changing your password.";
+    return "Hãy đăng nhập lại trước khi đổi mật khẩu.";
   }
 
   if (error?.status === 400) {
-    return "Check the highlighted fields and try again.";
+    return "Kiểm tra các trường được đánh dấu rồi thử lại.";
   }
 
   if (error?.status >= 500) {
-    return "Password could not be changed right now. Please try again later.";
+    return "Không thể đổi mật khẩu vào lúc này. Vui lòng thử lại sau.";
   }
 
   if (!error?.status) {
-    return "Network connection failed. Please check your connection and try again.";
+    return "Kết nối mạng thất bại. Vui lòng kiểm tra kết nối rồi thử lại.";
   }
 
-  return "Password could not be changed right now.";
+  return "Không thể đổi mật khẩu vào lúc này.";
 }
 
 function getPasswordFieldErrors(error) {
@@ -62,15 +62,15 @@ function getPasswordFieldErrors(error) {
   };
 
   if (error?.message === "Current password is incorrect") {
-    nextErrors.currentPassword = "Current password is incorrect.";
+    nextErrors.currentPassword = "Mật khẩu hiện tại không chính xác.";
   }
 
   if (error?.message === "Password confirmation does not match") {
-    nextErrors.confirmNewPassword = "Password confirmation does not match.";
+    nextErrors.confirmNewPassword = "Xác nhận mật khẩu không khớp.";
   }
 
   if (error?.message === "New password must be different from current password") {
-    nextErrors.newPassword = "New password must be different from current password.";
+    nextErrors.newPassword = "Mật khẩu mới phải khác mật khẩu hiện tại.";
   }
 
   return nextErrors;
@@ -78,22 +78,22 @@ function getPasswordFieldErrors(error) {
 
 function formatRole(role) {
   if (!role) {
-    return "Unavailable";
+    return "Không khả dụng";
   }
 
-  return role.charAt(0).toUpperCase() + role.slice(1).toLowerCase();
+  return role === "ADMIN" ? "Quản trị viên" : "Người dùng";
 }
 
 function formatStatus(active) {
   if (active === true) {
-    return "Active";
+    return "Đang hoạt động";
   }
 
   if (active === false) {
-    return "Inactive";
+    return "Ngừng hoạt động";
   }
 
-  return "Unavailable";
+  return "Không khả dụng";
 }
 
 function PasswordField({
@@ -154,19 +154,19 @@ function ProfileDetails({ profile }) {
   return (
     <dl className="account-profile-facts">
       <div className="account-profile-fact">
-        <dt>Full name</dt>
-        <dd>{profile?.fullName || "Unavailable"}</dd>
+        <dt>Họ và tên</dt>
+        <dd>{profile?.fullName || "Không khả dụng"}</dd>
       </div>
       <div className="account-profile-fact">
         <dt>Email</dt>
-        <dd>{profile?.email || "Unavailable"}</dd>
+        <dd>{profile?.email || "Không khả dụng"}</dd>
       </div>
       <div className="account-profile-fact">
-        <dt>Status</dt>
+        <dt>Trạng thái</dt>
         <dd>{formatStatus(profile?.active)}</dd>
       </div>
       <div className="account-profile-fact">
-        <dt>Role</dt>
+        <dt>Vai trò</dt>
         <dd>{formatRole(profile?.role)}</dd>
       </div>
     </dl>
@@ -255,21 +255,21 @@ export default function AccountProfilePage() {
     const confirmNewPassword = passwordValues.confirmNewPassword;
 
     if (!currentPassword) {
-      nextErrors.currentPassword = "Current password is required.";
+      nextErrors.currentPassword = "Vui lòng nhập mật khẩu hiện tại.";
     }
 
     if (!newPassword.trim()) {
-      nextErrors.newPassword = "New password is required.";
+      nextErrors.newPassword = "Vui lòng nhập mật khẩu mới.";
     } else if (newPassword.length < 6) {
-      nextErrors.newPassword = "Password must be at least 6 characters.";
+      nextErrors.newPassword = "Mật khẩu phải có ít nhất 6 ký tự.";
     } else if (newPassword.length > 100) {
-      nextErrors.newPassword = "Password must not exceed 100 characters.";
+      nextErrors.newPassword = "Mật khẩu không được vượt quá 100 ký tự.";
     }
 
     if (!confirmNewPassword.trim()) {
-      nextErrors.confirmNewPassword = "Password confirmation is required.";
+      nextErrors.confirmNewPassword = "Vui lòng xác nhận mật khẩu.";
     } else if (confirmNewPassword !== newPassword) {
-      nextErrors.confirmNewPassword = "Password confirmation does not match.";
+      nextErrors.confirmNewPassword = "Xác nhận mật khẩu không khớp.";
     }
 
     setPasswordFieldErrors(nextErrors);
@@ -298,7 +298,7 @@ export default function AccountProfilePage() {
       navigate("/login", {
         replace: true,
         state: {
-          notice: "Password changed. Sign in with your new password.",
+          notice: "Đã đổi mật khẩu. Hãy đăng nhập bằng mật khẩu mới.",
         },
       });
     } catch (error) {
@@ -311,9 +311,9 @@ export default function AccountProfilePage() {
   return (
     <section className="account-profile-page" aria-labelledby="account-profile-title">
       <div className="account-profile-page__header">
-        <p className="account-profile-page__kicker">Account</p>
-        <h1 id="account-profile-title">Profile</h1>
-        <p>View the account details currently held by CHẬM.</p>
+        <p className="account-profile-page__kicker">Tài khoản</p>
+        <h1 id="account-profile-title">Hồ sơ</h1>
+        <p>Xem thông tin tài khoản hiện có tại CHẬM.</p>
         <AccountNavigation />
       </div>
 
@@ -323,14 +323,14 @@ export default function AccountProfilePage() {
           aria-labelledby="account-profile-details-title"
         >
           <div className="account-profile-section__header">
-            <h2 id="account-profile-details-title">Profile details</h2>
+            <h2 id="account-profile-details-title">Thông tin hồ sơ</h2>
             {profileState.status === "error" ? (
               <button
                 type="button"
                 className="button button--ghost"
                 onClick={() => setRetryKey((key) => key + 1)}
               >
-                Retry
+                Thử lại
               </button>
             ) : null}
           </div>
@@ -347,7 +347,7 @@ export default function AccountProfilePage() {
 
           {hasLoadedProfile ? (
             <p className="account-profile-note">
-              Name and email changes are not available from your account page.
+              Bạn không thể đổi họ tên và email từ trang tài khoản.
             </p>
           ) : null}
         </section>
@@ -357,14 +357,14 @@ export default function AccountProfilePage() {
           aria-labelledby="account-password-title"
         >
           <div className="account-profile-section__header">
-            <h2 id="account-password-title">Change password</h2>
+            <h2 id="account-password-title">Đổi mật khẩu</h2>
           </div>
 
           <form className="account-profile-form" onSubmit={handlePasswordSubmit}>
             <PasswordField
               id="account-current-password"
               name="currentPassword"
-              label="Current password"
+              label="Mật khẩu hiện tại"
               autoComplete="current-password"
               value={passwordValues.currentPassword}
               onChange={(event) =>
@@ -376,20 +376,20 @@ export default function AccountProfilePage() {
             <PasswordField
               id="account-new-password"
               name="newPassword"
-              label="New password"
+              label="Mật khẩu mới"
               autoComplete="new-password"
               value={passwordValues.newPassword}
               onChange={(event) =>
                 updatePasswordField("newPassword", event.target.value)
               }
               error={passwordFieldErrors.newPassword}
-              hint="6 to 100 characters."
+              hint="Từ 6 đến 100 ký tự."
             />
 
             <PasswordField
               id="account-confirm-new-password"
               name="confirmNewPassword"
-              label="Confirm new password"
+              label="Xác nhận mật khẩu mới"
               autoComplete="new-password"
               value={passwordValues.confirmNewPassword}
               onChange={(event) =>
@@ -410,7 +410,7 @@ export default function AccountProfilePage() {
                 className="button button--primary"
                 disabled={isPasswordSubmitting || isPasswordUnchanged}
               >
-                {isPasswordSubmitting ? "Changing password..." : "Change password"}
+                {isPasswordSubmitting ? "Đang đổi mật khẩu..." : "Đổi mật khẩu"}
               </button>
             </div>
           </form>

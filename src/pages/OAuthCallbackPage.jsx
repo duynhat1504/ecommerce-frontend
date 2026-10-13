@@ -13,8 +13,8 @@ export default function OAuthCallbackPage() {
     return (
       <section className="oauth-callback" aria-live="polite">
         <p className="auth-page__brand">CHẬM Account</p>
-        <h1>Completing sign in</h1>
-        <p>Checking your session with the storefront.</p>
+        <h1>Đang hoàn tất đăng nhập</h1>
+        <p>Đang kiểm tra phiên đăng nhập của bạn.</p>
       </section>
     );
   }
@@ -26,10 +26,10 @@ export default function OAuthCallbackPage() {
   return (
     <section className="oauth-callback" role="alert">
       <p className="auth-page__brand">CHẬM Account</p>
-      <h1>Google sign in failed</h1>
-      <p>Unable to complete Google sign in. Please try again.</p>
+      <h1>Đăng nhập Google không thành công</h1>
+      <p>Không thể hoàn tất đăng nhập bằng Google. Vui lòng thử lại.</p>
       <Link className="button button--primary" to="/login">
-        Back to sign in
+        Quay lại đăng nhập
       </Link>
     </section>
   );

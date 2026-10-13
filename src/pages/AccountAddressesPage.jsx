@@ -22,49 +22,49 @@ const EMPTY_ADDRESS_FORM = {
 };
 
 const FIELD_LABELS = {
-  recipientName: "Recipient name",
-  phoneNumber: "Phone number",
-  province: "Province",
-  district: "District",
-  ward: "Ward",
-  addressLine: "Address line",
+  recipientName: "Tên người nhận",
+  phoneNumber: "Số điện thoại",
+  province: "Tỉnh / Thành phố",
+  district: "Quận / Huyện",
+  ward: "Phường / Xã",
+  addressLine: "Địa chỉ cụ thể",
 };
 
 function getAddressLoadErrorMessage(error) {
   if (error?.status === 401 || error?.status === 403) {
-    return "Sign in again to view your addresses.";
+    return "Hãy đăng nhập lại để xem địa chỉ.";
   }
 
   if (error?.status >= 500) {
-    return "Addresses are unavailable right now. Please try again later.";
+    return "Địa chỉ hiện không khả dụng. Vui lòng thử lại sau.";
   }
 
   if (!error?.status) {
-    return "Network connection failed. Please check your connection and try again.";
+    return "Kết nối mạng thất bại. Vui lòng kiểm tra kết nối rồi thử lại.";
   }
 
-  return "Addresses could not be loaded right now.";
+  return "Không thể tải địa chỉ vào lúc này.";
 }
 
 function getAddressMutationErrorMessage(error, fallback) {
   if (error?.status === 401 || error?.status === 403) {
-    return "Sign in again before changing addresses.";
+    return "Hãy đăng nhập lại trước khi thay đổi địa chỉ.";
   }
 
   if (error?.status === 400) {
-    return "Check the highlighted fields and try again.";
+    return "Kiểm tra các trường được đánh dấu rồi thử lại.";
   }
 
   if (error?.status === 404) {
-    return "This address is no longer available.";
+    return "Địa chỉ này không còn khả dụng.";
   }
 
   if (error?.status >= 500) {
-    return "Addresses are unavailable right now. Please try again later.";
+    return "Địa chỉ hiện không khả dụng. Vui lòng thử lại sau.";
   }
 
   if (!error?.status) {
-    return "Network connection failed. Please check your connection and try again.";
+    return "Kết nối mạng thất bại. Vui lòng kiểm tra kết nối rồi thử lại.";
   }
 
   return fallback;
@@ -72,19 +72,19 @@ function getAddressMutationErrorMessage(error, fallback) {
 
 function getAddressActionErrorMessage(error, fallback) {
   if (error?.status === 401 || error?.status === 403) {
-    return "Sign in again before changing addresses.";
+    return "Hãy đăng nhập lại trước khi thay đổi địa chỉ.";
   }
 
   if (error?.status === 404) {
-    return "This address is no longer available.";
+    return "Địa chỉ này không còn khả dụng.";
   }
 
   if (error?.status >= 500) {
-    return "Addresses are unavailable right now. Please try again later.";
+    return "Địa chỉ hiện không khả dụng. Vui lòng thử lại sau.";
   }
 
   if (!error?.status) {
-    return "Network connection failed. Please check your connection and try again.";
+    return "Kết nối mạng thất bại. Vui lòng kiểm tra kết nối rồi thử lại.";
   }
 
   return fallback;
@@ -96,32 +96,32 @@ function getAddressFormErrors(values, mode) {
 
   Object.entries(FIELD_LABELS).forEach(([field, label]) => {
     if (!values[field].trim()) {
-      errors[field] = `${label} is required.`;
+      errors[field] = `Vui lòng nhập ${label.toLowerCase()}.`;
     }
   });
 
   if (values.recipientName.trim().length > 150) {
-    errors.recipientName = "Recipient name must be 150 characters or fewer.";
+    errors.recipientName = "Tên người nhận không được quá 150 ký tự.";
   }
 
   if (values.phoneNumber.trim().length > phoneLimit) {
-    errors.phoneNumber = `Phone number must be ${phoneLimit} characters or fewer.`;
+    errors.phoneNumber = `Số điện thoại không được quá ${phoneLimit} ký tự.`;
   }
 
   if (values.province.trim().length > 100) {
-    errors.province = "Province must be 100 characters or fewer.";
+    errors.province = "Tỉnh / Thành phố không được quá 100 ký tự.";
   }
 
   if (values.district.trim().length > 100) {
-    errors.district = "District must be 100 characters or fewer.";
+    errors.district = "Quận / Huyện không được quá 100 ký tự.";
   }
 
   if (values.ward.trim().length > 100) {
-    errors.ward = "Ward must be 100 characters or fewer.";
+    errors.ward = "Phường / Xã không được quá 100 ký tự.";
   }
 
   if (values.addressLine.trim().length > 255) {
-    errors.addressLine = "Address line must be 255 characters or fewer.";
+    errors.addressLine = "Địa chỉ cụ thể không được quá 255 ký tự.";
   }
 
   return errors;
@@ -214,7 +214,7 @@ function AddressForm({
         <AddressField
           id="account-address-recipient-name"
           name="recipientName"
-          label="Recipient name"
+          label="Tên người nhận"
           value={formValues.recipientName}
           onChange={onChange}
           autoComplete="name"
@@ -224,7 +224,7 @@ function AddressForm({
         <AddressField
           id="account-address-phone-number"
           name="phoneNumber"
-          label="Phone number"
+          label="Số điện thoại"
           value={formValues.phoneNumber}
           onChange={onChange}
           autoComplete="tel"
@@ -234,7 +234,7 @@ function AddressForm({
         <AddressField
           id="account-address-province"
           name="province"
-          label="Province"
+          label="Tỉnh / Thành phố"
           value={formValues.province}
           onChange={onChange}
           autoComplete="address-level1"
@@ -244,7 +244,7 @@ function AddressForm({
         <AddressField
           id="account-address-district"
           name="district"
-          label="District"
+          label="Quận / Huyện"
           value={formValues.district}
           onChange={onChange}
           autoComplete="address-level2"
@@ -254,7 +254,7 @@ function AddressForm({
         <AddressField
           id="account-address-ward"
           name="ward"
-          label="Ward"
+          label="Phường / Xã"
           value={formValues.ward}
           onChange={onChange}
           autoComplete="address-level3"
@@ -264,7 +264,7 @@ function AddressForm({
         <AddressField
           id="account-address-line"
           name="addressLine"
-          label="Address line"
+          label="Địa chỉ cụ thể"
           value={formValues.addressLine}
           onChange={onChange}
           autoComplete="street-address"
@@ -281,7 +281,7 @@ function AddressForm({
             checked={formValues.defaultAddress}
             onChange={onChange}
           />
-          <span>Use as default address</span>
+          <span>Đặt làm địa chỉ mặc định</span>
         </label>
       ) : null}
 
@@ -292,10 +292,10 @@ function AddressForm({
           disabled={isSubmitting}
         >
           {isSubmitting
-            ? "Saving address..."
+            ? "Đang lưu địa chỉ..."
             : isEdit
-              ? "Save changes"
-              : "Save address"}
+              ? "Lưu thay đổi"
+              : "Lưu địa chỉ"}
         </button>
         <button
           type="button"
@@ -303,7 +303,7 @@ function AddressForm({
           onClick={onCancel}
           disabled={isSubmitting}
         >
-          Cancel
+          Hủy
         </button>
       </div>
     </form>
@@ -342,17 +342,17 @@ function AddressRow({
   return (
     <article
       className="account-address-row"
-      aria-label={address.recipientName || "Saved address"}
+      aria-label={address.recipientName || "Địa chỉ đã lưu"}
     >
       <div className="account-address-row__main">
         <div className="account-address-row__heading">
-          <h3>{address.recipientName || "Recipient"}</h3>
+          <h3>{address.recipientName || "Người nhận"}</h3>
           {isDefault ? (
-            <span className="account-address-default">Default</span>
+            <span className="account-address-default">Mặc định</span>
           ) : null}
         </div>
-        <p>{address.phoneNumber || "Phone unavailable"}</p>
-        <p>{getAddressSummary(address) || "Address unavailable"}</p>
+        <p>{address.phoneNumber || "Không có số điện thoại"}</p>
+        <p>{getAddressSummary(address) || "Địa chỉ không khả dụng"}</p>
       </div>
 
       <div className="account-address-row__actions">
@@ -362,7 +362,7 @@ function AddressRow({
           onClick={() => onEdit(address)}
           disabled={Boolean(actionAddressId)}
         >
-          Edit
+          Sửa
         </button>
         {!isDefault ? (
           <button
@@ -371,7 +371,7 @@ function AddressRow({
             onClick={() => onSetDefault(address.id)}
             disabled={Boolean(actionAddressId)}
           >
-            {isSettingDefault ? "Setting..." : "Set default"}
+            {isSettingDefault ? "Đang đặt..." : "Đặt mặc định"}
           </button>
         ) : null}
         <button
@@ -380,13 +380,13 @@ function AddressRow({
           onClick={() => onDeleteStart(address.id)}
           disabled={Boolean(actionAddressId)}
         >
-          Delete
+          Xóa
         </button>
       </div>
 
       {isConfirmingDelete ? (
         <div className="account-address-confirm" role="alert">
-          <p>Delete this address? This cannot be undone.</p>
+          <p>Xóa địa chỉ này? Thao tác này không thể hoàn tác.</p>
           <div>
             <button
               type="button"
@@ -394,7 +394,7 @@ function AddressRow({
               onClick={() => onConfirmDelete(address.id)}
               disabled={Boolean(actionAddressId)}
             >
-              {isDeleting ? "Deleting..." : "Delete address"}
+              {isDeleting ? "Đang xóa..." : "Xóa địa chỉ"}
             </button>
             <button
               type="button"
@@ -402,7 +402,7 @@ function AddressRow({
               onClick={onCancelDelete}
               disabled={Boolean(actionAddressId)}
             >
-              Keep address
+              Giữ địa chỉ
             </button>
           </div>
         </div>
@@ -586,7 +586,7 @@ export default function AccountAddressesPage() {
     } catch (error) {
       setFieldErrors(getBackendAddressErrors(error));
       setFormError(
-        getAddressMutationErrorMessage(error, "Address could not be saved."),
+        getAddressMutationErrorMessage(error, "Không thể lưu địa chỉ."),
       );
     } finally {
       setIsSubmitting(false);
@@ -607,7 +607,7 @@ export default function AccountAddressesPage() {
       await reloadAddresses();
     } catch (error) {
       setActionError(
-        getAddressActionErrorMessage(error, "Default address could not be changed."),
+        getAddressActionErrorMessage(error, "Không thể đổi địa chỉ mặc định."),
       );
       await reloadAddresses().catch(() => {});
     } finally {
@@ -638,7 +638,7 @@ export default function AccountAddressesPage() {
       }
     } catch (error) {
       setActionError(
-        getAddressActionErrorMessage(error, "Address could not be deleted."),
+        getAddressActionErrorMessage(error, "Không thể xóa địa chỉ."),
       );
       await reloadAddresses().catch(() => {});
     } finally {
@@ -660,11 +660,11 @@ export default function AccountAddressesPage() {
         aria-labelledby="account-addresses-state-title"
         role="alert"
       >
-        <p className="account-addresses-state__kicker">Account</p>
-        <h1 id="account-addresses-state-title">Addresses unavailable.</h1>
+        <p className="account-addresses-state__kicker">Tài khoản</p>
+        <h1 id="account-addresses-state-title">Địa chỉ không khả dụng.</h1>
         <p>{addressesState.message}</p>
         <button type="button" className="button button--ghost" onClick={handleRetry}>
-          Retry
+          Thử lại
         </button>
       </section>
     );
@@ -673,9 +673,9 @@ export default function AccountAddressesPage() {
   return (
     <section className="account-addresses-page" aria-labelledby="account-addresses-title">
       <div className="account-addresses-page__header">
-        <p className="account-addresses-page__kicker">Account</p>
-        <h1 id="account-addresses-title">Addresses</h1>
-        <p>Manage the saved shipping addresses for this account.</p>
+        <p className="account-addresses-page__kicker">Tài khoản</p>
+        <h1 id="account-addresses-title">Địa chỉ</h1>
+        <p>Quản lý các địa chỉ giao hàng đã lưu cho tài khoản này.</p>
         <AccountNavigation />
       </div>
 
@@ -686,13 +686,13 @@ export default function AccountAddressesPage() {
         >
           <div className="account-addresses-section__header">
             <div>
-              <h2 id="account-address-list-title">Saved addresses</h2>
+              <h2 id="account-address-list-title">Địa chỉ đã lưu</h2>
               {addressesState.status === "success" && hasAddresses ? (
                 <p>
                   {addresses.length}{" "}
-                  {addresses.length === 1 ? "address" : "addresses"} saved.{" "}
+                  địa chỉ đã lưu.{" "}
                   {defaultAddress
-                    ? `${defaultAddress.recipientName || "One address"} is default.`
+                    ? `${defaultAddress.recipientName || "Một địa chỉ"} là địa chỉ mặc định.`
                     : ""}
                 </p>
               ) : null}
@@ -704,7 +704,7 @@ export default function AccountAddressesPage() {
                 onClick={openCreateForm}
                 disabled={isSubmitting || Boolean(actionAddressId)}
               >
-                Add address
+                Thêm địa chỉ
               </button>
             ) : null}
           </div>
@@ -713,8 +713,8 @@ export default function AccountAddressesPage() {
 
           {addressesState.status === "success" && !hasAddresses ? (
             <div className="account-addresses-empty">
-              <h2>No addresses yet.</h2>
-              <p>Add a shipping address to make future checkouts faster.</p>
+            <h2>Chưa có địa chỉ.</h2>
+            <p>Thêm địa chỉ giao hàng để thanh toán nhanh hơn trong các lần sau.</p>
             </div>
           ) : null}
 
@@ -753,12 +753,12 @@ export default function AccountAddressesPage() {
           <div className="account-addresses-section__header">
             <div>
               <h2 id="account-address-form-title">
-                {formMode === "edit" ? "Edit address" : "Add address"}
+                {formMode === "edit" ? "Sửa địa chỉ" : "Thêm địa chỉ"}
               </h2>
               <p>
                 {formMode === "edit"
-                  ? "Default status is changed from the saved address list."
-                  : "The first address becomes default automatically."}
+                  ? "Trạng thái mặc định được thay đổi từ danh sách địa chỉ đã lưu."
+                  : "Địa chỉ đầu tiên sẽ tự động trở thành địa chỉ mặc định."}
               </p>
             </div>
           </div>
@@ -782,14 +782,14 @@ export default function AccountAddressesPage() {
             </>
           ) : (
             <div className="account-addresses-idle">
-              <p>Select an address to edit, or add a new one.</p>
+              <p>Chọn một địa chỉ để sửa, hoặc thêm địa chỉ mới.</p>
               <button
                 type="button"
                 className="button button--primary"
                 onClick={openCreateForm}
                 disabled={Boolean(actionAddressId)}
               >
-                Add address
+                Thêm địa chỉ
               </button>
             </div>
           )}

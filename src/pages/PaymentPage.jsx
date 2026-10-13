@@ -43,23 +43,36 @@ function getOrderItemCount(order) {
 function getOrderStatusMessage(status) {
   switch (status) {
     case "CONFIRMED":
-      return "This order is confirmed. Payment is no longer available.";
+      return "Đơn hàng này đã được xác nhận. Không thể thanh toán thêm.";
     case "CANCELLED":
-      return "This order was cancelled and cannot be paid.";
+      return "Đơn hàng này đã bị hủy và không thể thanh toán.";
     case "EXPIRED":
-      return "This order expired and cannot be paid.";
+      return "Đơn hàng này đã hết hạn và không thể thanh toán.";
     case "SHIPPING":
     case "COMPLETED":
-      return "This order has moved past payment.";
+      return "Đơn hàng này đã qua bước thanh toán.";
     default:
-      return "Only pending orders can be paid.";
+      return "Chỉ có thể thanh toán đơn hàng đang chờ xác nhận.";
   }
+}
+
+function getOrderStatusLabel(status) {
+  const labels = {
+    PENDING: "Chờ xác nhận",
+    CONFIRMED: "Đã xác nhận",
+    SHIPPING: "Đang giao",
+    COMPLETED: "Hoàn thành",
+    CANCELLED: "Đã hủy",
+    EXPIRED: "Hết hạn",
+  };
+
+  return labels[status] || "Không xác định";
 }
 
 function PaymentState({ title, message, action }) {
   return (
     <section className="payment-state" aria-labelledby="payment-state-title">
-      <p className="payment-state__kicker">Payment</p>
+      <p className="payment-state__kicker">Thanh toán</p>
       <h1 id="payment-state-title">{title}</h1>
       <p>{message}</p>
       {action}
@@ -71,24 +84,24 @@ function OrderFacts({ order, payment }) {
   return (
     <dl className="payment-facts">
       <div>
-        <dt>Order reference</dt>
-        <dd>{order?.orderCode || order?.id || "Order"}</dd>
+        <dt>Mã đơn hàng</dt>
+        <dd>{order?.orderCode || order?.id || "Đơn hàng"}</dd>
       </div>
       <div>
-        <dt>Order status</dt>
-        <dd>{order?.status || "Unavailable"}</dd>
+        <dt>Trạng thái đơn hàng</dt>
+        <dd>{getOrderStatusLabel(order?.status)}</dd>
       </div>
       <div>
-        <dt>Payment method</dt>
-        <dd>{payment?.method || "Mock payment"}</dd>
+        <dt>Phương thức thanh toán</dt>
+        <dd>{payment?.method || "Thanh toán mô phỏng"}</dd>
       </div>
       <div>
-        <dt>Payment status</dt>
-        <dd>{payment?.status || "Not submitted"}</dd>
+        <dt>Trạng thái thanh toán</dt>
+        <dd>{payment?.status || "Chưa thực hiện"}</dd>
       </div>
       {payment?.transactionCode ? (
         <div>
-          <dt>Transaction code</dt>
+          <dt>Mã giao dịch</dt>
           <dd>{payment.transactionCode}</dd>
         </div>
       ) : null}
@@ -101,13 +114,13 @@ function PaymentOrderSummary({ order }) {
 
   return (
     <section className="payment-summary" aria-labelledby="payment-summary-title">
-      <h2 id="payment-summary-title">Order summary</h2>
+      <h2 id="payment-summary-title">Tóm tắt đơn hàng</h2>
       <div className="payment-summary__items">
         {items.map((item) => (
           <article className="payment-summary-item" key={item.productId || item.productName}>
             <div>
-              <h3>{item.productName || "Product"}</h3>
-              <p>Quantity {item.quantity}</p>
+              <h3>{item.productName || "Sản phẩm"}</h3>
+              <p>Số lượng: {item.quantity}</p>
             </div>
             <p>{formatCurrency(item.subtotal)}</p>
           </article>
@@ -115,11 +128,11 @@ function PaymentOrderSummary({ order }) {
       </div>
       <dl className="payment-summary__total">
         <div>
-          <dt>Items</dt>
+          <dt>Sản phẩm</dt>
           <dd>{getOrderItemCount(order)}</dd>
         </div>
         <div>
-          <dt>Amount</dt>
+          <dt>Thành tiền</dt>
           <dd>{formatCurrency(order?.totalAmount)}</dd>
         </div>
       </dl>
@@ -135,9 +148,9 @@ function PaymentResult({ payment, order, onRetryNewAttempt }) {
   if (payment.status === "SUCCESS") {
     return (
       <section className="payment-result payment-result--success" aria-live="polite">
-        <h2>Payment successful.</h2>
+        <h2>Thanh toán thành công.</h2>
         <p>
-          Your mock payment was accepted and the order is now {order?.status || "confirmed"}.
+          Thanh toán mô phỏng đã được chấp nhận và đơn hàng hiện đã được xác nhận.
         </p>
       </section>
     );
@@ -146,11 +159,11 @@ function PaymentResult({ payment, order, onRetryNewAttempt }) {
   if (payment.status === "FAILED") {
     return (
       <section className="payment-result payment-result--failed" role="alert">
-        <h2>Payment unsuccessful.</h2>
-        <p>{payment.failureReason || "The mock payment was declined."}</p>
+        <h2>Thanh toán không thành công.</h2>
+        <p>{payment.failureReason || "Thanh toán mô phỏng đã bị từ chối."}</p>
         {order?.status === PAYABLE_STATUS ? (
           <button type="button" className="button button--primary" onClick={onRetryNewAttempt}>
-            Try mock payment again
+            Thử thanh toán mô phỏng lại
           </button>
         ) : null}
       </section>
@@ -221,7 +234,7 @@ export default function PaymentPage() {
           order: null,
           message: getPaymentErrorMessage(
             error,
-            "Order details could not be loaded right now.",
+            "Không thể tải chi tiết đơn hàng vào lúc này.",
           ),
         });
       }
@@ -289,7 +302,7 @@ export default function PaymentPage() {
         setPaymentState({
           status: "uncertain",
           payment,
-          message: "Payment succeeded, but order status could not be confirmed.",
+          message: "Thanh toán thành công, nhưng chưa thể xác nhận trạng thái đơn hàng.",
           attempt,
         });
       }
@@ -304,8 +317,8 @@ export default function PaymentPage() {
 
       if (isUnconfirmedPaymentError(error)) {
         const message = refreshedOrder?.status === "CONFIRMED"
-          ? "Order is confirmed, but the payment response was not received."
-          : "We could not confirm the payment result. Check the order status or retry the same payment attempt.";
+          ? "Đơn hàng đã được xác nhận, nhưng chưa nhận được phản hồi thanh toán."
+          : "Không thể xác nhận kết quả thanh toán. Hãy kiểm tra trạng thái đơn hàng hoặc thử lại cùng lần thanh toán.";
 
         setPaymentState({
           status: "uncertain",
@@ -321,7 +334,7 @@ export default function PaymentPage() {
         payment: null,
         message: getPaymentErrorMessage(
           error,
-          "Payment could not be processed right now.",
+          "Không thể xử lý thanh toán vào lúc này.",
         ),
         attempt,
       });
@@ -337,11 +350,11 @@ export default function PaymentPage() {
   if (!isValidOrderId) {
     return (
       <PaymentState
-        title="Payment unavailable."
-        message="This order is unavailable or the link is no longer valid."
+        title="Không thể thanh toán."
+        message="Đơn hàng này không khả dụng hoặc liên kết không còn hợp lệ."
         action={
           <Link className="button button--primary" to="/products">
-            Continue shopping
+            Tiếp tục mua sắm
           </Link>
         }
       />
@@ -351,8 +364,8 @@ export default function PaymentPage() {
   if (orderState.status === "loading") {
     return (
       <PaymentState
-        title="Loading payment."
-        message="Order details are being loaded."
+        title="Đang tải thanh toán."
+        message="Đang tải thông tin đơn hàng."
       />
     );
   }
@@ -360,11 +373,11 @@ export default function PaymentPage() {
   if (orderState.status === "unavailable") {
     return (
       <PaymentState
-        title="Payment unavailable."
+        title="Không thể thanh toán."
         message={orderState.message}
         action={
           <Link className="button button--primary" to="/products">
-            Continue shopping
+            Tiếp tục mua sắm
           </Link>
         }
       />
@@ -374,15 +387,15 @@ export default function PaymentPage() {
   if (orderState.status === "error") {
     return (
       <PaymentState
-        title="Payment could not be loaded."
+        title="Không thể tải thanh toán."
         message={orderState.message}
         action={
           <div className="payment-state__actions">
             <button type="button" className="button button--ghost" onClick={handleReloadOrder}>
-              Retry
+              Thử lại
             </button>
             <Link className="button button--primary" to="/products">
-              Continue shopping
+              Tiếp tục mua sắm
             </Link>
           </div>
         }
@@ -393,28 +406,28 @@ export default function PaymentPage() {
   return (
     <section className="payment-page" aria-labelledby="payment-title">
       <div className="payment-page__header">
-        <p className="payment-page__kicker">Payment</p>
-        <h1 id="payment-title">Payment</h1>
+        <p className="payment-page__kicker">Thanh toán</p>
+        <h1 id="payment-title">Thanh toán</h1>
         <p>
           {isPayable
-            ? "Complete the mock payment for this pending order."
-            : "Review the current payment state for this order."}
+            ? "Hoàn tất thanh toán mô phỏng cho đơn hàng đang chờ xác nhận này."
+            : "Xem trạng thái thanh toán hiện tại của đơn hàng này."}
         </p>
       </div>
 
       <div className="payment-layout">
         <div className="payment-panel">
           <section className="payment-section" aria-labelledby="payment-order-title">
-            <h2 id="payment-order-title">Order</h2>
+            <h2 id="payment-order-title">Đơn hàng</h2>
             <OrderFacts order={order} payment={paymentState.payment} />
           </section>
 
           <section className="payment-section" aria-labelledby="payment-action-title">
-            <h2 id="payment-action-title">Mock payment</h2>
+            <h2 id="payment-action-title">Thanh toán mô phỏng</h2>
             {isPayable ? (
               <>
                 <p>
-                  This uses the backend mock payment method. No card, bank, or gateway details are collected.
+                  Đây là phương thức thanh toán mô phỏng. Không thu thập thông tin thẻ, ngân hàng hoặc cổng thanh toán.
                 </p>
                 <div className="payment-actions" aria-live="polite">
                   <button
@@ -423,7 +436,7 @@ export default function PaymentPage() {
                     onClick={() => submitMockPayment(true)}
                     disabled={isSubmitting}
                   >
-                    {isSubmitting ? "Processing..." : "Pay order"}
+                    {isSubmitting ? "Đang xử lý..." : "Thanh toán đơn hàng"}
                   </button>
                   <button
                     type="button"
@@ -431,7 +444,7 @@ export default function PaymentPage() {
                     onClick={() => submitMockPayment(false)}
                     disabled={isSubmitting}
                   >
-                    Simulate failed payment
+                    Mô phỏng thanh toán thất bại
                   </button>
                 </div>
               </>
@@ -457,7 +470,7 @@ export default function PaymentPage() {
                     onClick={handleReloadOrder}
                     disabled={isSubmitting}
                   >
-                    Check order status
+                    Kiểm tra trạng thái đơn hàng
                   </button>
                   {canRetrySameAttempt ? (
                     <button
@@ -468,7 +481,7 @@ export default function PaymentPage() {
                       })}
                       disabled={isSubmitting}
                     >
-                      Retry same attempt
+                    Thử lại cùng lần thanh toán
                     </button>
                   ) : null}
                 </div>
