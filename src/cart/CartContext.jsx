@@ -63,7 +63,7 @@ export function CartProvider({ children }) {
         throw requestError;
       }
 
-      setError("Cart could not be loaded right now.");
+      setError("Không thể tải giỏ hàng vào lúc này.");
       setStatus("error");
       throw requestError;
     }

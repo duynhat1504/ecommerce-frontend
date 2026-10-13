@@ -3,14 +3,14 @@ import { NavLink } from "react-router-dom";
 import "./AccountNavigation.css";
 
 const accountRoutes = [
-  { to: "/account/profile", label: "Profile" },
-  { to: "/account/orders", label: "Orders" },
-  { to: "/account/addresses", label: "Addresses" },
+  { to: "/account/profile", label: "Hồ sơ" },
+  { to: "/account/orders", label: "Đơn hàng" },
+  { to: "/account/addresses", label: "Địa chỉ" },
 ];
 
 export default function AccountNavigation() {
   return (
-    <nav className="account-navigation" aria-label="Account navigation">
+    <nav className="account-navigation" aria-label="Điều hướng tài khoản">
       {accountRoutes.map((route) => (
         <NavLink
           key={route.to}

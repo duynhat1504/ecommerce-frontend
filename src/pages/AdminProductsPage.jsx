@@ -36,15 +36,15 @@ const ALLOWED_IMAGE_TYPES = [
 const PAGE_SIZE_OPTIONS = [10, 25, 50, 100];
 
 const SORT_OPTIONS = [
-  { label: "Newest", value: "createdAt,desc" },
-  { label: "Oldest", value: "createdAt,asc" },
-  { label: "Updated recently", value: "updatedAt,desc" },
-  { label: "Name A to Z", value: "name,asc" },
-  { label: "Name Z to A", value: "name,desc" },
-  { label: "Price low", value: "price,asc" },
-  { label: "Price high", value: "price,desc" },
-  { label: "Stock low", value: "stock,asc" },
-  { label: "Stock high", value: "stock,desc" },
+  { label: "Mới nhất", value: "createdAt,desc" },
+  { label: "Cũ nhất", value: "createdAt,asc" },
+  { label: "Mới cập nhật", value: "updatedAt,desc" },
+  { label: "Tên A đến Z", value: "name,asc" },
+  { label: "Tên Z đến A", value: "name,desc" },
+  { label: "Giá thấp nhất", value: "price,asc" },
+  { label: "Giá cao nhất", value: "price,desc" },
+  { label: "Tồn kho thấp nhất", value: "stock,asc" },
+  { label: "Tồn kho cao nhất", value: "stock,desc" },
 ];
 
 const SORT_VALUES = SORT_OPTIONS.map((option) => option.value);
@@ -149,31 +149,31 @@ function getDateTimeLabel(value) {
 function getLifecycle(product) {
   if (product?.deletedAt) {
     return {
-      label: "Deleted",
+      label: "Đã xóa",
       className: "admin-products-status admin-products-status--deleted",
     };
   }
 
   if (product?.active) {
     return {
-      label: "Active",
+      label: "Đang bán",
       className: "admin-products-status admin-products-status--active",
     };
   }
 
   return {
-    label: "Inactive",
+    label: "Ngừng bán",
     className: "admin-products-status admin-products-status--inactive",
   };
 }
 
 function getProductMutationErrorMessage(error, fallback) {
   if (error?.status === 401 || error?.status === 403) {
-    return "Admin access is required. Sign in again with an admin account.";
+    return "Cần quyền quản trị. Hãy đăng nhập lại bằng tài khoản quản trị.";
   }
 
   if (error?.status === 400 && error?.data?.errors) {
-    return "Check the highlighted fields and try again.";
+    return "Kiểm tra các trường được đánh dấu rồi thử lại.";
   }
 
   if (error?.status === 400) {
@@ -181,19 +181,19 @@ function getProductMutationErrorMessage(error, fallback) {
   }
 
   if (error?.status === 404) {
-    return error.message || "The product or category was not found.";
+    return "Không tìm thấy sản phẩm hoặc danh mục.";
   }
 
   if (error?.status === 409) {
-    return error.message || "The product conflicts with existing data.";
+    return "Sản phẩm xung đột với dữ liệu hiện có.";
   }
 
   if (error?.status >= 500) {
-    return "The product service is unavailable right now.";
+    return "Dịch vụ sản phẩm hiện không khả dụng.";
   }
 
   if (!error?.status) {
-    return "Network connection failed. Check the API server and try again.";
+    return "Kết nối mạng thất bại. Hãy kiểm tra máy chủ API rồi thử lại.";
   }
 
   return fallback;
@@ -212,7 +212,7 @@ function getProductFieldErrors(error) {
     error?.message === "Category not found" ||
     error?.message === "Category is inactive"
   ) {
-    errors.categoryName = error.message;
+    errors.categoryName = "Danh mục không tồn tại hoặc đã ngừng hoạt động.";
   }
 
   return errors;
@@ -340,7 +340,7 @@ function ProductForm({
   selectedImageFile,
 }) {
   const isEdit = formMode === "edit";
-  const title = isEdit ? "Edit product" : "Create product";
+  const title = isEdit ? "Sửa sản phẩm" : "Thêm sản phẩm";
   const hasCurrentCategory = categories.some(
     (category) => category.name === formValues.categoryName,
   );
@@ -360,7 +360,7 @@ function ProductForm({
           onClick={onCancel}
           disabled={isSubmitting}
         >
-          Close
+          Đóng
         </button>
       </div>
 
@@ -368,7 +368,7 @@ function ProductForm({
         <ProductFormField
           id="admin-product-name"
           name="name"
-          label="Name"
+          label="Tên sản phẩm"
           value={formValues.name}
           onChange={onChange}
           maxLength={150}
@@ -378,7 +378,7 @@ function ProductForm({
         <ProductFormField
           id="admin-product-price"
           name="price"
-          label="Price"
+          label="Giá"
           type="number"
           min="0"
           step="0.01"
@@ -393,19 +393,19 @@ function ProductForm({
             as="select"
             id="admin-product-active"
             name="active"
-            label="Storefront status"
+            label="Trạng thái bán"
             value={String(formValues.active)}
             onChange={onChange}
             error={fieldErrors.active}
           >
-            <option value="true">Active</option>
-            <option value="false">Inactive</option>
+            <option value="true">Đang bán</option>
+            <option value="false">Ngừng bán</option>
           </ProductFormField>
         ) : (
           <ProductFormField
             id="admin-product-stock"
             name="stock"
-            label="Opening stock"
+            label="Tồn kho ban đầu"
             type="number"
             min="0"
             step="1"
@@ -420,7 +420,7 @@ function ProductForm({
           as="select"
           id="admin-product-category"
           name="categoryName"
-          label="Category"
+          label="Danh mục"
           value={formValues.categoryName}
           onChange={onChange}
           error={fieldErrors.categoryName}
@@ -428,8 +428,8 @@ function ProductForm({
         >
           <option value="">
             {categoriesStatus === "loading"
-              ? "Loading categories"
-              : "Select category"}
+              ? "Đang tải danh mục"
+              : "Chọn danh mục"}
           </option>
           {categories.map((category) => (
             <option key={category.id} value={category.name}>
@@ -438,13 +438,13 @@ function ProductForm({
           ))}
           {showUnavailableCategory ? (
             <option value={formValues.categoryName}>
-              {formValues.categoryName} (unavailable)
+              {formValues.categoryName} (không khả dụng)
             </option>
           ) : null}
         </ProductFormField>
 
         <div className="admin-product-field">
-          <label htmlFor="admin-product-image">Product image</label>
+          <label htmlFor="admin-product-image">Hình ảnh sản phẩm</label>
 
           <input
             id="admin-product-image"
@@ -455,19 +455,19 @@ function ProductForm({
           />
 
           <p className="admin-product-field__hint">
-            JPEG, PNG or WebP. Maximum 5 MB.
+            Hỗ trợ JPEG, PNG hoặc WebP. Tối đa 5 MB.
           </p>
 
           {selectedImageFile ? (
             <p className="admin-product-field__hint">
-              Selected: {selectedImageFile.name}
+              Đã chọn: {selectedImageFile.name}
             </p>
           ) : null}
 
           {previewImageUrl || currentImageUrl ? (
             <ProductImage
               src={previewImageUrl || currentImageUrl}
-              alt="Product preview"
+              alt="Xem trước sản phẩm"
               className="admin-product-form__image-preview"
               loading="eager"
             />
@@ -480,7 +480,7 @@ function ProductForm({
               onClick={onDeleteImage}
               disabled={isSubmitting || isDeletingImage}
             >
-              {isDeletingImage ? "Deleting image..." : "Delete image"}
+              {isDeletingImage ? "Đang xóa ảnh..." : "Xóa ảnh"}
             </button>
           ) : null}
         </div>
@@ -490,7 +490,7 @@ function ProductForm({
         as="textarea"
         id="admin-product-description"
         name="description"
-        label="Description"
+        label="Mô tả"
         value={formValues.description}
         onChange={onChange}
         maxLength={1000}
@@ -500,15 +500,13 @@ function ProductForm({
 
       {categoriesStatus === "empty" ? (
         <p className="admin-products-alert" role="alert">
-          No active categories are available. Create or reactivate a category in
-          the backend before saving products.
+          Không có danh mục đang hoạt động. Hãy tạo hoặc kích hoạt lại danh mục trước khi lưu sản phẩm.
         </p>
       ) : null}
 
       {categoriesStatus === "error" ? (
         <p className="admin-products-alert" role="alert">
-          Categories could not be loaded. Product saves may fail until category
-          data is available.
+          Không thể tải danh mục. Việc lưu sản phẩm có thể thất bại cho đến khi có dữ liệu danh mục.
         </p>
       ) : null}
 
@@ -519,10 +517,10 @@ function ProductForm({
           disabled={isSubmitting || categoriesStatus === "loading"}
         >
           {isSubmitting
-            ? "Saving..."
+            ? "Đang lưu..."
             : isEdit
-              ? "Save changes"
-              : "Create product"}
+              ? "Lưu thay đổi"
+              : "Thêm sản phẩm"}
         </button>
         <button
           type="button"
@@ -530,7 +528,7 @@ function ProductForm({
           onClick={onCancel}
           disabled={isSubmitting}
         >
-          Cancel
+          Hủy
         </button>
       </div>
     </form>
@@ -551,7 +549,7 @@ function ProductPagination({ currentPage, onPageChange, totalPages }) {
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage <= 1}
       >
-        Previous
+        Trước
       </button>
       <div className="admin-products-pagination__pages">
         {pages.map((pageNumber, index) => {
@@ -586,7 +584,7 @@ function ProductPagination({ currentPage, onPageChange, totalPages }) {
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage >= totalPages}
       >
-        Next
+        Sau
       </button>
     </nav>
   );
@@ -654,7 +652,7 @@ function ProductRow({
               onClick={() => onEdit(product)}
               disabled={isDeleted || Boolean(actionId)}
             >
-              Edit
+              Sửa
             </button>
             {!product.active && !isDeleted ? (
               <button
@@ -673,7 +671,7 @@ function ProductRow({
                 onClick={() => onRequestToggle(product, false)}
                 disabled={Boolean(actionId)}
               >
-                Deactivate
+                Ngừng hoạt động
               </button>
             ) : null}
             <button
@@ -682,7 +680,7 @@ function ProductRow({
               onClick={() => onRequestDelete(product)}
               disabled={isDeleted || Boolean(actionId)}
             >
-              Delete
+              Xóa
             </button>
           </div>
           {isBusy ? (
@@ -716,7 +714,7 @@ function ProductRow({
                   onClick={onCancelConfirm}
                   disabled={Boolean(actionId)}
                 >
-                  Cancel
+                  Hủy
                 </button>
               </div>
             </div>
@@ -990,7 +988,7 @@ export default function AdminProductsPage() {
 
     if (file.size > MAX_IMAGE_SIZE) {
       setSelectedImageFile(null);
-      setFormError("Image size must not exceed 5 MB.");
+      setFormError("Kích thước hình ảnh không được vượt quá 5 MB.");
       event.target.value = "";
       return;
     }
@@ -1154,8 +1152,8 @@ export default function AdminProductsPage() {
       type: "delete",
       productId: product.id,
       message:
-        "Soft delete this product? It will leave the public store and cannot be restored from this admin screen.",
-      confirmLabel: "Delete product",
+        "Xóa sản phẩm ? Không thể khôi phục từ Quản trị !",
+      confirmLabel: "Xóa sản phẩm",
     });
   }
 
@@ -1166,9 +1164,9 @@ export default function AdminProductsPage() {
       productId: product.id,
       nextActive,
       message: nextActive
-        ? "Activate this product for the public store?"
-        : "Deactivate this product? It will leave the public store but remain editable.",
-      confirmLabel: nextActive ? "Activate product" : "Deactivate product",
+        ? "Kích hoạt sản phẩm này cho cửa hàng ?"
+        : "Ngừng hoạt động sản phẩm này ?",
+      confirmLabel: nextActive ? "Kích hoạt" : "Vô hiệu hóa sản phẩm",
     });
   }
 
@@ -1243,8 +1241,8 @@ export default function AdminProductsPage() {
     <section className="admin-products" aria-labelledby="admin-products-title">
       <header className="admin-products__header">
         <div>
-          <p className="admin-products__kicker">Admin products</p>
-          <h1 id="admin-products-title">Products</h1>
+          <p className="admin-products__kicker">Quản lý sản phẩm</p>
+          <h1 id="admin-products-title">Sản phẩm</h1>
         </div>
         <div className="admin-products__header-actions">
           <button
@@ -1253,7 +1251,7 @@ export default function AdminProductsPage() {
             onClick={handleRetry}
             disabled={productsState.status === "loading"}
           >
-            Refresh
+            Tải lại
           </button>
           <button
             type="button"
@@ -1261,27 +1259,27 @@ export default function AdminProductsPage() {
             onClick={openCreateForm}
             disabled={isSubmitting}
           >
-            Create product
+            Thêm sản phẩm
           </button>
         </div>
       </header>
 
       <section className="admin-products-toolbar" aria-label="Product list controls">
         <div className="admin-product-control">
-          <label htmlFor="admin-products-active-filter">Lifecycle filter</label>
+          <label htmlFor="admin-products-active-filter">Bộ lọc trạng thái</label>
           <select
             id="admin-products-active-filter"
             value={productQuery.active}
             onChange={(event) => updateQuery({ active: event.target.value })}
           >
-            <option value="all">All products</option>
-            <option value="true">Active flag only</option>
-            <option value="false">Inactive flag only</option>
+            <option value="all">Tất cả sản phẩm</option>
+            <option value="true">Chỉ đang bán</option>
+            <option value="false">Chỉ ngừng bán</option>
           </select>
         </div>
 
         <div className="admin-product-control">
-          <label htmlFor="admin-products-sort">Sort</label>
+          <label htmlFor="admin-products-sort">Sắp xếp</label>
           <select
             id="admin-products-sort"
             value={productQuery.sort}
@@ -1296,7 +1294,7 @@ export default function AdminProductsPage() {
         </div>
 
         <div className="admin-product-control">
-          <label htmlFor="admin-products-page-size">Rows</label>
+          <label htmlFor="admin-products-page-size">Số dòng</label>
           <select
             id="admin-products-page-size"
             value={productQuery.size}
@@ -1319,11 +1317,11 @@ export default function AdminProductsPage() {
         >
           <div className="admin-products-list__header">
             <div>
-              <h2 id="admin-products-list-title">Product records</h2>
+              <h2 id="admin-products-list-title">Danh sách sản phẩm</h2>
               {productsState.status === "success" ? (
                 <p>
-                  Showing {resultStart}-{resultEnd} of{" "}
-                  {productData.totalElements} products
+                  Hiển thị {resultStart}-{resultEnd} trong tổng số{" "}
+                  {productData.totalElements} sản phẩm
                 </p>
               ) : null}
               {productsState.status === "loading" ? (
@@ -1373,16 +1371,16 @@ export default function AdminProductsPage() {
           {productsState.status === "loading" || productsState.status === "success" ? (
             <div className="admin-products-table-wrap">
               <table className="admin-products-table">
-                <caption className="sr-only">Admin product records</caption>
+                <caption className="sr-only">Danh sách sản phẩm quản trị</caption>
                 <thead>
                   <tr>
-                    <th scope="col">Image</th>
-                    <th scope="col">Product</th>
-                    <th scope="col">Category</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Stock</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Actions</th>
+                    <th scope="col">Hình ảnh</th>
+                    <th scope="col">Sản phẩm</th>
+                    <th scope="col">Danh mục</th>
+                    <th scope="col">Giá</th>
+                    <th scope="col">Tồn kho</th>
+                    <th scope="col">Trạng thái</th>
+                    <th scope="col">Thao tác</th>
                   </tr>
                 </thead>
                 {productsState.status === "loading" ? (

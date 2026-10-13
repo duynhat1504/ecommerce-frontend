@@ -36,7 +36,7 @@ function clampQuantity(value, stock) {
 function QuantitySelector({ quantity, stock, onChange, disabled }) {
   return (
     <div className="product-detail__quantity">
-      <p id="product-quantity-label">Quantity</p>
+      <p id="product-quantity-label">Số lượng</p>
       <div
         className="product-detail__quantity-controls"
         role="group"
@@ -46,7 +46,7 @@ function QuantitySelector({ quantity, stock, onChange, disabled }) {
           type="button"
           onClick={() => onChange(quantity - 1)}
           disabled={disabled || quantity <= 1}
-          aria-label="Decrease quantity"
+          aria-label="Giảm số lượng"
         >
           -
         </button>
@@ -55,7 +55,7 @@ function QuantitySelector({ quantity, stock, onChange, disabled }) {
           type="button"
           onClick={() => onChange(quantity + 1)}
           disabled={disabled || quantity >= stock}
-          aria-label="Increase quantity"
+          aria-label="Tăng số lượng"
         >
           +
         </button>
@@ -67,7 +67,7 @@ function QuantitySelector({ quantity, stock, onChange, disabled }) {
 function ProductDetailSkeleton() {
   return (
     <section className="product-detail product-detail--loading" aria-live="polite">
-      <p className="sr-only">Loading product details...</p>
+      <p className="sr-only">Đang tải chi tiết sản phẩm...</p>
       <span className="product-detail-skeleton product-detail-skeleton--image" />
       <div className="product-detail-skeleton__copy" aria-hidden="true">
         <span className="product-detail-skeleton product-detail-skeleton--small" />
@@ -83,17 +83,17 @@ function ProductDetailSkeleton() {
 function ProductDetailState({ title, message, onRetry }) {
   return (
     <section className="product-detail-state" aria-labelledby="product-state-title">
-      <p className="product-detail-state__kicker">Product</p>
+      <p className="product-detail-state__kicker">Sản phẩm</p>
       <h1 id="product-state-title">{title}</h1>
       <p>{message}</p>
       <div className="product-detail-state__actions">
         {onRetry ? (
           <button type="button" className="button button--ghost" onClick={onRetry}>
-            Retry
+            Thử lại
           </button>
         ) : null}
         <Link className="button button--primary" to="/products">
-          Back to products
+          Quay lại sản phẩm
         </Link>
       </div>
     </section>
@@ -162,7 +162,7 @@ export default function ProductDetailPage() {
           setProductState({
             status: "not-found",
             product: null,
-            message: "This product is unavailable or the link is no longer valid.",
+            message: "Sản phẩm này không khả dụng hoặc liên kết không còn hợp lệ.",
           });
           return;
         }
@@ -170,7 +170,7 @@ export default function ProductDetailPage() {
         setProductState({
           status: "error",
           product: null,
-          message: "Product details could not be loaded right now.",
+          message: "Không thể tải chi tiết sản phẩm vào lúc này.",
         });
       }
     }
@@ -212,12 +212,12 @@ export default function ProductDetailPage() {
       });
       setCartFeedback({
         status: "success",
-        message: "Added to cart.",
+        message: "Đã thêm vào giỏ hàng.",
       });
     } catch (error) {
       setCartFeedback({
         status: "error",
-        message: getCartErrorMessage(error, "This product could not be added to cart."),
+        message: getCartErrorMessage(error, "Không thể thêm sản phẩm này vào giỏ hàng."),
       });
     }
   }
@@ -225,8 +225,8 @@ export default function ProductDetailPage() {
   if (!isValidProductId) {
     return (
       <ProductDetailState
-        title="Product unavailable."
-        message="This product is unavailable or the link is no longer valid."
+        title="Sản phẩm không khả dụng."
+        message="Sản phẩm này không khả dụng hoặc liên kết không còn hợp lệ."
       />
     );
   }
@@ -238,7 +238,7 @@ export default function ProductDetailPage() {
   if (productState.status === "not-found") {
     return (
       <ProductDetailState
-        title="Product unavailable."
+        title="Sản phẩm không khả dụng."
         message={productState.message}
       />
     );
@@ -247,7 +247,7 @@ export default function ProductDetailPage() {
   if (productState.status === "error") {
     return (
       <ProductDetailState
-        title="Product details are unavailable."
+        title="Chi tiết sản phẩm không khả dụng."
         message={productState.message}
         onRetry={() => setRetryKey((key) => key + 1)}
       />
@@ -256,16 +256,16 @@ export default function ProductDetailPage() {
 
   return (
     <article className="product-detail" aria-labelledby="product-title">
-      <nav className="product-detail__breadcrumb" aria-label="Breadcrumb">
-        <Link to="/products">Shop</Link>
+      <nav className="product-detail__breadcrumb" aria-label="Điều hướng đường dẫn">
+        <Link to="/products">Sản phẩm</Link>
         <span aria-hidden="true">/</span>
-        <span>{product.name || "Product"}</span>
+        <span>{product.name || "Sản phẩm"}</span>
       </nav>
 
-      <section className="product-detail__media" aria-label="Product image">
+      <section className="product-detail__media" aria-label="Hình ảnh sản phẩm">
         <ProductImage
           src={product.imageUrl}
-          alt={product.name || "Product image"}
+          alt={product.name || "Hình ảnh sản phẩm"}
           className="product-detail__image"
           loading="eager"
         />
@@ -275,31 +275,31 @@ export default function ProductDetailPage() {
         {product.categoryName ? (
           <p className="product-detail__category">{product.categoryName}</p>
         ) : null}
-        <h1 id="product-title">{product.name || "Product"}</h1>
+        <h1 id="product-title">{product.name || "Sản phẩm"}</h1>
         {price ? <p className="product-detail__price">{price}</p> : null}
 
         <div className="product-detail__description">
           {product.description ? (
             <p>{product.description}</p>
           ) : (
-            <p>No product description is available yet.</p>
+            <p>Chưa có mô tả sản phẩm.</p>
           )}
         </div>
 
         <dl className="product-detail__facts">
           <div>
-            <dt>Availability</dt>
-            <dd>{isAvailable ? "Available" : "Out of stock"}</dd>
+            <dt>Tình trạng</dt>
+            <dd>{isAvailable ? "Còn hàng" : "Hết hàng"}</dd>
           </div>
           <div>
-            <dt>Stock</dt>
+            <dt>Tồn kho</dt>
             <dd>{stock}</dd>
           </div>
         </dl>
 
         {!isAvailable ? (
           <p className="product-detail__unavailable" role="status">
-            This product is currently unavailable.
+            Sản phẩm này hiện không khả dụng.
           </p>
         ) : (
           <div className="product-detail__purchase">
@@ -315,7 +315,7 @@ export default function ProductDetailPage() {
               onClick={handleAddToCart}
               disabled={cartFeedback.status === "submitting"}
             >
-              {cartFeedback.status === "submitting" ? "Adding..." : "Add to cart"}
+              {cartFeedback.status === "submitting" ? "Đang thêm..." : "Thêm vào giỏ hàng"}
             </button>
             {cartFeedback.message ? (
               <p
@@ -330,7 +330,7 @@ export default function ProductDetailPage() {
                 {cartFeedback.status === "success" ? (
                   <>
                     {" "}
-                    <Link to="/cart">View cart</Link>
+                    <Link to="/cart">Xem giỏ hàng</Link>
                   </>
                 ) : null}
               </p>

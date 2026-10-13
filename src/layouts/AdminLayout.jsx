@@ -6,28 +6,28 @@ import "./AdminLayout.css";
 const adminNavItems = [
   {
     to: "/admin",
-    label: "Overview",
+    label: "Tổng quan",
     end: true,
   },
   {
     to: "/admin/products",
-    label: "Products",
+    label: "Sản phẩm",
   },
   {
     to: "/admin/categories",
-    label: "Categories",
+    label: "Danh mục",
   },
   {
     to: "/admin/inventory",
-    label: "Inventory",
+    label: "Kho hàng",
   },
   {
     to: "/admin/orders",
-    label: "Orders",
+    label: "Đơn hàng",
   },
   {
     to: "/admin/users",
-    label: "Users",
+    label: "Người dùng",
   },
 ];
 
@@ -37,18 +37,18 @@ export default function AdminLayout() {
   return (
     <div className="admin-shell">
       <a className="admin-shell__skip" href="#admin-content">
-        Skip to admin content
+        Chuyển đến nội dung quản trị
       </a>
 
-      <aside className="admin-shell__sidebar" aria-label="Admin">
+      <aside className="admin-shell__sidebar" aria-label="Quản trị">
         <header className="admin-shell__brand">
-          <Link to="/admin" aria-label="CHẬM admin overview">
-            CHẬM Admin
+          <Link to="/admin" aria-label="Tổng quan quản trị CHẬM">
+            CHẬM 
           </Link>
-          <span>Store operations</span>
+          <span>Quản trị cửa hàng</span>
         </header>
 
-        <nav className="admin-shell__nav" aria-label="Admin navigation">
+        <nav className="admin-shell__nav" aria-label="Điều hướng quản trị">
           {adminNavItems.map((item) => (
             <NavLink
               key={item.to}
@@ -67,19 +67,19 @@ export default function AdminLayout() {
 
         <div className="admin-shell__account">
           <div className="admin-shell__user">
-            <span>{user?.fullName || user?.email || "Admin"}</span>
+            <span>{user?.fullName || user?.email || "Quản trị viên"}</span>
             <small>{user?.role || "ADMIN"}</small>
           </div>
           <div className="admin-shell__actions">
             <Link className="admin-shell__text-link" to="/">
-              Storefront
+              Cửa hàng
             </Link>
             <button
               className="admin-shell__text-button"
               type="button"
               onClick={logout}
             >
-              Sign out
+              Đăng xuất
             </button>
           </div>
         </div>

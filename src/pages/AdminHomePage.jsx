@@ -3,32 +3,32 @@ import "./AdminHomePage.css";
 
 const backendSurfaces = [
   {
-    area: "Products",
+    area: "Sản phẩm",
     contract:
       "GET /api/admin/products, GET /api/admin/products/{id}, DELETE /api/admin/products/{id}",
   },
   {
-    area: "Categories",
+    area: "Danh mục",
     contract:
       "GET /api/admin/categories, GET /api/admin/categories/{id}, DELETE /api/admin/categories/{id}",
   },
   {
-    area: "Orders",
+    area: "Đơn hàng",
     contract:
       "GET /api/admin/orders, GET /api/admin/orders/{id}, PUT /api/admin/orders/{id}/status",
   },
   {
-    area: "Inventory",
+    area: "Kho hàng",
     contract: "GET /api/admin/inventory/products/{productId}/transactions",
   },
 ];
 
 const foundationChecks = [
-  ["Session source", "Existing AuthContext"],
-  ["Route guard", "Existing AdminRoute"],
-  ["Required role", "ADMIN"],
-  ["Admin navigation", "Overview only"],
-  ["Dashboard endpoint", "None found"],
+  ["Nguồn phiên", "AuthContext hiện có"],
+  ["Bảo vệ route", "AdminRoute hiện có"],
+  ["Vai trò yêu cầu", "Quản trị viên"],
+  ["Điều hướng quản trị", "Chỉ tổng quan"],
+  ["Endpoint bảng điều khiển", "Không tìm thấy"],
 ];
 
 export default function AdminHomePage() {
@@ -38,17 +38,17 @@ export default function AdminHomePage() {
     <section className="admin-home" aria-labelledby="admin-home-title">
       <header className="admin-home__header">
         <div>
-          <p className="admin-home__kicker">Admin foundation</p>
-          <h1 id="admin-home-title">Operations overview</h1>
+          <p className="admin-home__kicker">Quản trị</p>
+          <h1 id="admin-home-title">Tổng quan vận hành</h1>
         </div>
-        <dl className="admin-home__identity" aria-label="Signed in admin">
+        <dl className="admin-home__identity" aria-label="Quản trị viên đã đăng nhập">
           <div>
-            <dt>Signed in</dt>
-            <dd>{user?.email || "Authenticated admin"}</dd>
+            <dt>Đã đăng nhập</dt>
+            <dd>{user?.email || "Quản trị viên đã xác thực"}</dd>
           </div>
           <div>
-            <dt>Role</dt>
-            <dd>{user?.role || "ADMIN"}</dd>
+            <dt>Vai trò</dt>
+            <dd>{user?.role === "ADMIN" ? "Quản trị viên" : "Người dùng"}</dd>
           </div>
         </dl>
       </header>
@@ -59,8 +59,8 @@ export default function AdminHomePage() {
           aria-labelledby="admin-status-title"
         >
           <div className="admin-home__section-header">
-            <h2 id="admin-status-title">Foundation status</h2>
-            <p>Current shell and access-control wiring.</p>
+            <h2 id="admin-status-title">Trạng thái nền tảng</h2>
+            <p>Khung giao diện và phân quyền truy cập hiện tại.</p>
           </div>
           <dl className="admin-home__check-list">
             {foundationChecks.map(([label, value]) => (
@@ -77,17 +77,16 @@ export default function AdminHomePage() {
           aria-labelledby="admin-contracts-title"
         >
           <div className="admin-home__section-header">
-            <h2 id="admin-contracts-title">Verified backend surfaces</h2>
+            <h2 id="admin-contracts-title">Các bề mặt backend đã xác nhận</h2>
             <p>
-              These are backend contracts only. CRUD screens are intentionally
-              not linked yet.
+              Đây chỉ là các contract backend. Các đường dẫn API được giữ nguyên.
             </p>
           </div>
           <table className="admin-home__surface-table">
-            <caption className="sr-only">Admin backend surfaces</caption>
+            <caption className="sr-only">Các bề mặt backend quản trị</caption>
             <thead>
               <tr>
-                <th scope="col">Area</th>
+                <th scope="col">Khu vực</th>
                 <th scope="col">Contract</th>
               </tr>
             </thead>

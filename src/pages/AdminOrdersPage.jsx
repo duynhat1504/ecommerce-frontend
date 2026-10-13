@@ -89,13 +89,13 @@ function getPaginationPages(currentPage, totalPages) {
 
 function getDateTimeLabel(value) {
   if (!value) {
-    return "Unavailable";
+    return "Không khả dụng";
   }
 
   const date = new Date(value);
 
   if (Number.isNaN(date.getTime())) {
-    return "Unavailable";
+    return "Không khả dụng";
   }
 
   return new Intl.DateTimeFormat("vi-VN", {
@@ -105,31 +105,40 @@ function getDateTimeLabel(value) {
 }
 
 function getOrderReference(order) {
-  return order?.orderCode || order?.id || "Order";
+  return order?.orderCode || order?.id || "Đơn hàng";
 }
 
 function getStatusLabel(status) {
-  return status ? status.replaceAll("_", " ") : "Unavailable";
+  const labels = {
+    PENDING: "Chờ xác nhận",
+    CONFIRMED: "Đã xác nhận",
+    SHIPPING: "Đang giao",
+    COMPLETED: "Hoàn thành",
+    CANCELLED: "Đã hủy",
+    EXPIRED: "Hết hạn",
+  };
+
+  return labels[status] || "Không khả dụng";
 }
 
 function getOrderListErrorMessage(error) {
   if (error?.status === 401 || error?.status === 403) {
-    return "Admin access is required. Sign in again with an admin account.";
+    return "Cần quyền quản trị. Hãy đăng nhập lại bằng tài khoản quản trị.";
   }
 
   if (error?.status === 400) {
-    return error.message || "Order filters were rejected by the backend.";
+    return "Bộ lọc đơn hàng không hợp lệ.";
   }
 
   if (error?.status >= 500) {
-    return "The order service is unavailable right now.";
+    return "Dịch vụ đơn hàng hiện không khả dụng.";
   }
 
   if (!error?.status) {
-    return "Network connection failed. Check the API server and try again.";
+    return "Kết nối mạng thất bại. Hãy kiểm tra máy chủ API rồi thử lại.";
   }
 
-  return "Orders could not be loaded.";
+  return "Không thể tải đơn hàng.";
 }
 
 function OrderSkeletonRows() {
@@ -170,13 +179,13 @@ function Pagination({ currentPage, onPageChange, totalPages }) {
   }
 
   return (
-    <nav className="admin-orders-pagination" aria-label="Admin orders pagination">
+    <nav className="admin-orders-pagination" aria-label="Phân trang đơn hàng quản trị">
       <button
         type="button"
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage <= 1}
       >
-        Previous
+        Trước
       </button>
       <div className="admin-orders-pagination__pages">
         {pages.map((pageNumber, index) => {
@@ -211,7 +220,7 @@ function Pagination({ currentPage, onPageChange, totalPages }) {
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage >= totalPages}
       >
-        Next
+        Sau
       </button>
     </nav>
   );
@@ -224,13 +233,13 @@ function OrderRow({ order }) {
 
   return (
     <tr className="admin-orders-row">
-      <th scope="row" data-label="Order">
+      <th scope="row" data-label="Đơn hàng">
         <Link className="admin-orders-row__reference" to={orderPath}>
           {getOrderReference(order)}
         </Link>
-        <span className="admin-orders-row__meta">{order?.id || "No order id"}</span>
+        <span className="admin-orders-row__meta">{order?.id || "Không có mã đơn"}</span>
       </th>
-      <td data-label="Status">
+      <td data-label="Trạng thái">
         <span
           className={`admin-orders-status admin-orders-status--${String(
             order?.status || "unknown",
@@ -239,18 +248,18 @@ function OrderRow({ order }) {
           {getStatusLabel(order?.status)}
         </span>
       </td>
-      <td data-label="Items" className="admin-orders-number">
+      <td data-label="Sản phẩm" className="admin-orders-number">
         {Number.isFinite(Number(order?.totalItems)) ? order.totalItems : "0"}
       </td>
-      <td data-label="Total" className="admin-orders-number">
-        {formatCurrency(order?.totalAmount) || "Unavailable"}
+      <td data-label="Tổng tiền" className="admin-orders-number">
+        {formatCurrency(order?.totalAmount) || "Không khả dụng"}
       </td>
-      <td data-label="Created" className="admin-orders-number">
+      <td data-label="Ngày tạo" className="admin-orders-number">
         {getDateTimeLabel(order?.createdAt)}
       </td>
-      <td data-label="Actions">
+      <td data-label="Thao tác">
         <Link className="admin-orders-text-link" to={orderPath}>
-          Open
+          Mở
         </Link>
       </td>
     </tr>
@@ -418,8 +427,8 @@ export default function AdminOrdersPage() {
     <section className="admin-orders" aria-labelledby="admin-orders-title">
       <header className="admin-orders__header">
         <div>
-          <p className="admin-orders__kicker">Admin orders</p>
-          <h1 id="admin-orders-title">Orders</h1>
+          <p className="admin-orders__kicker">Quản lý đơn hàng</p>
+          <h1 id="admin-orders-title">Đơn hàng</h1>
         </div>
         <button
           type="button"
@@ -427,17 +436,17 @@ export default function AdminOrdersPage() {
           onClick={handleRetry}
           disabled={ordersState.status === "loading"}
         >
-          Refresh
+          Làm mới
         </button>
       </header>
 
       <form
         className="admin-orders-toolbar"
-        aria-label="Order list controls"
+        aria-label="Điều khiển danh sách đơn hàng"
         onSubmit={handleFilterSubmit}
       >
         <div className="admin-orders-control">
-          <label htmlFor="admin-orders-code">Order code</label>
+          <label htmlFor="admin-orders-code">Mã đơn hàng</label>
           <input
             id="admin-orders-code"
             name="orderCode"
@@ -449,13 +458,13 @@ export default function AdminOrdersPage() {
         </div>
 
         <div className="admin-orders-control">
-          <label htmlFor="admin-orders-status">Status</label>
+          <label htmlFor="admin-orders-status">Trạng thái</label>
           <select
             id="admin-orders-status"
             value={orderQuery.status}
             onChange={(event) => updateQuery({ status: event.target.value })}
           >
-            <option value="all">All statuses</option>
+            <option value="all">Tất cả trạng thái</option>
             {ORDER_STATUSES.map((status) => (
               <option key={status} value={status}>
                 {getStatusLabel(status)}
@@ -465,7 +474,7 @@ export default function AdminOrdersPage() {
         </div>
 
         <div className="admin-orders-control">
-          <label htmlFor="admin-orders-size">Rows</label>
+          <label htmlFor="admin-orders-size">Số dòng</label>
           <select
             id="admin-orders-size"
             value={orderQuery.size}
@@ -481,14 +490,14 @@ export default function AdminOrdersPage() {
 
         <div className="admin-orders-toolbar__actions">
           <button type="submit" className="button button--primary">
-            Apply
+            Áp dụng
           </button>
           <button
             type="button"
             className="button button--ghost"
             onClick={handleResetFilters}
           >
-            Reset
+            Đặt lại
           </button>
         </div>
       </form>
@@ -496,48 +505,47 @@ export default function AdminOrdersPage() {
       <section className="admin-orders-list" aria-labelledby="admin-orders-list-title">
         <div className="admin-orders-list__header">
           <div>
-            <h2 id="admin-orders-list-title">Order list</h2>
+            <h2 id="admin-orders-list-title">Danh sách đơn hàng</h2>
             {ordersState.status === "success" ? (
               <p>
-                Showing {resultStart}-{resultEnd} of {orderData.totalElements}
-                {" "}orders. Newest first.
+                Hiển thị {resultStart}-{resultEnd} trong tổng số {orderData.totalElements} đơn hàng.
               </p>
             ) : null}
             {ordersState.status === "loading" ? (
-              <p aria-live="polite">Loading orders...</p>
+              <p aria-live="polite">Đang tải đơn hàng...</p>
             ) : null}
           </div>
         </div>
 
         {ordersState.status === "error" ? (
           <div className="admin-orders-state" role="alert">
-            <h2>Orders unavailable.</h2>
+            <h2>Đơn hàng không khả dụng.</h2>
             <p>{ordersState.message}</p>
             <button type="button" className="button button--ghost" onClick={handleRetry}>
-              Retry
+              Thử lại
             </button>
           </div>
         ) : null}
 
         {ordersState.status === "empty" ? (
           <div className="admin-orders-state">
-            <h2>No orders returned.</h2>
-            <p>Adjust the supported status or order-code filters.</p>
+            <h2>Không có đơn hàng.</h2>
+            <p>Điều chỉnh bộ lọc trạng thái hoặc mã đơn hàng.</p>
           </div>
         ) : null}
 
         {ordersState.status === "loading" || ordersState.status === "success" ? (
           <div className="admin-orders-table-wrap">
             <table className="admin-orders-table">
-              <caption className="sr-only">Admin order records</caption>
+              <caption className="sr-only">Danh sách đơn hàng quản trị</caption>
               <thead>
                 <tr>
-                  <th scope="col">Order</th>
-                  <th scope="col">Status</th>
-                  <th scope="col">Items</th>
-                  <th scope="col">Total</th>
-                  <th scope="col">Created</th>
-                  <th scope="col">Actions</th>
+                  <th scope="col">Đơn hàng</th>
+                  <th scope="col">Trạng thái</th>
+                  <th scope="col">Sản phẩm</th>
+                  <th scope="col">Tổng tiền</th>
+                  <th scope="col">Ngày tạo</th>
+                  <th scope="col">Thao tác</th>
                 </tr>
               </thead>
               {ordersState.status === "loading" ? (

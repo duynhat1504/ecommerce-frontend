@@ -14,13 +14,13 @@ const UUID_PATTERN =
 
 function getDateTimeLabel(value) {
   if (!value) {
-    return "Unavailable";
+    return "Không khả dụng";
   }
 
   const date = new Date(value);
 
   if (Number.isNaN(date.getTime())) {
-    return "Unavailable";
+    return "Không khả dụng";
   }
 
   return new Intl.DateTimeFormat("vi-VN", {
@@ -30,98 +30,98 @@ function getDateTimeLabel(value) {
 }
 
 function getRoleLabel(role) {
-  return role === "ADMIN" ? "Admin" : "User";
+  return role === "ADMIN" ? "Quản trị viên" : "Người dùng";
 }
 
 function getStatusLabel(active) {
   if (active === true) {
-    return "Active";
+    return "Đang hoạt động";
   }
 
   if (active === false) {
-    return "Inactive";
+    return "Ngừng hoạt động";
   }
 
-  return "Unavailable";
+  return "Không khả dụng";
 }
 
 function getBooleanLabel(value) {
   if (value === true) {
-    return "Yes";
+    return "Có";
   }
 
   if (value === false) {
-    return "No";
+    return "Không";
   }
 
-  return "Unavailable";
+  return "Không khả dụng";
 }
 
 function getUserTitle(user) {
-  return user?.fullName || user?.email || "User";
+  return user?.fullName || user?.email || "Người dùng";
 }
 
 function getDetailErrorState(error) {
   if (error?.status === 404) {
     return {
       status: "missing",
-      message: "User not found.",
+      message: "Không tìm thấy người dùng.",
     };
   }
 
   if (error?.status === 400) {
     return {
       status: "missing",
-      message: error.message || "The user identifier was rejected.",
+      message: "Mã định danh người dùng không hợp lệ.",
     };
   }
 
   if (error?.status === 401 || error?.status === 403) {
     return {
       status: "error",
-      message: "Admin access is required. Sign in again with an admin account.",
+      message: "Cần quyền quản trị. Hãy đăng nhập lại bằng tài khoản quản trị.",
     };
   }
 
   if (error?.status >= 500) {
     return {
       status: "error",
-      message: "The user service is unavailable right now.",
+      message: "Dịch vụ người dùng hiện không khả dụng.",
     };
   }
 
   if (!error?.status) {
     return {
       status: "network",
-      message: "Network connection failed. Check the API server and try again.",
+      message: "Kết nối mạng thất bại. Hãy kiểm tra máy chủ API rồi thử lại.",
     };
   }
 
   return {
     status: "error",
-    message: "User details could not be loaded.",
+    message: "Không thể tải chi tiết người dùng.",
   };
 }
 
 function getMutationMessage(error, fallbackMessage) {
   if (error?.status === 404) {
-    return "User not found. The account may no longer exist or the id is invalid.";
+    return "Không tìm thấy người dùng. Tài khoản có thể không còn tồn tại hoặc mã không hợp lệ.";
   }
 
   if (error?.status === 400) {
-    return error.message || "The backend rejected this account change.";
+    return "Backend từ chối thay đổi tài khoản này.";
   }
 
   if (error?.status === 401 || error?.status === 403) {
-    return error.message || "Admin access is required for this account change.";
+    return "Cần quyền quản trị để thay đổi tài khoản này.";
   }
 
   if (error?.status >= 500) {
-    return "The user service rejected the account change right now.";
+    return "Dịch vụ người dùng hiện không thể thay đổi tài khoản.";
   }
 
   if (!error?.status) {
-    return "Network connection failed. The account was not changed locally.";
+    return "Kết nối mạng thất bại. Tài khoản chưa được thay đổi.";
   }
 
   return fallbackMessage;
@@ -134,7 +134,7 @@ function AdminUserDetailState({ alert = false, action, message, title }) {
       aria-labelledby="admin-user-detail-state-title"
       role={alert ? "alert" : undefined}
     >
-      <p className="admin-users__kicker">Admin users</p>
+      <p className="admin-users__kicker">Quản lý người dùng</p>
       <h1 id="admin-user-detail-state-title">{title}</h1>
       <p>{message}</p>
       {action}
@@ -165,27 +165,27 @@ function UserFacts({ user }) {
   return (
     <dl className="admin-user-facts">
       <div>
-        <dt>Full name</dt>
-        <dd>{user?.fullName || "Unavailable"}</dd>
+        <dt>Họ và tên</dt>
+        <dd>{user?.fullName || "Không khả dụng"}</dd>
       </div>
       <div>
         <dt>Email</dt>
-        <dd>{user?.email || "Unavailable"}</dd>
+        <dd>{user?.email || "Không khả dụng"}</dd>
       </div>
       <div>
-        <dt>Email verified</dt>
+        <dt>Email đã xác thực</dt>
         <dd>{getBooleanLabel(user?.emailVerified)}</dd>
       </div>
       <div>
-        <dt>User id</dt>
-        <dd>{user?.id || "Unavailable"}</dd>
+        <dt>Mã định danh người dùng</dt>
+        <dd>{user?.id || "Không khả dụng"}</dd>
       </div>
       <div>
-        <dt>Created</dt>
+        <dt>Ngày tạo</dt>
         <dd>{getDateTimeLabel(user?.createdAt)}</dd>
       </div>
       <div>
-        <dt>Updated</dt>
+        <dt>Cập nhật</dt>
         <dd>{getDateTimeLabel(user?.updatedAt)}</dd>
       </div>
     </dl>
@@ -196,7 +196,7 @@ function LifecycleFacts({ user }) {
   return (
     <dl className="admin-user-facts admin-user-facts--compact">
       <div>
-        <dt>Role</dt>
+        <dt>Vai trò</dt>
         <dd>
           <span
             className={`admin-users-status admin-users-status--${String(
@@ -208,7 +208,7 @@ function LifecycleFacts({ user }) {
         </dd>
       </div>
       <div>
-        <dt>Status</dt>
+        <dt>Trạng thái</dt>
         <dd>
           <span
             className={`admin-users-status admin-users-status--${
@@ -241,13 +241,13 @@ function AccountActions({
   return (
     <aside className="admin-user-panel" aria-labelledby="admin-user-actions-title">
       <div className="admin-user-panel__header">
-        <h2 id="admin-user-actions-title">Account actions</h2>
-        <span className="admin-users-number">{user?.email || "Unavailable"}</span>
+        <h2 id="admin-user-actions-title">Thao tác tài khoản</h2>
+        <span className="admin-users-number">{user?.email || "Không khả dụng"}</span>
       </div>
 
       <LifecycleFacts user={user} />
 
-      <div className="admin-user-actions" aria-label="Supported account actions">
+      <div className="admin-user-actions" aria-label="Các thao tác tài khoản được hỗ trợ">
         <button
           type="button"
           className={
@@ -259,10 +259,10 @@ function AccountActions({
           disabled={isMutating || disableSelfDeactivate}
         >
           {mutatingAction === "status"
-            ? "Saving..."
+            ? "Đang lưu..."
             : nextActive
-              ? "Activate account"
-              : "Deactivate account"}
+              ? "Kích hoạt tài khoản"
+              : "Vô hiệu hóa tài khoản"}
         </button>
         <button
           type="button"
@@ -275,20 +275,20 @@ function AccountActions({
           disabled={isMutating || disableSelfDemote}
         >
           {mutatingAction === "role"
-            ? "Saving..."
+            ? "Đang lưu..."
             : nextRole === "ADMIN"
-              ? "Promote to admin"
-              : "Demote to user"}
+              ? "Nâng thành quản trị viên"
+              : "Hạ thành người dùng"}
         </button>
       </div>
 
       {disableSelfDeactivate || disableSelfDemote ? (
         <p className="admin-user-note">
-          Self deactivation and self demotion are blocked by the backend.
+          Backend không cho phép tự vô hiệu hóa hoặc tự hạ quyền.
         </p>
       ) : (
         <p className="admin-user-note">
-          Changes are saved by the backend, then this account is reloaded.
+          Thay đổi được lưu bởi backend, sau đó tài khoản này được tải lại.
         </p>
       )}
 
@@ -384,12 +384,12 @@ export default function AdminUserDetailPage() {
         await loadUser();
       } catch {
         setActionMessage(
-          "Status request finished, but the refreshed user could not be loaded.",
+          "Đã gửi yêu cầu trạng thái, nhưng không thể tải lại người dùng.",
         );
       }
     } catch (error) {
       setActionMessage(
-        getMutationMessage(error, "Could not change account status."),
+        getMutationMessage(error, "Không thể đổi trạng thái tài khoản."),
       );
       await loadUser().catch(() => {});
     } finally {
@@ -414,11 +414,11 @@ export default function AdminUserDetailPage() {
         await loadUser();
       } catch {
         setActionMessage(
-          "Role request finished, but the refreshed user could not be loaded.",
+          "Đã gửi yêu cầu vai trò, nhưng không thể tải lại người dùng.",
         );
       }
     } catch (error) {
-      setActionMessage(getMutationMessage(error, "Could not change user role."));
+      setActionMessage(getMutationMessage(error, "Không thể đổi vai trò người dùng."));
       await loadUser().catch(() => {});
     } finally {
       mutationInFlightRef.current = false;
@@ -433,11 +433,11 @@ export default function AdminUserDetailPage() {
   if (!isValidUserId) {
     return (
       <AdminUserDetailState
-        title="User not found."
-        message="The user identifier is not a valid UUID."
+        title="Không tìm thấy người dùng."
+        message="Mã định danh người dùng không phải UUID hợp lệ."
         action={
           <Link className="button button--primary" to="/admin/users">
-            Back to users
+            Quay lại người dùng
           </Link>
         }
       />
@@ -451,11 +451,11 @@ export default function AdminUserDetailPage() {
   if (userState.status === "missing") {
     return (
       <AdminUserDetailState
-        title="User not found."
+        title="Không tìm thấy người dùng."
         message={userState.message}
         action={
           <Link className="button button--primary" to="/admin/users">
-            Back to users
+            Quay lại người dùng
           </Link>
         }
       />
@@ -465,16 +465,16 @@ export default function AdminUserDetailPage() {
   if (userState.status === "error" || userState.status === "network") {
     return (
       <AdminUserDetailState
-        title="User unavailable."
+        title="Người dùng không khả dụng."
         message={userState.message}
         alert
         action={
           <div className="admin-users-state__actions">
             <button type="button" className="button button--ghost" onClick={handleRetry}>
-              Retry
+              Thử lại
             </button>
             <Link className="button button--primary" to="/admin/users">
-              Back to users
+              Quay lại người dùng
             </Link>
           </div>
         }
@@ -488,11 +488,11 @@ export default function AdminUserDetailPage() {
     <article className="admin-user-detail" aria-labelledby="admin-user-detail-title">
       <header className="admin-user-detail__header">
         <Link className="admin-users-text-link" to="/admin/users">
-          Back to users
+          Quay lại người dùng
         </Link>
         <div className="admin-user-detail__heading">
           <div>
-            <p className="admin-users__kicker">Admin user</p>
+            <p className="admin-users__kicker">Người dùng quản trị</p>
             <h1 id="admin-user-detail-title">{getUserTitle(user)}</h1>
           </div>
           <button
@@ -501,7 +501,7 @@ export default function AdminUserDetailPage() {
             onClick={handleRetry}
             disabled={userState.status === "loading" || Boolean(mutatingAction)}
           >
-            Refresh
+            Làm mới
           </button>
         </div>
       </header>
@@ -509,12 +509,12 @@ export default function AdminUserDetailPage() {
       <div className="admin-user-detail__layout">
         <div className="admin-user-detail__main">
           <section className="admin-user-section" aria-labelledby="admin-user-account-title">
-            <h2 id="admin-user-account-title">Account information</h2>
+            <h2 id="admin-user-account-title">Thông tin tài khoản</h2>
             <UserFacts user={user} />
           </section>
 
           <section className="admin-user-section" aria-labelledby="admin-user-lifecycle-title">
-            <h2 id="admin-user-lifecycle-title">Role and status</h2>
+            <h2 id="admin-user-lifecycle-title">Vai trò và trạng thái</h2>
             <LifecycleFacts user={user} />
           </section>
         </div>

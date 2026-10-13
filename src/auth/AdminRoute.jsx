@@ -9,7 +9,7 @@ export default function AdminRoute() {
   if (status === "loading") {
     return (
       <section className="route-state" aria-live="polite">
-        <p>Checking admin access...</p>
+        <p>Đang kiểm tra quyền quản trị...</p>
       </section>
     );
   }

@@ -20,26 +20,26 @@ import "./AuthPages.css";
 
 function getLoginErrorMessage(error) {
   if (error?.message === "Email is not verified") {
-    return "Verify your email before signing in.";
+    return "Hãy xác thực email trước khi đăng nhập.";
   }
 
   if (error?.status === 401) {
-    return "Email or password is incorrect.";
+    return "Email hoặc mật khẩu không chính xác.";
   }
 
   if (error?.status === 400) {
-    return "Check your email and password, then try again.";
+    return "Kiểm tra email và mật khẩu rồi thử lại.";
   }
 
-  return "Unable to sign in right now. Please try again.";
+  return "Không thể đăng nhập vào lúc này. Vui lòng thử lại.";
 }
 
 function getLoginFieldErrors(error) {
   const backendErrors = getBackendFieldErrors(error);
 
   return {
-    email: backendErrors.email ? "Enter a valid email address." : "",
-    password: backendErrors.password ? "Password is required." : "",
+    email: backendErrors.email ? "Vui lòng nhập địa chỉ email hợp lệ." : "",
+    password: backendErrors.password ? "Vui lòng nhập mật khẩu." : "",
   };
 }
 
@@ -64,7 +64,7 @@ export default function LoginPage() {
   if (status === "loading") {
     return (
       <section className="route-state" aria-live="polite">
-        <p>Checking your session...</p>
+        <p>Đang kiểm tra phiên đăng nhập...</p>
       </section>
     );
   }
@@ -91,13 +91,13 @@ export default function LoginPage() {
     const email = values.email.trim();
 
     if (!email) {
-      nextErrors.email = "Email is required.";
+      nextErrors.email = "Vui lòng nhập email.";
     } else if (!isValidEmail(email)) {
-      nextErrors.email = "Enter a valid email address.";
+      nextErrors.email = "Vui lòng nhập địa chỉ email hợp lệ.";
     }
 
     if (!values.password) {
-      nextErrors.password = "Password is required.";
+      nextErrors.password = "Vui lòng nhập mật khẩu.";
     }
 
     setFieldErrors(nextErrors);
@@ -134,13 +134,13 @@ export default function LoginPage() {
     <div className="auth-page">
       <section className="auth-page__intro" aria-labelledby="login-title">
         <p className="auth-page__brand">CHẬM Account</p>
-        <h1 id="login-title">Sign in</h1>
+        <h1 id="login-title">Đăng nhập</h1>
         <p>
-          Continue to your account with the same quiet storefront experience.
+          Tiếp tục với tài khoản của bạn trên cửa hàng CHẬM.
         </p>
       </section>
 
-      <section className="auth-panel" aria-label="Sign in form">
+      <section className="auth-panel" aria-label="Biểu mẫu đăng nhập">
         {loginNotice ? (
           <p className="auth-form__notice" role="status">
             {loginNotice}
@@ -149,7 +149,7 @@ export default function LoginPage() {
 
         {hasOAuthError ? (
           <p className="auth-form__error" role="alert">
-            Google sign in could not be completed. Please try again.
+            Không thể hoàn tất đăng nhập bằng Google. Vui lòng thử lại.
           </p>
         ) : null}
 
@@ -168,7 +168,7 @@ export default function LoginPage() {
           <AuthField
             id="login-password"
             name="password"
-            label="Password"
+            label="Mật khẩu"
             type="password"
             autoComplete="current-password"
             value={values.password}
@@ -188,21 +188,21 @@ export default function LoginPage() {
               className="button button--primary"
               disabled={isSubmitting}
             >
-              {isSubmitting ? "Signing in..." : "Sign in"}
+              {isSubmitting ? "Đang đăng nhập..." : "Đăng nhập"}
             </button>
             <p className="auth-form__links">
-              <span>New here?</span>
-              <Link to="/register">Create an account</Link>
+              <span>Chưa có tài khoản?</span>
+              <Link to="/register">Tạo tài khoản</Link>
             </p>
           </div>
         </form>
 
         <div className="auth-divider" aria-hidden="true">
-          or
+          hoặc
         </div>
 
         <a className="button button--ghost auth-oauth-link" href={getGoogleOAuthUrl()}>
-          Continue with Google
+          Tiếp tục với Google
         </a>
 
         {requiresVerification ? (

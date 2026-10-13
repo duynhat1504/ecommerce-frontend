@@ -10,11 +10,11 @@ import "./ProductCatalogPage.css";
 const PAGE_SIZE = 12;
 
 const SORT_OPTIONS = [
-  { label: "Newest", value: "createdAt,desc" },
-  { label: "Price: low to high", value: "price,asc" },
-  { label: "Price: high to low", value: "price,desc" },
-  { label: "Name: A to Z", value: "name,asc" },
-  { label: "Name: Z to A", value: "name,desc" },
+  { label: "Mới nhất", value: "createdAt,desc" },
+  { label: "Giá: thấp đến cao", value: "price,asc" },
+  { label: "Giá: cao đến thấp", value: "price,desc" },
+  { label: "Tên: A đến Z", value: "name,asc" },
+  { label: "Tên: Z đến A", value: "name,desc" },
 ];
 
 const SORT_VALUES = SORT_OPTIONS.map((option) => option.value);
@@ -52,15 +52,15 @@ function validatePriceRange(minPrice, maxPrice) {
   const max = maxPrice ? Number(maxPrice) : null;
 
   if ((minPrice && !Number.isFinite(min)) || (maxPrice && !Number.isFinite(max))) {
-    return "Use numeric values for price filters.";
+    return "Vui lòng dùng số cho bộ lọc giá.";
   }
 
   if ((min !== null && min < 0) || (max !== null && max < 0)) {
-    return "Price filters cannot be negative.";
+    return "Giá lọc không thể là số âm.";
   }
 
   if (min !== null && max !== null && min > max) {
-    return "Minimum price cannot be greater than maximum price.";
+    return "Giá tối thiểu không thể lớn hơn giá tối đa.";
   }
 
   return "";
@@ -126,7 +126,7 @@ function getPaginationPages(currentPage, totalPages) {
 }
 
 function ProductCard({ product }) {
-  const productName = product.name || "Product";
+  const productName = product.name || "Sản phẩm";
   const price = formatCurrency(product.price);
   const isOutOfStock = Number(product.stock) === 0;
   const productPath = product.id
@@ -138,7 +138,7 @@ function ProductCard({ product }) {
       <Link
         className="catalog-product__link"
         to={productPath}
-        aria-label={`View ${productName}`}
+        aria-label={`Xem ${productName}`}
       >
         <ProductImage src={product.imageUrl} alt={productName} />
         <div className="catalog-product__meta">
@@ -148,7 +148,7 @@ function ProductCard({ product }) {
           <h3>{productName}</h3>
           {price ? <p className="catalog-product__price">{price}</p> : null}
           {isOutOfStock ? (
-            <p className="catalog-product__stock">Currently out of stock</p>
+            <p className="catalog-product__stock">Hiện đã hết hàng</p>
           ) : null}
         </div>
       </Link>
@@ -189,14 +189,14 @@ function CatalogPagination({ currentPage, totalPages, onPageChange }) {
   }
 
   return (
-    <nav className="catalog-pagination" aria-label="Product catalog pagination">
+    <nav className="catalog-pagination" aria-label="Phân trang danh mục sản phẩm">
       <button
         type="button"
         className="catalog-pagination__control"
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage <= 1}
       >
-        Previous
+        Trước
       </button>
 
       <div className="catalog-pagination__pages">
@@ -234,7 +234,7 @@ function CatalogPagination({ currentPage, totalPages, onPageChange }) {
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage >= totalPages}
       >
-        Next
+        Sau
       </button>
     </nav>
   );
@@ -364,7 +364,7 @@ export default function ProductCatalogPage() {
         setProductsState({
           status: "error",
           data: null,
-          error: "Products could not be loaded right now.",
+          error: "Không thể tải sản phẩm vào lúc này.",
         });
       }
     }
@@ -403,7 +403,7 @@ export default function ProductCatalogPage() {
         setCategoriesState({
           status: "error",
           data: [],
-          error: "Categories could not be loaded.",
+          error: "Không thể tải danh mục.",
         });
       }
     }
@@ -517,10 +517,9 @@ export default function ProductCatalogPage() {
       <section className="catalog-intro" aria-labelledby="catalog-title">
         <p className="catalog-intro__brand">CHẬM Shop</p>
         <div className="catalog-intro__copy">
-          <h1 id="catalog-title">Coffee objects, selected slowly.</h1>
+          <h1 id="catalog-title">Dụng cụ cà phê được chọn chậm rãi.</h1>
           <p>
-            Browse the current store inventory with search, category filters,
-            price controls and sorting from the live backend.
+            Khám phá sản phẩm hiện có với tìm kiếm, lọc danh mục, khoảng giá và sắp xếp.
           </p>
         </div>
       </section>
@@ -528,20 +527,20 @@ export default function ProductCatalogPage() {
       <section className="catalog-layout" aria-labelledby="catalog-results-title">
         <form className="catalog-controls" onSubmit={handleFilterSubmit}>
           <div className="catalog-controls__header">
-            <h2>Filter</h2>
+            <h2>Bộ lọc</h2>
             {hasActiveFilters ? (
               <button
                 type="button"
                 className="catalog-controls__clear"
                 onClick={handleClearFilters}
               >
-                Clear filters
+                Xóa bộ lọc
               </button>
             ) : null}
           </div>
 
           <div className="catalog-control catalog-control--search">
-            <label htmlFor="catalog-keyword">Search products</label>
+            <label htmlFor="catalog-keyword">Tìm sản phẩm</label>
             <div className="catalog-search-row">
               <input
                 id="catalog-keyword"
@@ -551,23 +550,23 @@ export default function ProductCatalogPage() {
                 onChange={(event) =>
                   updateFilterDraft({ keyword: event.target.value })
                 }
-                placeholder="Search by name"
+                placeholder="Tìm theo tên"
               />
               <button type="submit" className="button button--primary">
-                Search
+                Tìm kiếm
               </button>
             </div>
           </div>
 
           <div className="catalog-control">
-            <label htmlFor="catalog-category">Category</label>
+            <label htmlFor="catalog-category">Danh mục</label>
             <select
               id="catalog-category"
               name="categoryId"
               value={catalogQuery.categoryId}
               onChange={handleCategoryChange}
             >
-              <option value="">All categories</option>
+              <option value="">Tất cả danh mục</option>
               {categoriesState.data.map((category) => (
                 <option key={category.id} value={category.id}>
                   {category.name}
@@ -576,11 +575,11 @@ export default function ProductCatalogPage() {
             </select>
             {categoriesState.status === "loading" ? (
               <p className="catalog-control__note" aria-live="polite">
-                Loading categories...
+                Đang tải danh mục...
               </p>
             ) : null}
             {categoriesState.status === "empty" ? (
-              <p className="catalog-control__note">No categories available.</p>
+              <p className="catalog-control__note">Không có danh mục nào.</p>
             ) : null}
             {categoriesState.status === "error" ? (
               <div className="catalog-control__error" role="alert">
@@ -589,17 +588,17 @@ export default function ProductCatalogPage() {
                   type="button"
                   onClick={() => setCategoryRetryKey((key) => key + 1)}
                 >
-                  Retry
+                  Thử lại
                 </button>
               </div>
             ) : null}
           </div>
 
           <fieldset className="catalog-control catalog-control--price">
-            <legend>Price range</legend>
+            <legend>Khoảng giá</legend>
             <div className="catalog-price-row">
               <label>
-                <span>Minimum</span>
+                <span>Tối thiểu</span>
                 <input
                   name="minPrice"
                   type="number"
@@ -612,7 +611,7 @@ export default function ProductCatalogPage() {
                 />
               </label>
               <label>
-                <span>Maximum</span>
+                <span>Tối đa</span>
                 <input
                   name="maxPrice"
                   type="number"
@@ -631,12 +630,12 @@ export default function ProductCatalogPage() {
               </p>
             ) : null}
             <button type="submit" className="catalog-apply-button">
-              Apply filters
+              Áp dụng bộ lọc
             </button>
           </fieldset>
 
           <div className="catalog-control">
-            <label htmlFor="catalog-sort">Sort</label>
+            <label htmlFor="catalog-sort">Sắp xếp</label>
             <select
               id="catalog-sort"
               name="sort"
@@ -655,17 +654,16 @@ export default function ProductCatalogPage() {
         <div className="catalog-results">
           <div className="catalog-results__header">
             <div>
-              <h2 id="catalog-results-title">Products</h2>
+              <h2 id="catalog-results-title">Sản phẩm</h2>
               {productsState.status === "success" ? (
                 <p>
-                  Showing {resultStart}-{resultEnd} of{" "}
-                  {productData.totalElements} products
+                  Hiển thị {resultStart}-{resultEnd} trong tổng số {productData.totalElements} sản phẩm
                 </p>
               ) : null}
             </div>
             {productsState.status === "loading" ? (
               <p className="catalog-results__status" aria-live="polite">
-                Loading products...
+                Đang tải sản phẩm...
               </p>
             ) : null}
           </div>
@@ -674,26 +672,25 @@ export default function ProductCatalogPage() {
 
           {productsState.status === "error" ? (
             <div className="catalog-state catalog-state--error" role="alert">
-              <h2>Products could not be loaded.</h2>
+              <h2>Không thể tải sản phẩm.</h2>
               <p>
-                Keep your filters in place and try the request again.
+                Giữ nguyên bộ lọc và thử lại.
               </p>
               <button
                 type="button"
                 className="button button--ghost"
                 onClick={() => setProductRetryKey((key) => key + 1)}
               >
-                Retry
+                Thử lại
               </button>
             </div>
           ) : null}
 
           {productsState.status === "empty" ? (
             <div className="catalog-state">
-              <h2>No products match these filters.</h2>
+              <h2>Không có sản phẩm phù hợp với bộ lọc này.</h2>
               <p>
-                Clear the filters or adjust the search terms to return to the
-                full collection.
+                Xóa bộ lọc hoặc điều chỉnh từ khóa để xem toàn bộ sản phẩm.
               </p>
               {hasActiveFilters ? (
                 <button
@@ -701,7 +698,7 @@ export default function ProductCatalogPage() {
                   className="button button--ghost"
                   onClick={handleClearFilters}
                 >
-                  Clear filters
+                  Xóa bộ lọc
                 </button>
               ) : null}
             </div>

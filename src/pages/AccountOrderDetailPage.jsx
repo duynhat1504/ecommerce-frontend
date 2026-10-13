@@ -24,16 +24,16 @@ function getOrderItemCount(order) {
 
 function formatOrderDateTime(value) {
   if (!value) {
-    return "Unavailable";
+    return "Không khả dụng";
   }
 
   const date = new Date(value);
 
   if (Number.isNaN(date.getTime())) {
-    return "Unavailable";
+    return "Không khả dụng";
   }
 
-  return new Intl.DateTimeFormat("en-US", {
+  return new Intl.DateTimeFormat("vi-VN", {
     year: "numeric",
     month: "short",
     day: "numeric",
@@ -43,34 +43,47 @@ function formatOrderDateTime(value) {
 }
 
 function getOrderReference(order) {
-  return order?.orderCode || order?.id || "Order";
+  return order?.orderCode || order?.id || "Đơn hàng";
+}
+
+function getStatusLabel(status) {
+  const labels = {
+    PENDING: "Chờ xác nhận",
+    CONFIRMED: "Đã xác nhận",
+    SHIPPING: "Đang giao",
+    COMPLETED: "Hoàn thành",
+    CANCELLED: "Đã hủy",
+    EXPIRED: "Hết hạn",
+  };
+
+  return labels[status] || "Không khả dụng";
 }
 
 function getDetailErrorState(error) {
   if (error?.status === 404 || error?.status === 400) {
     return {
       status: "unavailable",
-      message: "This order is unavailable or the link is no longer valid.",
+      message: "Đơn hàng này không khả dụng hoặc liên kết không còn hợp lệ.",
     };
   }
 
   if (error?.status === 401 || error?.status === 403) {
     return {
       status: "error",
-      message: "Sign in again to view this order.",
+      message: "Hãy đăng nhập lại để xem đơn hàng này.",
     };
   }
 
   if (error?.status >= 500) {
     return {
       status: "error",
-      message: "Order details are unavailable right now. Please try again later.",
+      message: "Chi tiết đơn hàng hiện không khả dụng. Vui lòng thử lại sau.",
     };
   }
 
   return {
     status: "error",
-    message: "Order details could not be loaded right now.",
+    message: "Không thể tải chi tiết đơn hàng vào lúc này.",
   };
 }
 
@@ -81,7 +94,7 @@ function AccountOrderDetailState({ title, message, action, alert = false }) {
       aria-labelledby="account-order-detail-state-title"
       role={alert ? "alert" : undefined}
     >
-      <p className="account-orders-state__kicker">Account</p>
+      <p className="account-orders-state__kicker">Tài khoản</p>
       <h1 id="account-order-detail-state-title">{title}</h1>
       <p>{message}</p>
       {action}
@@ -112,19 +125,19 @@ function OrderMetadata({ order }) {
   return (
     <dl className="account-order-facts">
       <div>
-        <dt>Reference</dt>
+        <dt>Mã đơn hàng</dt>
         <dd>{getOrderReference(order)}</dd>
       </div>
       <div>
-        <dt>Status</dt>
-        <dd>{order?.status || "Unavailable"}</dd>
+        <dt>Trạng thái</dt>
+        <dd>{getStatusLabel(order?.status)}</dd>
       </div>
       <div>
-        <dt>Placed</dt>
+        <dt>Ngày đặt</dt>
         <dd>{formatOrderDateTime(order?.createdAt)}</dd>
       </div>
       <div>
-        <dt>Updated</dt>
+        <dt>Cập nhật</dt>
         <dd>{formatOrderDateTime(order?.updatedAt)}</dd>
       </div>
     </dl>
@@ -136,13 +149,13 @@ function OrderItems({ order }) {
 
   return (
     <section className="account-order-section" aria-labelledby="account-order-items-title">
-      <h2 id="account-order-items-title">Items</h2>
+      <h2 id="account-order-items-title">Sản phẩm</h2>
       <div className="account-order-items">
         <div className="account-order-item account-order-item--head" aria-hidden="true">
-          <span>Product</span>
-          <span>Unit price</span>
-          <span>Quantity</span>
-          <span>Subtotal</span>
+          <span>Sản phẩm</span>
+          <span>Đơn giá</span>
+          <span>Số lượng</span>
+          <span>Thành tiền</span>
         </div>
         {items.map((item, index) => (
           <article
@@ -150,20 +163,20 @@ function OrderItems({ order }) {
             key={`${item.productId || item.productName || "item"}-${index}`}
           >
             <div className="account-order-item__product">
-              <span>Product</span>
-              <strong>{item.productName || "Product"}</strong>
+              <span>Sản phẩm</span>
+              <strong>{item.productName || "Sản phẩm"}</strong>
             </div>
             <div>
-              <span>Unit price</span>
-              <strong>{formatCurrency(item.unitPrice) || "Unavailable"}</strong>
+              <span>Đơn giá</span>
+              <strong>{formatCurrency(item.unitPrice) || "Không khả dụng"}</strong>
             </div>
             <div>
-              <span>Quantity</span>
+              <span>Số lượng</span>
               <strong>{Number(item.quantity) || 0}</strong>
             </div>
             <div className="account-order-item__subtotal">
-              <span>Subtotal</span>
-              <strong>{formatCurrency(item.subtotal) || "Unavailable"}</strong>
+              <span>Thành tiền</span>
+              <strong>{formatCurrency(item.subtotal) || "Không khả dụng"}</strong>
             </div>
           </article>
         ))}
@@ -175,19 +188,19 @@ function OrderItems({ order }) {
 function ShippingSnapshot({ order }) {
   return (
     <section className="account-order-section" aria-labelledby="account-order-shipping-title">
-      <h2 id="account-order-shipping-title">Shipping snapshot</h2>
+      <h2 id="account-order-shipping-title">Thông tin giao hàng</h2>
       <dl className="account-order-facts">
         <div>
-          <dt>Recipient</dt>
-          <dd>{order?.recipientName || "Unavailable"}</dd>
+          <dt>Người nhận</dt>
+          <dd>{order?.recipientName || "Không khả dụng"}</dd>
         </div>
         <div>
-          <dt>Phone</dt>
-          <dd>{order?.phoneNumber || "Unavailable"}</dd>
+          <dt>Số điện thoại</dt>
+          <dd>{order?.phoneNumber || "Không khả dụng"}</dd>
         </div>
         <div>
-          <dt>Address</dt>
-          <dd>{order?.shippingAddress || "Unavailable"}</dd>
+          <dt>Địa chỉ</dt>
+          <dd>{order?.shippingAddress || "Không khả dụng"}</dd>
         </div>
       </dl>
     </section>
@@ -197,20 +210,20 @@ function ShippingSnapshot({ order }) {
 function OrderTotal({ order }) {
   return (
     <aside className="account-order-total" aria-labelledby="account-order-total-title">
-      <h2 id="account-order-total-title">Total</h2>
+      <h2 id="account-order-total-title">Tổng tiền</h2>
       <dl>
         <div>
-          <dt>Items</dt>
+          <dt>Sản phẩm</dt>
           <dd>{getOrderItemCount(order)}</dd>
         </div>
         <div>
-          <dt>Amount</dt>
-          <dd>{formatCurrency(order?.totalAmount) || "Unavailable"}</dd>
+          <dt>Thành tiền</dt>
+          <dd>{formatCurrency(order?.totalAmount) || "Không khả dụng"}</dd>
         </div>
       </dl>
       {order?.status === PAYABLE_STATUS ? (
         <Link className="button button--primary account-order-total__payment" to={`/payment/${order.id}`}>
-          Continue to payment
+          Tiếp tục thanh toán
         </Link>
       ) : null}
     </aside>
@@ -279,11 +292,11 @@ export default function AccountOrderDetailPage() {
   if (!isValidOrderId) {
     return (
       <AccountOrderDetailState
-        title="Order unavailable."
-        message="This order is unavailable or the link is no longer valid."
+        title="Đơn hàng không khả dụng."
+        message="Đơn hàng này không khả dụng hoặc liên kết không còn hợp lệ."
         action={
           <Link className="button button--primary" to="/account/orders">
-            Back to orders
+            Quay lại đơn hàng
           </Link>
         }
       />
@@ -297,11 +310,11 @@ export default function AccountOrderDetailPage() {
   if (orderState.status === "unavailable") {
     return (
       <AccountOrderDetailState
-        title="Order unavailable."
+        title="Đơn hàng không khả dụng."
         message={orderState.message}
         action={
           <Link className="button button--primary" to="/account/orders">
-            Back to orders
+            Quay lại đơn hàng
           </Link>
         }
       />
@@ -311,7 +324,7 @@ export default function AccountOrderDetailPage() {
   if (orderState.status === "error") {
     return (
       <AccountOrderDetailState
-        title="Order details unavailable."
+        title="Chi tiết đơn hàng không khả dụng."
         message={orderState.message}
         alert
         action={
@@ -321,10 +334,10 @@ export default function AccountOrderDetailPage() {
               className="button button--ghost"
               onClick={() => setRetryKey((key) => key + 1)}
             >
-              Retry
+              Thử lại
             </button>
             <Link className="button button--primary" to="/account/orders">
-              Back to orders
+              Quay lại đơn hàng
             </Link>
           </div>
         }
@@ -338,18 +351,18 @@ export default function AccountOrderDetailPage() {
     <article className="account-order-detail" aria-labelledby="account-order-detail-title">
       <div className="account-order-detail__header">
         <Link className="account-order-detail__back" to="/account/orders">
-          Back to orders
+          Quay lại đơn hàng
         </Link>
-        <p className="account-order-detail__kicker">Order</p>
+        <p className="account-order-detail__kicker">Đơn hàng</p>
         <h1 id="account-order-detail-title">{getOrderReference(order)}</h1>
-        <p>Historical order details from checkout.</p>
+        <p>Chi tiết đơn hàng được lưu khi thanh toán.</p>
         <AccountNavigation />
       </div>
 
       <div className="account-order-detail__layout">
         <div className="account-order-detail__main">
           <section className="account-order-section" aria-labelledby="account-order-meta-title">
-            <h2 id="account-order-meta-title">Order details</h2>
+            <h2 id="account-order-meta-title">Chi tiết đơn hàng</h2>
             <OrderMetadata order={order} />
           </section>
 

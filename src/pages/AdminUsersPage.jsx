@@ -7,12 +7,12 @@ import "./AdminUsersPage.css";
 const PAGE_SIZE_OPTIONS = [10, 25, 50, 100];
 const ROLES = ["USER", "ADMIN"];
 const SORT_OPTIONS = [
-  { value: "createdAt,desc", label: "Newest first" },
-  { value: "createdAt,asc", label: "Oldest first" },
+  { value: "createdAt,desc", label: "Mới nhất" },
+  { value: "createdAt,asc", label: "Cũ nhất" },
   { value: "email,asc", label: "Email A-Z" },
-  { value: "fullName,asc", label: "Name A-Z" },
-  { value: "role,asc", label: "Role A-Z" },
-  { value: "active,desc", label: "Active first" },
+  { value: "fullName,asc", label: "Tên A-Z" },
+  { value: "role,asc", label: "Vai trò A-Z" },
+  { value: "active,desc", label: "Đang hoạt động trước" },
 ];
 
 function getPositivePage(value) {
@@ -107,13 +107,13 @@ function getPaginationPages(currentPage, totalPages) {
 
 function getDateTimeLabel(value) {
   if (!value) {
-    return "Unavailable";
+    return "Không khả dụng";
   }
 
   const date = new Date(value);
 
   if (Number.isNaN(date.getTime())) {
-    return "Unavailable";
+    return "Không khả dụng";
   }
 
   return new Intl.DateTimeFormat("vi-VN", {
@@ -123,51 +123,51 @@ function getDateTimeLabel(value) {
 }
 
 function getRoleLabel(role) {
-  return role === "ADMIN" ? "Admin" : "User";
+  return role === "ADMIN" ? "Quản trị viên" : "Người dùng";
 }
 
 function getBooleanLabel(value) {
   if (value === true) {
-    return "Yes";
+    return "Có";
   }
 
   if (value === false) {
-    return "No";
+    return "Không";
   }
 
-  return "Unavailable";
+  return "Không khả dụng";
 }
 
 function getStatusLabel(active) {
   if (active === true) {
-    return "Active";
+    return "Đang hoạt động";
   }
 
   if (active === false) {
-    return "Inactive";
+    return "Ngừng hoạt động";
   }
 
-  return "Unavailable";
+  return "Không khả dụng";
 }
 
 function getUserListErrorMessage(error) {
   if (error?.status === 401 || error?.status === 403) {
-    return "Admin access is required. Sign in again with an admin account.";
+    return "Cần quyền quản trị. Hãy đăng nhập lại bằng tài khoản quản trị.";
   }
 
   if (error?.status === 400) {
-    return error.message || "User filters were rejected by the backend.";
+    return "Bộ lọc người dùng không hợp lệ.";
   }
 
   if (error?.status >= 500) {
-    return "The user service is unavailable right now.";
+    return "Dịch vụ người dùng hiện không khả dụng.";
   }
 
   if (!error?.status) {
-    return "Network connection failed. Check the API server and try again.";
+    return "Kết nối mạng thất bại. Hãy kiểm tra máy chủ API rồi thử lại.";
   }
 
-  return "Users could not be loaded.";
+  return "Không thể tải người dùng.";
 }
 
 function UserSkeletonRows() {
@@ -208,13 +208,13 @@ function Pagination({ currentPage, onPageChange, totalPages }) {
   }
 
   return (
-    <nav className="admin-users-pagination" aria-label="Admin users pagination">
+    <nav className="admin-users-pagination" aria-label="Phân trang người dùng quản trị">
       <button
         type="button"
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage <= 1}
       >
-        Previous
+        Trước
       </button>
       <div className="admin-users-pagination__pages">
         {pages.map((pageNumber, index) => {
@@ -249,7 +249,7 @@ function Pagination({ currentPage, onPageChange, totalPages }) {
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage >= totalPages}
       >
-        Next
+        Sau
       </button>
     </nav>
   );
@@ -262,13 +262,13 @@ function UserRow({ user }) {
 
   return (
     <tr className="admin-users-row">
-      <th scope="row" data-label="User">
+      <th scope="row" data-label="Người dùng">
         <Link className="admin-users-row__reference" to={userPath}>
-          {user?.fullName || "Unnamed user"}
+          {user?.fullName || "Người dùng chưa có tên"}
         </Link>
-        <span className="admin-users-row__meta">{user?.email || "No email"}</span>
+        <span className="admin-users-row__meta">{user?.email || "Không có email"}</span>
       </th>
-      <td data-label="Role">
+      <td data-label="Vai trò">
         <span
           className={`admin-users-status admin-users-status--${String(
             user?.role || "unknown",
@@ -277,7 +277,7 @@ function UserRow({ user }) {
           {getRoleLabel(user?.role)}
         </span>
       </td>
-      <td data-label="Status">
+      <td data-label="Trạng thái">
         <span
           className={`admin-users-status admin-users-status--${
             user?.active ? "active" : "inactive"
@@ -286,13 +286,13 @@ function UserRow({ user }) {
           {getStatusLabel(user?.active)}
         </span>
       </td>
-      <td data-label="Verified">{getBooleanLabel(user?.emailVerified)}</td>
-      <td data-label="Created" className="admin-users-number">
+      <td data-label="Đã xác thực">{getBooleanLabel(user?.emailVerified)}</td>
+      <td data-label="Ngày tạo" className="admin-users-number">
         {getDateTimeLabel(user?.createdAt)}
       </td>
-      <td data-label="Actions">
+      <td data-label="Thao tác">
         <Link className="admin-users-text-link" to={userPath}>
-          Open
+          Mở
         </Link>
       </td>
     </tr>
@@ -476,8 +476,8 @@ export default function AdminUsersPage() {
     <section className="admin-users" aria-labelledby="admin-users-title">
       <header className="admin-users__header">
         <div>
-          <p className="admin-users__kicker">Admin users</p>
-          <h1 id="admin-users-title">Users</h1>
+          <p className="admin-users__kicker">Quản lý người dùng</p>
+          <h1 id="admin-users-title">Người dùng</h1>
         </div>
         <button
           type="button"
@@ -485,17 +485,17 @@ export default function AdminUsersPage() {
           onClick={handleRetry}
           disabled={usersState.status === "loading"}
         >
-          Refresh
+          Làm mới
         </button>
       </header>
 
       <form
         className="admin-users-toolbar"
-        aria-label="User list controls"
+        aria-label="Điều khiển danh sách người dùng"
         onSubmit={handleFilterSubmit}
       >
         <div className="admin-users-control">
-          <label htmlFor="admin-users-keyword">Keyword</label>
+          <label htmlFor="admin-users-keyword">Từ khóa</label>
           <input
             id="admin-users-keyword"
             name="keyword"
@@ -508,13 +508,13 @@ export default function AdminUsersPage() {
         </div>
 
         <div className="admin-users-control">
-          <label htmlFor="admin-users-role">Role</label>
+          <label htmlFor="admin-users-role">Vai trò</label>
           <select
             id="admin-users-role"
             value={userQuery.role}
             onChange={(event) => updateQuery({ role: event.target.value })}
           >
-            <option value="all">All roles</option>
+            <option value="all">Tất cả vai trò</option>
             {ROLES.map((role) => (
               <option key={role} value={role}>
                 {getRoleLabel(role)}
@@ -524,20 +524,20 @@ export default function AdminUsersPage() {
         </div>
 
         <div className="admin-users-control">
-          <label htmlFor="admin-users-active">Status</label>
+          <label htmlFor="admin-users-active">Trạng thái</label>
           <select
             id="admin-users-active"
             value={userQuery.active}
             onChange={(event) => updateQuery({ active: event.target.value })}
           >
-            <option value="all">All statuses</option>
-            <option value="true">Active</option>
-            <option value="false">Inactive</option>
+            <option value="all">Tất cả trạng thái</option>
+            <option value="true">Đang hoạt động</option>
+            <option value="false">Ngừng hoạt động</option>
           </select>
         </div>
 
         <div className="admin-users-control">
-          <label htmlFor="admin-users-sort">Sort</label>
+          <label htmlFor="admin-users-sort">Sắp xếp</label>
           <select
             id="admin-users-sort"
             value={userQuery.sort}
@@ -552,7 +552,7 @@ export default function AdminUsersPage() {
         </div>
 
         <div className="admin-users-control">
-          <label htmlFor="admin-users-size">Rows</label>
+          <label htmlFor="admin-users-size">Số dòng</label>
           <select
             id="admin-users-size"
             value={userQuery.size}
@@ -568,14 +568,14 @@ export default function AdminUsersPage() {
 
         <div className="admin-users-toolbar__actions">
           <button type="submit" className="button button--primary">
-            Apply
+            Áp dụng
           </button>
           <button
             type="button"
             className="button button--ghost"
             onClick={handleResetFilters}
           >
-            Reset
+            Đặt lại
           </button>
         </div>
       </form>
@@ -583,48 +583,47 @@ export default function AdminUsersPage() {
       <section className="admin-users-list" aria-labelledby="admin-users-list-title">
         <div className="admin-users-list__header">
           <div>
-            <h2 id="admin-users-list-title">User list</h2>
+            <h2 id="admin-users-list-title">Danh sách người dùng</h2>
             {usersState.status === "success" ? (
               <p>
-                Showing {resultStart}-{resultEnd} of {userData.totalElements}
-                {" "}users.
+                Hiển thị {resultStart}-{resultEnd} trong tổng số {userData.totalElements} người dùng.
               </p>
             ) : null}
             {usersState.status === "loading" ? (
-              <p aria-live="polite">Loading users...</p>
+              <p aria-live="polite">Đang tải người dùng...</p>
             ) : null}
           </div>
         </div>
 
         {usersState.status === "error" ? (
           <div className="admin-users-state" role="alert">
-            <h2>Users unavailable.</h2>
+            <h2>Người dùng không khả dụng.</h2>
             <p>{usersState.message}</p>
             <button type="button" className="button button--ghost" onClick={handleRetry}>
-              Retry
+              Thử lại
             </button>
           </div>
         ) : null}
 
         {usersState.status === "empty" ? (
           <div className="admin-users-state">
-            <h2>No users returned.</h2>
-            <p>Adjust the supported keyword, role, or status filters.</p>
+            <h2>Không có người dùng.</h2>
+            <p>Điều chỉnh bộ lọc từ khóa, vai trò hoặc trạng thái.</p>
           </div>
         ) : null}
 
         {usersState.status === "loading" || usersState.status === "success" ? (
           <div className="admin-users-table-wrap">
             <table className="admin-users-table">
-              <caption className="sr-only">Admin user records</caption>
+              <caption className="sr-only">Danh sách người dùng quản trị</caption>
               <thead>
                 <tr>
-                  <th scope="col">User</th>
-                  <th scope="col">Role</th>
-                  <th scope="col">Status</th>
-                  <th scope="col">Verified</th>
-                  <th scope="col">Created</th>
-                  <th scope="col">Actions</th>
+                  <th scope="col">Người dùng</th>
+                  <th scope="col">Vai trò</th>
+                  <th scope="col">Trạng thái</th>
+                  <th scope="col">Đã xác thực</th>
+                  <th scope="col">Ngày tạo</th>
+                  <th scope="col">Thao tác</th>
                 </tr>
               </thead>
               {usersState.status === "loading" ? (

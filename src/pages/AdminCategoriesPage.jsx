@@ -51,31 +51,31 @@ function getDateTimeLabel(value) {
 function getLifecycle(category) {
   if (category?.deletedAt) {
     return {
-      label: "Deleted",
+      label: "Đã xóa",
       className: "admin-categories-status admin-categories-status--deleted",
     };
   }
 
   if (category?.active) {
     return {
-      label: "Active",
+      label: "Đang hoạt động",
       className: "admin-categories-status admin-categories-status--active",
     };
   }
 
   return {
-    label: "Inactive",
+    label: "Ngừng hoạt động",
     className: "admin-categories-status admin-categories-status--inactive",
   };
 }
 
 function getCategoryErrorMessage(error, fallback) {
   if (error?.status === 401 || error?.status === 403) {
-    return "Admin access is required. Sign in again with an admin account.";
+    return "Cần quyền quản trị. Hãy đăng nhập lại bằng tài khoản quản trị.";
   }
 
   if (error?.status === 400 && error?.data?.errors) {
-    return "Check the highlighted fields and try again.";
+    return "Kiểm tra các trường được đánh dấu rồi thử lại.";
   }
 
   if (error?.status === 400) {
@@ -83,19 +83,19 @@ function getCategoryErrorMessage(error, fallback) {
   }
 
   if (error?.status === 404) {
-    return error.message || "The category was not found.";
+    return "Không tìm thấy danh mục.";
   }
 
   if (error?.status === 409) {
-    return error.message || "The category conflicts with existing data.";
+    return "Danh mục xung đột với dữ liệu hiện có.";
   }
 
   if (error?.status >= 500) {
-    return "The category service is unavailable right now.";
+    return "Dịch vụ danh mục hiện không khả dụng.";
   }
 
   if (!error?.status) {
-    return "Network connection failed. Check the API server and try again.";
+    return "Kết nối mạng thất bại. Hãy kiểm tra máy chủ API rồi thử lại.";
   }
 
   return fallback;
@@ -111,7 +111,7 @@ function getCategoryFieldErrors(error) {
   );
 
   if (error?.status === 409) {
-    errors.name = "Name is already used or violates category constraints.";
+    errors.name = "Tên đã được sử dụng hoặc không đáp ứng điều kiện danh mục.";
   }
 
   return errors;
@@ -219,11 +219,11 @@ function CategoryForm({
     <form className="admin-category-form" onSubmit={onSubmit}>
       <div className="admin-category-form__header">
         <div>
-          <h2>{isEdit ? "Edit category" : "Create category"}</h2>
+          <h2>{isEdit ? "Sửa danh mục" : "Thêm danh mục"}</h2>
           <p>
             {isEdit
-              ? "Update the admin record. Deleted categories cannot be edited."
-              : "New categories are created active by the backend."}
+              ? "Cập nhật bản ghi quản trị. Không thể sửa danh mục đã xóa."
+              : "Danh mục mới được tạo ở trạng thái hoạt động."}
           </p>
         </div>
         <button
@@ -232,14 +232,14 @@ function CategoryForm({
           onClick={onCancel}
           disabled={isSubmitting}
         >
-          Close
+          Đóng
         </button>
       </div>
 
       <CategoryFormField
         id="admin-category-name"
         name="name"
-        label="Name"
+        label="Tên danh mục"
         value={formValues.name}
         onChange={onChange}
         maxLength={100}
@@ -250,7 +250,7 @@ function CategoryForm({
         as="textarea"
         id="admin-category-description"
         name="description"
-        label="Description"
+        label="Mô tả"
         value={formValues.description}
         onChange={onChange}
         maxLength={255}
@@ -263,13 +263,13 @@ function CategoryForm({
           as="select"
           id="admin-category-active"
           name="active"
-          label="Storefront status"
+          label="Trạng thái bán"
           value={String(formValues.active)}
           onChange={onChange}
           error={fieldErrors.active}
         >
-          <option value="true">Active</option>
-          <option value="false">Inactive</option>
+          <option value="true">Đang hoạt động</option>
+          <option value="false">Ngừng hoạt động</option>
         </CategoryFormField>
       ) : null}
 
@@ -280,10 +280,10 @@ function CategoryForm({
           disabled={isSubmitting}
         >
           {isSubmitting
-            ? "Saving..."
+            ? "Đang lưu..."
             : isEdit
-              ? "Save changes"
-              : "Create category"}
+              ? "Lưu thay đổi"
+              : "Tạo danh mục"}
         </button>
         <button
           type="button"
@@ -291,7 +291,7 @@ function CategoryForm({
           onClick={onCancel}
           disabled={isSubmitting}
         >
-          Cancel
+          Hủy
         </button>
       </div>
     </form>
@@ -324,26 +324,26 @@ function CategoryRow({
           isDeleted ? "admin-categories-row is-deleted" : "admin-categories-row"
         }
       >
-        <th scope="row" data-label="Category">
+      <th scope="row" data-label="Danh mục">
           <span className="admin-categories-row__name">
-            {category.name || "Untitled category"}
+            {category.name || "Danh mục chưa có tên"}
           </span>
           <span className="admin-categories-row__meta">
-            {category.id || "No category id"}
+            {category.id || "Không có mã danh mục"}
           </span>
         </th>
-        <td data-label="Description">
+        <td data-label="Mô tả">
           {category.description || (
-            <span className="admin-categories-row__muted">No description</span>
+            <span className="admin-categories-row__muted">Không có mô tả</span>
           )}
         </td>
-        <td data-label="Status">
+        <td data-label="Trạng thái">
           <span className={lifecycle.className}>{lifecycle.label}</span>
         </td>
-        <td data-label="Deleted at" className="admin-categories-number">
-          {category.deletedAt ? getDateTimeLabel(category.deletedAt) : "None"}
+        <td data-label="Thời gian xóa" className="admin-categories-number">
+          {category.deletedAt ? getDateTimeLabel(category.deletedAt) : "Không có"}
         </td>
-        <td data-label="Actions">
+        <td data-label="Thao tác">
           <div className="admin-categories-actions">
             <button
               type="button"
@@ -351,7 +351,7 @@ function CategoryRow({
               onClick={() => onEdit(category)}
               disabled={isDeleted || Boolean(actionId)}
             >
-              Edit
+              Sửa
             </button>
             {!category.active && !isDeleted ? (
               <button
@@ -360,7 +360,7 @@ function CategoryRow({
                 onClick={() => onRequestToggle(category, true)}
                 disabled={Boolean(actionId)}
               >
-                Activate
+                Kích hoạt
               </button>
             ) : null}
             {category.active && !isDeleted ? (
@@ -370,7 +370,7 @@ function CategoryRow({
                 onClick={() => onRequestToggle(category, false)}
                 disabled={Boolean(actionId)}
               >
-                Deactivate
+                Ngừng hoạt động
               </button>
             ) : null}
             <button
@@ -379,12 +379,12 @@ function CategoryRow({
               onClick={() => onRequestDelete(category)}
               disabled={isDeleted || Boolean(actionId)}
             >
-              Delete
+              Xóa
             </button>
           </div>
           {isBusy ? (
             <p className="admin-categories-row__meta" aria-live="polite">
-              {isDeleting ? "Deleting..." : isToggling ? "Updating..." : "Loading..."}
+              {isDeleting ? "Đang xóa..." : isToggling ? "Đang cập nhật..." : "Đang tải..."}
             </p>
           ) : null}
         </td>
@@ -413,7 +413,7 @@ function CategoryRow({
                   onClick={onCancelConfirm}
                   disabled={Boolean(actionId)}
                 >
-                  Cancel
+                  Hủy
                 </button>
               </div>
             </div>
@@ -574,7 +574,7 @@ export default function AdminCategoriesPage() {
       const categoryDetail = await getAdminCategoryById(category.id);
 
       if (categoryDetail.deletedAt) {
-        setActionError("Deleted categories cannot be edited because restore is not supported.");
+        setActionError("Không thể sửa danh mục đã xóa vì không hỗ trợ khôi phục.");
         await reloadCategories().catch(() => {});
         return;
       }
@@ -584,7 +584,7 @@ export default function AdminCategoriesPage() {
       setFormValues(getCategoryFormValues(categoryDetail));
     } catch (error) {
       setActionError(
-        getCategoryErrorMessage(error, "Category could not be opened."),
+        getCategoryErrorMessage(error, "Không thể mở danh mục."),
       );
       await reloadCategories().catch(() => {});
     } finally {
@@ -632,7 +632,7 @@ export default function AdminCategoriesPage() {
     } catch (error) {
       setFieldErrors(getCategoryFieldErrors(error));
       setFormError(
-        getCategoryErrorMessage(error, "Category could not be saved."),
+        getCategoryErrorMessage(error, "Không thể lưu danh mục."),
       );
       await reloadCategories().catch(() => {});
     } finally {
@@ -646,8 +646,8 @@ export default function AdminCategoriesPage() {
       type: "delete",
       categoryId: category.id,
       message:
-        "Soft delete this category? The backend will reject the delete if undeleted products still use it.",
-      confirmLabel: "Delete category",
+        "Xóa mềm danh mục này? Sẽ từ chối nếu sản phẩm chưa xóa vẫn dùng danh mục này.",
+      confirmLabel: "Xóa danh mục",
     });
   }
 
@@ -658,9 +658,9 @@ export default function AdminCategoriesPage() {
       categoryId: category.id,
       nextActive,
       message: nextActive
-        ? "Activate this category for the public catalog?"
-        : "Deactivate this category? Products in it will leave public shopping flows.",
-      confirmLabel: nextActive ? "Activate category" : "Deactivate category",
+        ? "Kích hoạt danh mục này cho cửa hàng?"
+        : "Ngừng hoạt động danh mục này? Sản phẩm thuộc danh mục sẽ không còn hiển thị để mua.",
+      confirmLabel: nextActive ? "Kích hoạt danh mục" : "Ngừng hoạt động danh mục",
     });
   }
 
@@ -682,7 +682,7 @@ export default function AdminCategoriesPage() {
       }
     } catch (error) {
       setActionError(
-        getCategoryErrorMessage(error, "Category could not be deleted."),
+        getCategoryErrorMessage(error, "Không thể xóa danh mục."),
       );
       await reloadCategories().catch(() => {});
     } finally {
@@ -717,7 +717,7 @@ export default function AdminCategoriesPage() {
       setActionError(
         getCategoryErrorMessage(
           error,
-          "Category status could not be changed.",
+          "Không thể đổi trạng thái danh mục.",
         ),
       );
       await reloadCategories().catch(() => {});
@@ -739,8 +739,8 @@ export default function AdminCategoriesPage() {
     >
       <header className="admin-categories__header">
         <div>
-          <p className="admin-categories__kicker">Admin categories</p>
-          <h1 id="admin-categories-title">Categories</h1>
+          <p className="admin-categories__kicker">Quản lý danh mục</p>
+          <h1 id="admin-categories-title">Danh mục</h1>
         </div>
         <div className="admin-categories__header-actions">
           <button
@@ -749,7 +749,7 @@ export default function AdminCategoriesPage() {
             onClick={handleRetry}
             disabled={categoriesState.status === "loading"}
           >
-            Refresh
+            Làm mới
           </button>
           <button
             type="button"
@@ -757,41 +757,41 @@ export default function AdminCategoriesPage() {
             onClick={openCreateForm}
             disabled={isSubmitting}
           >
-            Create category
+            Thêm danh mục
           </button>
         </div>
       </header>
 
-      <section className="admin-categories-toolbar" aria-label="Category list controls">
+      <section className="admin-categories-toolbar" aria-label="Điều khiển danh sách danh mục">
         <div className="admin-category-control">
-          <label htmlFor="admin-categories-active-filter">Active filter</label>
+          <label htmlFor="admin-categories-active-filter">Bộ lọc trạng thái</label>
           <select
             id="admin-categories-active-filter"
             value={categoryQuery.active}
             onChange={(event) => updateQuery({ active: event.target.value })}
           >
-            <option value="all">All categories</option>
-            <option value="true">Active flag only</option>
-            <option value="false">Inactive flag only</option>
+            <option value="all">Tất cả danh mục</option>
+            <option value="true">Chỉ đang hoạt động</option>
+            <option value="false">Chỉ ngừng hoạt động</option>
           </select>
         </div>
 
         {categoriesState.status === "success" ? (
-          <dl className="admin-categories-summary" aria-label="Category totals">
+          <dl className="admin-categories-summary" aria-label="Tổng số danh mục">
             <div>
-              <dt>Total</dt>
+              <dt>Tổng</dt>
               <dd>{categories.length}</dd>
             </div>
             <div>
-              <dt>Active</dt>
+              <dt>Đang hoạt động</dt>
               <dd>{activeCount}</dd>
             </div>
             <div>
-              <dt>Inactive</dt>
+              <dt>Ngừng hoạt động</dt>
               <dd>{inactiveCount}</dd>
             </div>
             <div>
-              <dt>Deleted</dt>
+              <dt>Đã xóa</dt>
               <dd>{deletedCount}</dd>
             </div>
           </dl>
@@ -811,9 +811,9 @@ export default function AdminCategoriesPage() {
         >
           <div className="admin-categories-list__header">
             <div>
-              <h2 id="admin-categories-list-title">Category records</h2>
+              <h2 id="admin-categories-list-title">Danh sách danh mục</h2>
               {categoriesState.status === "success" ? (
-                <p>{categories.length} categories returned by the backend</p>
+                <p>{categories.length} danh mục</p>
               ) : null}
               {categoriesState.status === "loading" ? (
                 <p aria-live="polite">Loading categories...</p>
@@ -839,17 +839,16 @@ export default function AdminCategoriesPage() {
 
           {categoriesState.status === "empty" ? (
             <div className="admin-categories-state">
-              <h2>No categories returned.</h2>
+              <h2>Không có danh mục nào</h2>
               <p>
-                Adjust the active filter or create the first category for this
-                store.
+                Điều chỉnh bộ lọc đang hoạt động hoặc tạo danh mục đầu tiên cho cửa hàng này.
               </p>
               <button
                 type="button"
                 className="button button--primary"
                 onClick={openCreateForm}
               >
-                Create category
+                Thêm danh mục
               </button>
             </div>
           ) : null}
@@ -858,14 +857,14 @@ export default function AdminCategoriesPage() {
           categoriesState.status === "success" ? (
             <div className="admin-categories-table-wrap">
               <table className="admin-categories-table">
-                <caption className="sr-only">Admin category records</caption>
+                <caption className="sr-only">Danh sách danh mục quản trị</caption>
                 <thead>
                   <tr>
-                    <th scope="col">Category</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Deleted at</th>
-                    <th scope="col">Actions</th>
+                    <th scope="col">Danh mục</th>
+                    <th scope="col">Mô tả</th>
+                    <th scope="col">Trạng thái</th>
+                    <th scope="col">Thời gian xóa</th>
+                    <th scope="col">Thao tác</th>
                   </tr>
                 </thead>
                 {categoriesState.status === "loading" ? (
