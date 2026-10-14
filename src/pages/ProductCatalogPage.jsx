@@ -517,9 +517,9 @@ export default function ProductCatalogPage() {
       <section className="catalog-intro" aria-labelledby="catalog-title">
         <p className="catalog-intro__brand">CHẬM Shop</p>
         <div className="catalog-intro__copy">
-          <h1 id="catalog-title">Dụng cụ cà phê được chọn chậm rãi.</h1>
+          <h1 id="catalog-title">Dụng cụ pha cà phê</h1>
           <p>
-            Khám phá sản phẩm hiện có với tìm kiếm, lọc danh mục, khoảng giá và sắp xếp.
+            Tìm dụng cụ phù hợp theo cách pha, mức giá và nhu cầu của bạn.
           </p>
         </div>
       </section>
@@ -657,7 +657,7 @@ export default function ProductCatalogPage() {
               <h2 id="catalog-results-title">Sản phẩm</h2>
               {productsState.status === "success" ? (
                 <p>
-                  Hiển thị {resultStart}-{resultEnd} trong tổng số {productData.totalElements} sản phẩm
+                  Hiển thị {resultStart}-{resultEnd} trên {productData.totalElements} sản phẩm
                 </p>
               ) : null}
             </div>
