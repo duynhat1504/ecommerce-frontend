@@ -1073,8 +1073,8 @@ export default function AdminInventoryPage() {
 
           {productsState.status === "empty" ? (
             <div className="admin-inventory-state">
-              <h2>No products returned.</h2>
-              <p>Adjust the status filter before reviewing inventory history.</p>
+              <h2>Không có sản phẩm nào</h2>
+              <p>Điều chỉnh bộ lọc trước khi xem lịch sử hàng tồn kho</p>
             </div>
           ) : null}
 

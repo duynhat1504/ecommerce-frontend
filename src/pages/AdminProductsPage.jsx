@@ -1357,13 +1357,12 @@ export default function AdminProductsPage() {
 
           {productsState.status === "empty" ? (
             <div className="admin-products-state">
-              <h2>No products returned.</h2>
+              <h2>Không có sản phẩm</h2>
               <p>
-                Adjust the active filter or create the first product for this
-                store.
+                Điều chỉnh bộ lọc hoặc tạo sản phẩm đầu tiên
               </p>
               <button type="button" className="button button--primary" onClick={openCreateForm}>
-                Create product
+                Thêm sản phẩm
               </button>
             </div>
           ) : null}
