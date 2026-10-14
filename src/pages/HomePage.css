@@ -1,6 +1,6 @@
 .home-page {
   display: grid;
-  gap: clamp(4rem, 8vw, 7rem);
+  gap: clamp(3.5rem, 6vw, 6rem);
   padding-bottom: clamp(4rem, 8vw, 7rem);
 }
 
@@ -29,8 +29,9 @@
 }
 
 .home-hero h1 {
-  max-width: 8.5ch;
-  font-size: clamp(4.25rem, 8.6vw, 8.5rem);
+  max-width: 10.5ch;
+  font-size: clamp(3.5rem, 6.5vw, 6.5rem);
+  line-height: 0.96;
 }
 
 .home-hero__text {
@@ -70,12 +71,17 @@
 }
 
 .ritual-section h2,
-.home-section-heading h2,
 .home-categories h2,
-.product-story h2,
-.quiet-section h2 {
-  max-width: 12ch;
-  font-size: clamp(2.25rem, 5vw, 5rem);
+.product-story h2 {
+  max-width: 15ch;
+  font-size: clamp(2rem, 4vw, 3.75rem);
+  line-height: 1;
+}
+
+.home-section-heading h2 {
+  max-width: 16ch;
+  font-size: clamp(1.8rem, 3vw, 2.75rem);
+  line-height: 1.05;
 }
 
 .ritual-section p,
@@ -225,7 +231,7 @@
 }
 
 .quiet-section {
-  width: min(100%, 58rem);
+  width: min(100%, 52rem);
   margin-left: auto;
   border-top: 1px solid var(--color-border);
   padding-top: clamp(2rem, 5vw, 3rem);
@@ -239,6 +245,8 @@
 
 .quiet-section h2 {
   max-width: 14ch;
+  font-size: clamp(2.5rem, 4.5vw, 4.25rem);
+  line-height: 1.02;
 }
 
 .home-state {
@@ -295,7 +303,7 @@
   }
 
   .home-hero h1 {
-    font-size: clamp(3.5rem, 8.5vw, 6rem);
+    font-size: clamp(3.25rem, 6.5vw, 5.5rem);
   }
 
   .home-products__grid {
@@ -322,8 +330,7 @@
 
   .home-hero h1 {
     max-width: 11ch;
-    font-size: clamp(3rem, 12.5vw, 4.45rem);
-    line-height: 0.98;
+    font-size: clamp(2.75rem, 10.5vw, 4rem);
   }
 
   .home-hero__copy {

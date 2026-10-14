@@ -154,12 +154,12 @@ export default function HomePage() {
       <section className="home-hero" aria-labelledby="home-hero-title">
         <div className="home-hero__copy">
           <p className="home-hero__brand">CHẬM</p>
-          <h1 id="home-hero-title">Dụng cụ cho một tách cà phê chậm rãi.</h1>
+          <h1 id="home-hero-title">Dụng cụ cho một tách cà phê ngon.</h1>
           <p className="home-hero__text">
-            Những dụng cụ pha cà phê được chọn cho buổi sáng yên tĩnh và sử dụng mỗi ngày.
+            Những dụng cụ pha cà phê được CHẬM chọn lọc cho việc pha tại nhà.
           </p>
           <Link className="button button--primary home-hero__cta" to="/products">
-            Khám phá bộ sưu tập
+            Khám phá sản phẩm
           </Link>
         </div>
         <div className="home-hero__media">
@@ -172,9 +172,9 @@ export default function HomePage() {
 
       <section className="ritual-section" aria-labelledby="ritual-title">
         <div className="ritual-section__text">
-          <h2 id="ritual-title">Cho lần rót đầu tiên trong ngày.</h2>
+          <h2 id="ritual-title">Bắt đầu một ngày bằng cà phê ngon.</h2>
           <p>
-            Bắt đầu với phễu lọc, ấm rót ổn định và chiếc cốc khiến góc bàn thêm chỉn chu.
+            Từ phễu lọc, ấm rót đến chiếc cốc quen thuộc, những dụng cụ đơn giản cho việc pha cà phê mỗi ngày.
           </p>
         </div>
         <Link className="ritual-section__link" to="/products">
@@ -184,7 +184,7 @@ export default function HomePage() {
 
       <section className="home-products" aria-labelledby="new-products-title">
         <div className="home-section-heading">
-          <h2 id="new-products-title">Sản phẩm mới tại cửa hàng</h2>
+          <h2 id="new-products-title">Sản phẩm mới</h2>
           <Link to="/products">Xem tất cả</Link>
         </div>
 
@@ -212,19 +212,19 @@ export default function HomePage() {
           />
         </div>
         <div className="product-story__copy">
-          <h2 id="story-title">Những vật dụng luôn ở lại trên bàn pha.</h2>
+          <h2 id="story-title">Những món đồ đáng để ở lại trên bàn pha.</h2>
           <p>
-            CHẬM chọn dụng cụ cà phê xứng đáng có mặt qua chất liệu, cảm giác cầm và sự hữu ích mỗi ngày.
+            CHẬM chọn những dụng cụ bền, dễ dùng và đủ tốt để trở thành một phần của thói quen pha cà phê mỗi ngày.
           </p>
-          <Link to="/products">Xem dụng cụ dùng mỗi ngày</Link>
+          <Link to="/products">Khám phá dụng cụ</Link>
         </div>
       </section>
 
       <section className="home-categories" aria-labelledby="categories-title">
         <div className="home-categories__intro">
-          <h2 id="categories-title">Chọn theo thói quen pha</h2>
+          <h2 id="categories-title">Chọn theo cách pha</h2>
           <p>
-            Từ hạt đến tách cà phê, mỗi dụng cụ đều được chọn cho những buổi sáng lặp lại.
+            Tìm dụng cụ phù hợp với cách bạn pha cà phê mỗi ngày.
           </p>
         </div>
 
@@ -245,10 +245,8 @@ export default function HomePage() {
       </section>
 
       <section className="quiet-section" aria-labelledby="quiet-title">
-        <p>Dành cho một cửa hàng, một góc nhìn.</p>
-        <h2 id="quiet-title">
-          Dụng cụ cà phê không ồn ào như một sàn thương mại.
-        </h2>
+        <p>CHẬM chọn lọc</p>
+        <h2 id="quiet-title">Những món đồ cho góc cà phê của bạn.</h2>
       </section>
     </div>
   );
