@@ -23,10 +23,16 @@
 }
 
 .account-orders-page h1,
-.account-orders-state h1,
-.account-order-detail h1 {
+.account-orders-state h1 {
   max-width: 12ch;
   font-size: clamp(3rem, 7vw, 5.25rem);
+}
+
+.account-order-detail__header h1 {
+  max-width: none;
+  font-size: clamp(2rem, 3.5vw, 3.25rem);
+  line-height: 1.05;
+  white-space: nowrap;
 }
 
 .account-orders-panel,
@@ -319,7 +325,7 @@
 
 .account-orders-skeleton--title {
   width: min(22rem, 80vw);
-  height: clamp(3rem, 7vw, 5rem);
+  height: clamp(2.25rem, 4.5vw, 3.75rem);
 }
 
 .account-orders-skeleton--block {
@@ -412,9 +418,15 @@
   }
 
   .account-orders-page h1,
-  .account-orders-state h1,
-  .account-order-detail h1 {
+  .account-orders-state h1 {
     font-size: clamp(2.7rem, 14vw, 4.2rem);
+  }
+
+  .account-order-detail__header h1 {
+    max-width: 100%;
+    font-size: clamp(1.8rem, 8vw, 2.5rem);
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
 
   .account-order-row,

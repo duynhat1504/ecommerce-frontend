@@ -18,3 +18,26 @@ export async function createMockPayment({ orderId, success }, idempotencyKey, op
 
   return unwrapApiResponse(response);
 }
+
+
+export async function createVnPayPayment(
+  { orderId },
+  idempotencyKey,
+  options = {},
+) {
+  const { headers, ...requestOptions } = options;
+
+  const response = await apiRequest("/payments/vnpay", {
+    method: "POST",
+    body: {
+      orderId,
+    },
+    headers: {
+      ...(headers || {}),
+      "Idempotency-Key": idempotencyKey,
+    },
+    ...requestOptions,
+  });
+
+  return unwrapApiResponse(response);
+}
