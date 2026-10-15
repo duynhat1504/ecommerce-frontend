@@ -23,6 +23,7 @@ import LoginPage from "./pages/LoginPage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
 import OAuthCallbackPage from "./pages/OAuthCallbackPage.jsx";
 import PaymentPage from "./pages/PaymentPage.jsx";
+import PaymentResultPage from "./pages/PaymentResultPage.jsx";
 import ProductCatalogPage from "./pages/ProductCatalogPage.jsx";
 import ProductDetailPage from "./pages/ProductDetailPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
@@ -159,6 +160,10 @@ const router = createBrowserRouter([
       {
         path: "oauth2/callback",
         element: <OAuthCallbackPage />,
+      },
+      {
+        path: "payment-result",
+        element: <PaymentResultPage />,
       },
       {
         path: "404",

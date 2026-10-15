@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import { getOrderById } from "../api/orderApi";
-import { createMockPayment } from "../api/paymentApi";
+import {createMockPayment, createVnPayPayment,} from "../api/paymentApi";
 import {
   getPaymentErrorMessage,
   isUnconfirmedPaymentError,
@@ -117,12 +117,22 @@ function PaymentOrderSummary({ order }) {
       <h2 id="payment-summary-title">Tóm tắt đơn hàng</h2>
       <div className="payment-summary__items">
         {items.map((item) => (
+          // <article className="payment-summary-item" key={item.productId || item.productName}>
+          //   <div>
+          //     <h3>{item.productName || "Sản phẩm"}</h3>
+          //     <p>Số lượng: {item.quantity}</p>
+          //   </div>
+          //   <p>{formatCurrency(item.subtotal)}</p>
+          // </article>
           <article className="payment-summary-item" key={item.productId || item.productName}>
-            <div>
+            <div className="payment-summary-item__info">
               <h3>{item.productName || "Sản phẩm"}</h3>
               <p>Số lượng: {item.quantity}</p>
             </div>
-            <p>{formatCurrency(item.subtotal)}</p>
+
+            <p className="payment-summary-item__price">
+              {formatCurrency(item.subtotal)}
+            </p>
           </article>
         ))}
       </div>
@@ -343,6 +353,53 @@ export default function PaymentPage() {
     }
   }
 
+  async function submitVnPayPayment() {
+  if (!order?.id || isSubmitting || paymentRequestInFlightRef.current) {
+    return;
+  }
+
+  paymentRequestInFlightRef.current = true;
+
+  const idempotencyKey = createIdempotencyKey();
+
+  setPaymentState({
+    status: "submitting",
+    payment: null,
+    message: "",
+    attempt: {
+      idempotencyKey,
+      method: "VNPAY",
+    },
+  });
+
+  try {
+    const payment = await createVnPayPayment(
+      {
+        orderId: order.id,
+      },
+      idempotencyKey,
+    );
+
+    if (!payment?.paymentUrl) {
+      throw new Error("VNPay payment URL is missing");
+    }
+
+    window.location.assign(payment.paymentUrl);
+  } catch (error) {
+    setPaymentState({
+      status: "error",
+      payment: null,
+      message: getPaymentErrorMessage(
+        error,
+        "Không thể khởi tạo thanh toán VNPay.",
+      ),
+      attempt: null,
+    });
+  } finally {
+    paymentRequestInFlightRef.current = false;
+  }
+}
+
   function handleReloadOrder() {
     setReloadKey((key) => key + 1);
   }
@@ -423,28 +480,20 @@ export default function PaymentPage() {
           </section>
 
           <section className="payment-section" aria-labelledby="payment-action-title">
-            <h2 id="payment-action-title">Thanh toán mô phỏng</h2>
+            <h2 id="payment-action-title">Phương thức thanh toán</h2>
             {isPayable ? (
               <>
                 <p>
-                  Đây là phương thức thanh toán mô phỏng. Không thu thập thông tin thẻ, ngân hàng hoặc cổng thanh toán.
+                   Thanh toán an toàn qua VNPay hoặc sử dụng chế độ mô phỏng để kiểm thử.
                 </p>
                 <div className="payment-actions" aria-live="polite">
                   <button
                     type="button"
                     className="button button--primary"
-                    onClick={() => submitMockPayment(true)}
+                    onClick={submitVnPayPayment}
                     disabled={isSubmitting}
                   >
-                    {isSubmitting ? "Đang xử lý..." : "Thanh toán đơn hàng"}
-                  </button>
-                  <button
-                    type="button"
-                    className="button button--ghost"
-                    onClick={() => submitMockPayment(false)}
-                    disabled={isSubmitting}
-                  >
-                    Mô phỏng thanh toán thất bại
+                    {isSubmitting ? "Đang chuyển đến VNPay..." : "Thanh toán qua VNPay"}
                   </button>
                 </div>
               </>
