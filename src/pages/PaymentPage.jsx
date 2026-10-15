@@ -117,12 +117,22 @@ function PaymentOrderSummary({ order }) {
       <h2 id="payment-summary-title">Tóm tắt đơn hàng</h2>
       <div className="payment-summary__items">
         {items.map((item) => (
+          // <article className="payment-summary-item" key={item.productId || item.productName}>
+          //   <div>
+          //     <h3>{item.productName || "Sản phẩm"}</h3>
+          //     <p>Số lượng: {item.quantity}</p>
+          //   </div>
+          //   <p>{formatCurrency(item.subtotal)}</p>
+          // </article>
           <article className="payment-summary-item" key={item.productId || item.productName}>
-            <div>
+            <div className="payment-summary-item__info">
               <h3>{item.productName || "Sản phẩm"}</h3>
               <p>Số lượng: {item.quantity}</p>
             </div>
-            <p>{formatCurrency(item.subtotal)}</p>
+
+            <p className="payment-summary-item__price">
+              {formatCurrency(item.subtotal)}
+            </p>
           </article>
         ))}
       </div>
@@ -484,24 +494,6 @@ export default function PaymentPage() {
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? "Đang chuyển đến VNPay..." : "Thanh toán qua VNPay"}
-                  </button>
-
-                  <button
-                    type="button"
-                    className="button button--ghost"
-                    onClick={() => submitMockPayment(true)}
-                    disabled={isSubmitting}
-                  >
-                    Thanh toán mô phỏng thành công
-                  </button>
-
-                  <button
-                    type="button"
-                    className="button button--ghost"
-                    onClick={() => submitMockPayment(false)}
-                    disabled={isSubmitting}
-                  >
-                    Mô phỏng thanh toán thất bại
                   </button>
                 </div>
               </>
